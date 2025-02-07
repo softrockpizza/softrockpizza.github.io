@@ -72,10 +72,10 @@
     'images/nine.jpg', 'images/one.jpg'
 ];
 // Add your artwork image URLs here
-        ];
+        ;
         
         // Randomly select a background image
-        document.querySelector('.background').style.backgroundImage = `url(${artworks[Math.floor(Math.random() * artworks.length)]})`;
+        document.querySelector('.background').style.backgroundImage = `url("${artworks[Math.floor(Math.random() * artworks.length)]}")`;
         
         // Canvas Drawing Functionality
         const canvas = document.getElementById("drawCanvas");
