@@ -129,9 +129,6 @@
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
         
-        let drawing = false;
-        let cursorSize = Math.random() * 10 + 5;
-        
         function getRandomColor() {
             const colors = [
                 "#b0a999", "#c3b091", "#a89f91", "#978b82", "#d8c3a5", "#a68b76", "#b9a394", 
@@ -140,18 +137,20 @@
             return colors[Math.floor(Math.random() * colors.length)];
         }
 
-        let cursorColor = getRandomColor();
-        cursor.style.backgroundColor = cursorColor;
-        cursor.style.width = `${cursorSize}px`;
-        cursor.style.height = `${cursorSize}px`;
+        function drawTrail(x, y, color, size) {
+            ctx.fillStyle = color;
+            ctx.globalAlpha = 0.5;
+            ctx.beginPath();
+            ctx.arc(x, y, size / 2, 0, Math.PI * 2);
+            ctx.fill();
+            setTimeout(() => {
+                ctx.globalAlpha = 0.05;
+                ctx.fill();
+            }, 60000);
+        }
 
-        document.querySelectorAll(".menu a").forEach(link => {
-            link.addEventListener("mouseover", () => {
-                cursor.classList.add("triangle");
-            });
-            link.addEventListener("mouseleave", () => {
-                cursor.classList.remove("triangle");
-            });
+        document.addEventListener("mousemove", (e) => {
+            drawTrail(e.clientX, e.clientY, getRandomColor(), 10);
         });
     </script>
 </body>
