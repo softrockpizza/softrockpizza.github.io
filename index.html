@@ -4,27 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>adam stoves</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><circle cx='8' cy='8' r='6' fill='gray'/></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Laro+Soft:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            background-color: #d3d3d3; /* Light gray background */
+            background-color: #d3d3d3;
             margin: 0;
-            font-family: "Fira Sans", sans-serif;
+            font-family: "Laro Soft", sans-serif;
             overflow: hidden;
-            cursor: none; /* Hide default cursor */
+            cursor: none;
+            touch-action: none;
         }
         
-        /* Background Image */
         .background {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            background-size: 200%; /* Zoomed-in effect */
+            background-size: 200%;
             background-position: center;
         }
         
-        /* Name Styling */
         .name {
             position: absolute;
             top: 20px;
@@ -43,26 +44,27 @@
             100% { opacity: 0; }
         }
         
-        /* Menu Styling */
         .menu {
             position: absolute;
-            top: 100px; /* Increased space between name and menu */
+            top: 100px;
             left: 20px;
             font-size: 18px;
             font-weight: bold;
-            color: #c7a037; /* Yellow Ochre */
+            color: #c7a037;
             display: flex;
             flex-direction: column;
             gap: 10px;
+            z-index: 2;
         }
         
         .menu a {
             text-decoration: none;
             color: inherit;
             cursor: pointer;
+            position: relative;
+            z-index: 3;
         }
         
-        /* Canvas for Drawing */
         canvas {
             position: absolute;
             top: 0;
@@ -70,17 +72,21 @@
             width: 100vw;
             height: 100vh;
             pointer-events: none;
+            z-index: 1;
         }
 
-        /* Custom Cursor Dot */
         .cursor {
             position: absolute;
             width: 10px;
             height: 10px;
             background-color: red;
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%) rotate(0deg);
             pointer-events: none;
+            clip-path: circle(50%);
+        }
+        
+        .triangle {
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
         }
     </style>
 </head>
@@ -97,25 +103,27 @@
     <div class="cursor" id="cursor"></div>
     
     <script>
-        // List of artwork images
         const artworks = [
             "1.jpg", "nine.jpg", "one.jpg", "IMG_20180402_143642_071.jpg", "image_248.jpg", 
             "image_257.jpg", "image_265.jpg", "image_269.jpg", "image_67.jpg"
         ];
         
-        // Set a random background image
         const background = document.querySelector(".background");
         const randomImage = artworks[Math.floor(Math.random() * artworks.length)];
         background.style.backgroundImage = `url(${randomImage})`;
 
-        // Cursor functionality
         const cursor = document.getElementById("cursor");
         document.addEventListener("mousemove", (e) => {
             cursor.style.left = `${e.clientX}px`;
             cursor.style.top = `${e.clientY}px`;
         });
+        
+        document.addEventListener("touchmove", (e) => {
+            let touch = e.touches[0];
+            cursor.style.left = `${touch.clientX}px`;
+            cursor.style.top = `${touch.clientY}px`;
+        }, { passive: false });
 
-        // Canvas Drawing Functionality
         const canvas = document.getElementById("drawCanvas");
         const ctx = canvas.getContext("2d");
         canvas.width = window.innerWidth;
@@ -127,8 +135,7 @@
         function getRandomColor() {
             const colors = [
                 "#b0a999", "#c3b091", "#a89f91", "#978b82", "#d8c3a5", "#a68b76", "#b9a394", 
-                "#d8a5a5", "#a5b8d8", "#c7a037", "#808000", "#8b3a3a", /* Additional colors */
-                "#ff5733", "#33ff57", "#3357ff", "#ff33a8", "#a833ff", "#33fff5"
+                "#d8a5a5", "#a5b8d8", "#c7a037", "#808000", "#8b3a3a"
             ];
             return colors[Math.floor(Math.random() * colors.length)];
         }
@@ -138,43 +145,14 @@
         cursor.style.width = `${cursorSize}px`;
         cursor.style.height = `${cursorSize}px`;
 
-        function startDrawing(e) {
-            drawing = true;
-            ctx.beginPath();
-            ctx.moveTo(e.clientX, e.clientY);
-        }
-        
-        function draw(e) {
-            if (!drawing) return;
-            ctx.lineTo(e.clientX, e.clientY);
-            ctx.strokeStyle = cursorColor;
-            ctx.lineWidth = cursorSize;
-            ctx.lineCap = "round";
-            ctx.globalAlpha = 0.5; // Set transparency
-            ctx.stroke();
-
-            setTimeout(() => {
-                ctx.globalAlpha = 0.05; // Gradually fade out over time
-                ctx.stroke();
-            }, 60000);
-        }
-        
-        function stopDrawing() {
-            drawing = false;
-        }
-        
-        function changeCursor() {
-            cursorSize = Math.random() * 20 + 5;
-            cursorColor = getRandomColor();
-            cursor.style.backgroundColor = cursorColor;
-            cursor.style.width = `${cursorSize}px`;
-            cursor.style.height = `${cursorSize}px`;
-        }
-        
-        window.addEventListener("mousedown", startDrawing);
-        window.addEventListener("mousemove", draw);
-        window.addEventListener("mouseup", stopDrawing);
-        window.addEventListener("click", changeCursor);
+        document.querySelectorAll(".menu a").forEach(link => {
+            link.addEventListener("mouseover", () => {
+                cursor.classList.add("triangle");
+            });
+            link.addEventListener("mouseleave", () => {
+                cursor.classList.remove("triangle");
+            });
+        });
     </script>
 </body>
 </html>
