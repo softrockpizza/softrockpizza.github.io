@@ -10,6 +10,7 @@
             margin: 0;
             font-family: "Fira Sans", sans-serif;
             overflow: hidden;
+            cursor: none; /* Hide default cursor */
         }
         
         /* Background Image */
@@ -28,7 +29,7 @@
             position: absolute;
             top: 20px;
             left: 20px;
-            font-size: 12px;
+            font-size: 14px;
             font-weight: bold;
             text-align: left;
             line-height: 1.2;
@@ -51,23 +52,28 @@
             height: 100vh;
             pointer-events: none;
         }
+
+        /* Custom Cursor Dot */
+        .cursor {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: red;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
     </style>
 </head>
 <body>
     <div class="background"></div>
     <div class="name">adam<br>stoves</div>
     <canvas id="drawCanvas"></canvas>
+    <div class="cursor" id="cursor"></div>
     
     <script>
-        // List of artwork images
-        const artworks = [
-    '1.jpg'
-];
-// Add your artwork image URLs here
-        ;
-        
-        // Randomly select a background image
-        document.querySelector('.background').style.backgroundImage = `url("${artworks[Math.floor(Math.random() * artworks.length)]}")`;
+        // Cursor Element
+        const cursor = document.getElementById("cursor");
         
         // Canvas Drawing Functionality
         const canvas = document.getElementById("drawCanvas");
@@ -77,9 +83,19 @@
         
         let drawing = false;
         let cursorSize = Math.random() * 10 + 5;
-        let cursorColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
         
-        document.body.style.cursor = "none";
+        function getDustyColor() {
+            const dustyColors = [
+                "#b0a999", "#c3b091", "#a89f91", "#978b82", "#d8c3a5", "#a68b76", "#b9a394"
+            ];
+            return dustyColors[Math.floor(Math.random() * dustyColors.length)];
+        }
+        
+        let cursorColor = getDustyColor();
+        
+        cursor.style.backgroundColor = cursorColor;
+        cursor.style.width = `${cursorSize}px`;
+        cursor.style.height = `${cursorSize}px`;
         
         function startDrawing(e) {
             drawing = true;
@@ -103,7 +119,10 @@
         function changeCursor(e) {
             if (e.type === "click") {
                 cursorSize = Math.random() * 20 + 5;
-                cursorColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                cursorColor = getDustyColor();
+                cursor.style.backgroundColor = cursorColor;
+                cursor.style.width = `${cursorSize}px`;
+                cursor.style.height = `${cursorSize}px`;
             }
         }
         
@@ -111,6 +130,12 @@
         window.addEventListener("mousemove", draw);
         window.addEventListener("mouseup", stopDrawing);
         window.addEventListener("click", changeCursor);
+        
+        // Move Cursor Dot
+        document.addEventListener("mousemove", (e) => {
+            cursor.style.left = `${e.clientX}px`;
+            cursor.style.top = `${e.clientY}px`;
+        });
     </script>
 </body>
 </html>
