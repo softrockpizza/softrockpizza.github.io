@@ -20,7 +20,7 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background-size: cover;
+            background-size: 200%; /* Zoomed-in effect */
             background-position: center;
         }
         
@@ -72,6 +72,16 @@
     <div class="cursor" id="cursor"></div>
     
     <script>
+        // List of artwork images
+        const artworks = [
+            "images/1.jpg", "images/nine.jpg", "images/one.jpg" // Add more as needed
+        ];
+        
+        // Set a random background image
+        const background = document.querySelector(".background");
+        const randomImage = artworks[Math.floor(Math.random() * artworks.length)];
+        background.style.backgroundImage = `url(${randomImage})`;
+        
         // Cursor Element
         const cursor = document.getElementById("cursor");
         
@@ -86,7 +96,9 @@
         
         function getDustyColor() {
             const dustyColors = [
-                "#b0a999", "#c3b091", "#a89f91", "#978b82", "#d8c3a5", "#a68b76", "#b9a394"
+                "#b0a999", "#c3b091", "#a89f91", "#978b82", "#d8c3a5", "#a68b76", "#b9a394", 
+                "#d8a5a5", /* Dusty Pink */ "#a5b8d8", /* Dusty Blue */ "#c7a037", /* Yellow Ochre */ 
+                "#808000", /* Olive Green */ "#8b3a3a" /* Rust Red */
             ];
             return dustyColors[Math.floor(Math.random() * dustyColors.length)];
         }
