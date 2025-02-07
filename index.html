@@ -26,7 +26,8 @@
         
         .first-name, .last-name {
             display: block;
-            animation: letterSpacing 6s infinite alternate;
+            white-space: nowrap;
+            animation: letterSpacing 120s infinite alternate;
         }
         
         @keyframes fadeDissolve {
@@ -37,8 +38,11 @@
         
         @keyframes letterSpacing {
             0% { letter-spacing: 0px; transform: translateX(0); }
-            50% { letter-spacing: 10px; transform: translateX(5px); }
-            100% { letter-spacing: -2px; transform: translateX(-3px); }
+            20% { letter-spacing: 50px; transform: translateX(10vw); }
+            40% { letter-spacing: -10px; transform: translateX(-15vw); }
+            60% { letter-spacing: 100px; transform: translateX(30vw); }
+            80% { letter-spacing: 20px; transform: translateX(-5vw); }
+            100% { letter-spacing: -5px; transform: translateX(45vw); }
         }
     </style>
 </head>
