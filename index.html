@@ -19,7 +19,14 @@
             font-size: 24px;
             font-weight: bold;
             opacity: 0;
-            animation: fadeDissolve 12s infinite alternate;
+            text-align: left;
+            line-height: 1.2;
+            animation: fadeDissolve 60s infinite alternate;
+        }
+        
+        .first-name, .last-name {
+            display: block;
+            animation: letterSpacing 6s infinite alternate;
         }
         
         @keyframes fadeDissolve {
@@ -27,9 +34,18 @@
             50% { opacity: 1; filter: blur(0); transform: scale(1); }
             100% { opacity: 0; filter: blur(5px); transform: scale(0.9); }
         }
+        
+        @keyframes letterSpacing {
+            0% { letter-spacing: 0px; transform: translateX(0); }
+            50% { letter-spacing: 10px; transform: translateX(5px); }
+            100% { letter-spacing: -2px; transform: translateX(-3px); }
+        }
     </style>
 </head>
 <body>
-    <div class="name">adam stoves</div>
+    <div class="name">
+        <span class="first-name">adam</span>
+        <span class="last-name">stoves</span>
+    </div>
 </body>
 </html>
