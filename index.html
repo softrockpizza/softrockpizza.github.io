@@ -8,42 +8,107 @@
         body {
             background-color: #d3d3d3; /* Light gray background */
             margin: 0;
-            font-family: Helvetica, sans-serif;
+            font-family: "Fira Sans", sans-serif;
             overflow: hidden;
         }
         
+        /* Background Image */
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        /* Name Styling */
         .name {
             position: absolute;
             top: 20px;
             left: 20px;
             font-size: 24px;
             font-weight: bold;
-            opacity: 1;
             text-align: left;
             line-height: 1.2;
+            opacity: 0;
+            animation: fadeInOut 120s infinite alternate;
         }
         
-        .first-name, .last-name {
-            display: inline-block;
-            white-space: nowrap;
-            position: relative;
-            animation: scatterFade 120s forwards;
+        @keyframes fadeInOut {
+            0% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; }
         }
         
-        @keyframes scatterFade {
-            0% { opacity: 1; transform: translate(0, 0); }
-            20% { transform: translate(10vw, -5vh) rotate(10deg); }
-            40% { transform: translate(-15vw, 10vh) rotate(-15deg); }
-            60% { transform: translate(30vw, -10vh) rotate(20deg); }
-            80% { transform: translate(-5vw, 15vh) rotate(-25deg); opacity: 0.5; }
-            100% { transform: translate(50vw, 25vh) rotate(30deg); opacity: 0; }
+        /* Canvas for Drawing */
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
         }
     </style>
 </head>
 <body>
-    <div class="name">
-        <span class="first-name">adam</span>
-        <span class="last-name">stoves</span>
-    </div>
+    <div class="background"></div>
+    <div class="name">adam<br>stoves</div>
+    <canvas id="drawCanvas"></canvas>
+    
+    <script>
+        // List of artwork images
+        const artworks = [
+            'art1.jpg', 'art2.jpg', 'art3.jpg' // Add your artwork image URLs here
+        ];
+        
+        // Randomly select a background image
+        document.querySelector('.background').style.backgroundImage = `url(${artworks[Math.floor(Math.random() * artworks.length)]})`;
+        
+        // Canvas Drawing Functionality
+        const canvas = document.getElementById("drawCanvas");
+        const ctx = canvas.getContext("2d");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        let drawing = false;
+        let cursorSize = Math.random() * 10 + 5;
+        let cursorColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+        
+        document.body.style.cursor = "none";
+        
+        function startDrawing(e) {
+            drawing = true;
+            ctx.beginPath();
+            ctx.moveTo(e.clientX, e.clientY);
+        }
+        
+        function draw(e) {
+            if (!drawing) return;
+            ctx.lineTo(e.clientX, e.clientY);
+            ctx.strokeStyle = cursorColor;
+            ctx.lineWidth = cursorSize;
+            ctx.lineCap = "round";
+            ctx.stroke();
+        }
+        
+        function stopDrawing() {
+            drawing = false;
+        }
+        
+        function changeCursor(e) {
+            if (e.type === "click") {
+                cursorSize = Math.random() * 20 + 5;
+                cursorColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+            }
+        }
+        
+        window.addEventListener("mousedown", startDrawing);
+        window.addEventListener("mousemove", draw);
+        window.addEventListener("mouseup", stopDrawing);
+        window.addEventListener("click", changeCursor);
+    </script>
 </body>
 </html>
