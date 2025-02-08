@@ -114,17 +114,19 @@
 
         const cursor = document.getElementById("cursor");
         let isClicking = false;
+        let currentColor = getRandomColor();
 
         document.addEventListener("mousemove", (e) => {
             cursor.style.left = `${e.clientX}px`;
             cursor.style.top = `${e.clientY}px`;
             if (isClicking) {
-                drawTrail(e.clientX, e.clientY, getRandomColor(), 10);
+                drawTrail(e.clientX, e.clientY, currentColor, 5);
             }
         });
         
         document.addEventListener("mousedown", () => {
             isClicking = true;
+            currentColor = getRandomColor();
             changeCursorAppearance();
         });
 
@@ -137,12 +139,13 @@
             cursor.style.left = `${touch.clientX}px`;
             cursor.style.top = `${touch.clientY}px`;
             if (isClicking) {
-                drawTrail(touch.clientX, touch.clientY, getRandomColor(), 10);
+                drawTrail(touch.clientX, touch.clientY, currentColor, 5);
             }
         }, { passive: false });
 
         document.addEventListener("touchstart", () => {
             isClicking = true;
+            currentColor = getRandomColor();
             changeCursorAppearance();
         });
         
@@ -164,17 +167,19 @@
         }
 
         function changeCursorAppearance() {
-            cursor.style.backgroundColor = getRandomColor();
+            cursor.style.backgroundColor = currentColor;
             cursor.style.width = `${Math.random() * 20 + 10}px`;
             cursor.style.height = cursor.style.width;
         }
 
         function drawTrail(x, y, color, size) {
-            ctx.fillStyle = color;
+            ctx.strokeStyle = color;
             ctx.globalAlpha = 0.5;
+            ctx.lineWidth = size;
+            ctx.lineTo(x, y);
+            ctx.stroke();
             ctx.beginPath();
-            ctx.arc(x, y, size / 2, 0, Math.PI * 2);
-            ctx.fill();
+            ctx.moveTo(x, y);
         }
     </script>
 </body>
