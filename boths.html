@@ -1,1 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>boths</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&display=swap">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><circle cx='8' cy='8' r='6' fill='gray'/></svg>">
+    <style>
+        body {
+            background-color: #d3d3d3;
+            margin: 0;
+            font-family: "IBM Plex Mono", monospace;
+            color: navy;
+            overflow: auto;
+            touch-action: manipulation;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            width: 100vw;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="32" height="32"><line x1="10" y1="90" x2="90" y2="10" stroke="%238C6A29" stroke-width="10"/></svg>') 16 16, auto;
+        }
+        
+        .menu {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            font-size: 30px;
+            font-weight: bold;
+            color: navy;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 10;
+        }
+        
+        .menu a {
+            text-decoration: none;
+            color: navy;
+            cursor: pointer;
+            padding: 5px;
+            transition: background 0.3s, color 0.3s;
+        }
+        
+        .menu a:hover {
+            color: #c7a037;
+            background: black;
+        }
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            width: 80%;
+            margin-top: 100px;
+        }
+
+        .image-grid img {
+            width: 100%;
+            height: auto;
+            filter: blur(10px);
+            transition: filter 0.5s ease-in-out;
+        }
+
+        .image-grid img:hover {
+            filter: blur(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="menu">
+        <a href="index.html">home</a>
+        <a href="ragbag.html">ragbag</a>
+        <a href="words.html">words</a>
+        <a href="reachme.html">reach me</a>
+    </div>
+
+    <div class="image-grid">
+        <img src="pwhm7_f.jpg" alt="Image 1">
+        <img src="pwhm7_b.jpg" alt="Image 2">
+        <img src="p_w_h_m.1f.jpg" alt="Image 3">
+    </div>
+</body>
+</html>
 
