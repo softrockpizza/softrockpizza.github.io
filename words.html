@@ -19,6 +19,7 @@
             color: navy;
             overflow: hidden;
             cursor: none;
+            touch-action: manipulation;
         }
         
         .menu {
@@ -50,10 +51,22 @@
             position: absolute;
             width: 20px;
             height: 20px;
-            background: rust;
-            border-radius: 50%;
+            background: none;
+            border: 2px solid rust;
             transform: translate(-50%, -50%);
             pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: rust;
+        }
+
+        .click-text {
+            position: absolute;
+            font-size: 16px;
+            color: black;
+            top: 30px;
         }
 
         .poem-container {
@@ -74,9 +87,10 @@
             transition: opacity 0.5s, transform 0.5s;
         }
 
-        .redacted {
+        .redacted span {
             background: black;
             color: black;
+            padding: 2px;
         }
 
         #click-text {
@@ -86,6 +100,8 @@
             transform: translate(-50%, 100px);
             font-size: 20px;
             color: black;
+            opacity: 1;
+            transition: opacity 1s;
         }
     </style>
 </head>
@@ -93,22 +109,37 @@
     <div class="menu">
         <a href="index.html">home</a>
         <a href="ragbag.html">ragbag</a>
-        <a href="words.html">words</a>
         <a href="boths.html">boths</a>
+        <a href="reachme.html">reach me</a>
     </div>
-    <div class="cursor"></div>
+    <div class="cursor">
+        <div class="click-text">click for new</div>
+    </div>
     <div id="click-text">click for new</div>
     <div class="poem-container">
         <div class="poem" id="poem1">aura manusia looks super natural <br> in the crick-necked creek of the dead<br> paints holy<br> clusters in squeezed quick final push face<br> just finished testing the waters of making peace <br> for an outline one day will wake up<br> all made up<br> but not today<br> the _____ stream is for wading</div>
-        <div class="poem redacted" id="poem2">dialects first<br>they end.<br>bye my civilian accents<br>my imported<br><br>into day so moves<br>difference<br>some english goons<br>their parts evolving<br>the poor lapses.<br>ellipses.<br><br>cultural remains<br>quickly morph<br><br>in woman is<br>discovered a middle silent desert<br>obscured and therein<br>loved<br><br>i start rather squealed<br>off</div>
-        <div class="poem redacted" id="poem3">Figure 1.<br>where a picture of the divine is emerging it looks like a rock slide of the blackest black<br>one hears in the cascade, an adage: it is important to be [characteristic]<br>from meteoric to anabolistic <br>& so our divine, sour, end<br><br>jigsaw rotunda neurotic<br>draped heavy & long over eulogy is a teeming mass, teaming-up, as seen in Figure 2, hot eulogy<br>above-&-below exchange is fluid like a toad becomes a sailor is a toaster yet again<br>& it is the picture that forces & sews the eye shut that does its spelling<br>now if we step through...</div>
-        <div class="poem redacted" id="poem4">robot tells me to hug it<br>globs honey on my boo<br>sweetheart’s hardon sightsees, writes love notes<br>phone lines can’t cope with its bylines<br><br>robot necessarily fingerprints me<br>asks how can i sleep<br>& insists on calling<br>we make out on cctv<br><br>according to data i’m always looking down & that’s heartbreaking<br>then robot brushes my hair & i’m off</div>
-        <div class="poem redacted" id="poem5">dear white tiger in barbed wire<br>did you know all bubbles pop, popes die<br>both mind & perpetual motion come to a stop<br>plus, probably cancer is hidden within me<br><br>why words aren’t a problem is a mystery<br>wait, they are<br>why mystery isn’t a problem is just words<br>everything fits & parts<br>& slowly lops off the head of my son<br><br>no one lies<br>here’s the building i live in, and then there’s the graveyard<br>over which is which i still get confused<br>besides, what could be felt by the ungrowth of a wednesday?<br><br>narrow fate hangs in the chamber<br>soft clamor, a mosquito in amber<br>relax, my nerves. everything bathes<br>no enemy worse than the hell i foresee</div>
-        <div class="poem redacted" id="poem6">███████████████</div>
-        <div class="poem redacted" id="poem7">███████████████</div>
-        <div class="poem redacted" id="poem8">███████████████</div>
-        <div class="poem redacted" id="poem9">███████████████</div>
-        <div class="poem redacted" id="poem10">███████████████</div>
+        <div class="poem redacted" id="poem2"><span>dialects first</span><br><span>they end.</span><br><span>bye my civilian accents</span><br><span>my imported</span><br><br><span>into day so moves</span><br><span>difference</span><br><span>some english goons</span><br><span>their parts evolving</span><br><span>the poor lapses.</span><br><span>ellipses.</span></div>
+        <div class="poem redacted" id="poem3"><span>Figure 1.</span><br><span>where a picture of the divine is emerging it looks like a rock slide of the blackest black</span><br><span>one hears in the cascade, an adage: it is important to be [characteristic]</span><br><span>from meteoric to anabolistic</span><br><span>& so our divine, sour, end</span></div>
+        <div class="poem redacted" id="poem4"><span>robot tells me to hug it</span><br><span>globs honey on my boo</span><br><span>sweetheart’s hardon sightsees, writes love notes</span><br><span>phone lines can’t cope with its bylines</span></div>
+        <div class="poem redacted" id="poem5"><span>dear white tiger in barbed wire</span><br><span>did you know all bubbles pop, popes die</span><br><span>both mind & perpetual motion come to a stop</span><br><span>plus, probably cancer is hidden within me</span></div>
     </div>
+
+    <script>
+        document.addEventListener("mousemove", (e) => {
+            const cursor = document.querySelector(".cursor");
+            cursor.style.left = `${e.clientX}px`;
+            cursor.style.top = `${e.clientY}px`;
+        });
+
+        document.addEventListener("touchstart", (e) => {
+            const cursor = document.querySelector(".cursor");
+            cursor.style.left = `${e.touches[0].clientX}px`;
+            cursor.style.top = `${e.touches[0].clientY}px`;
+        });
+        
+        setTimeout(() => {
+            document.getElementById("click-text").style.opacity = "0";
+        }, 10000);
+    </script>
 </body>
 </html>
