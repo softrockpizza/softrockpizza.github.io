@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>words</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&display=swap">
+    <link rel="icon" href="gray-circle-favicon.ico" type="image/x-icon">
     <style>
         body {
             background-color: #d3d3d3;
@@ -72,14 +73,14 @@
 
         .poem {
             font-size: 14px;
-            text-align: center;
+            text-align: left;
             padding: 10px;
             width: 30vw;
             height: auto;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
         }
     </style>
 </head>
@@ -113,18 +114,6 @@
                 grid.appendChild(poemDiv);
             }
         }
-
-        document.addEventListener("mousemove", (e) => {
-            const cursor = document.querySelector(".cursor");
-            cursor.style.left = `${e.clientX}px`;
-            cursor.style.top = `${e.clientY}px`;
-        });
-
-        document.addEventListener("touchmove", (e) => {
-            const cursor = document.querySelector(".cursor");
-            cursor.style.left = `${e.touches[0].clientX}px`;
-            cursor.style.top = `${e.touches[0].clientY}px`;
-        });
 
         generatePoems();
     </script>
