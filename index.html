@@ -84,10 +84,13 @@
 
         .cursor {
             position: absolute;
-            transform: translate(-50%, -50%) rotate(0deg);
-            pointer-events: none;
-            clip-path: circle(50%);
+            width: 10px;
+            height: 10px;
             background-color: #c7a037;
+            border-radius: 50%;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            transition: width 0.2s, height 0.2s, background-color 0.2s;
         }
         
     </style>
@@ -141,27 +144,9 @@
             isClicking = false;
         });
 
-        document.addEventListener("touchmove", (e) => {
-            let touch = e.touches[0];
-            cursor.style.left = `${touch.clientX}px`;
-            cursor.style.top = `${touch.clientY}px`;
-            if (isClicking) {
-                drawTrail(touch.clientX, touch.clientY);
-            }
-        }, { passive: false });
-
-        document.addEventListener("touchstart", () => {
-            isClicking = true;
-            updateCursorAppearance();
-        });
-        
-        document.addEventListener("touchend", () => {
-            isClicking = false;
-        });
-
         function updateCursorAppearance() {
             currentColor = getRandomColor();
-            currentSize = Math.floor(Math.random() * 200) + 5;
+            currentSize = Math.floor(Math.random() * 100) + 5; // Reduced max size
             cursor.style.backgroundColor = currentColor;
             cursor.style.width = `${currentSize}px`;
             cursor.style.height = `${currentSize}px`;
