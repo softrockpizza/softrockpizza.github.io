@@ -75,11 +75,12 @@
             width: 100%;
             height: auto;
             filter: blur(10px);
-            transition: filter 0.5s ease-in-out;
+            transition: filter 0.5s ease-in-out, transform 0.5s ease-in-out;
         }
 
-        .image-grid img:hover {
+        .image-grid img:hover, .image-grid img:active {
             filter: blur(0);
+            transform: scale(1.1);
         }
     </style>
 </head>
