@@ -13,7 +13,6 @@
             font-family: "IBM Plex Mono", monospace;
             color: navy;
             overflow: auto;
-            cursor: none;
             touch-action: manipulation;
             position: relative;
             display: flex;
@@ -50,12 +49,13 @@
         }
 
         .cursor {
-            position: absolute;
+            position: fixed;
             width: 20px;
             height: 20px;
             background-color: #b7410e;
             transform: translate(-50%, -50%);
             pointer-events: none;
+            z-index: 1000;
         }
 
         .poem-container {
@@ -99,7 +99,8 @@
             `aura manusia looks super natural \n in the crick-necked creek of the dead\n  paints holy\n   clusters in squeezed quick final push face\n    just finished testing the waters of making peace \n     for an outline one day will wake up\n      all made up\n       but not today\n        the _____ stream is for wading`,
             `dialects first\nthey end. \nbye my civilian accents       \n                  my imported\n\ninto day so moves     \n              difference\nsome english goons \ntheir parts evolving\nthe poor lapses.\nellipses.\n\ncultural remains\nquickly morph\n\nin woman is \ndiscovered a middle silent desert\nobscured and therein \nloved\n\ni start rather squealed \noff`,
             `most pictures, you see, of photographs of ‘people talk,’\nquite frankly, by a painting of the picture, you say here’s a painting but it’s a picture, or it represents but it doesn’t represent,,\ntwo different therapies, there was a picture of a woman who had burgers and children, and they put in an element of stock,, people act if people aren’t\n\nI came to see how things knock down, the way you would respond to a picture of a monster, & everybody said, you should be abstracter in the future.\n\nright as rain over wrong! in other words,\npeople of tonight’s lengthy, imposed visit, even, simply,\nthe audacity of being mindful, the un-elected,\nproves I have nothing to prove.\n\nthe claim that the little mind is American is a doctor’s shadow\nthey were almost monsters, third generation, what gave structures pressure,\nthe caps of a figure, in a certain kind of way,\nbecause figures will do what you can see, what they were, that they were,\nthe elephant, the alphabet,,\n\nworker where there were Daguerre, a predator,\nregistering movement. it was a movement, was sort of the last overworked movement forward, the thought of, the thought dot, is not big and clear,\n\nthey were almost monsters, third generation abstract specialists’ sons,\nwhat made structures pressure didn’t have the idea of letting yourself gold,\nmarketed,, maneuvered,, directing any traffic`,
-            `robot tells me to hug it\nglobs honey on my boo\nsweetheart’s hardon sightsees, writes love notes\nphone lines can’t cope with its bylines\n\nrobot necessarily fingerprints me\nasks how can i sleep\n& insists on calling\nwe make out on cctv\n\naccording to data i’m always looking down & that’s heartbreaking\nthen robot brushes my hair & i’m off`
+            `robot tells me to hug it\nglobs honey on my boo\nsweetheart’s hardon sightsees, writes love notes\nphone lines can’t cope with its bylines\n\nrobot necessarily fingerprints me\nasks how can i sleep\n& insists on calling\nwe make out on cctv\n\naccording to data i’m always looking down & that’s heartbreaking\nthen robot brushes my hair & i’m off`,
+            `on a bluff is a red tomato\na meter away\n& the jungle deletes me\non the rabbit-hole goes\na lie down\n& shapes to motion\nact dumb in affect\n\non niches, sea creatures\na quasar, saccades\n& how sex often flies\non blue, on AT&T\nall mimics\n& moreover\nlimits one, two, see\n\non bold conflations\nabout madness\n& hoodwinking \nor how data structure \napproximates me\n& persists\nmust be logic or quit\n\non perception, it's not\na wrong language\n& to spare the mess \non balance\nall models are wrong\n& delete my secret code.\nin effect`
         ];
 
         function generatePoems() {
@@ -113,6 +114,12 @@
                 grid.appendChild(poemDiv);
             }
         }
+
+        document.addEventListener("mousemove", (e) => {
+            const cursor = document.querySelector(".cursor");
+            cursor.style.left = `${e.clientX}px`;
+            cursor.style.top = `${e.clientY}px`;
+        });
 
         generatePoems();
     </script>
