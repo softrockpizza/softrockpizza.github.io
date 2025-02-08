@@ -5,12 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>adam stoves</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><circle cx='8' cy='8' r='6' fill='gray'/></svg>">
-    <link href="https://fonts.googleapis.com/css2?family=Laro+Soft:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
     <style>
         body {
             background-color: #d3d3d3;
             margin: 0;
-            font-family: "Laro Soft", sans-serif;
+            font-family: "Bebas Neue", sans-serif;
             overflow: hidden;
             cursor: none;
             touch-action: none;
@@ -128,10 +128,12 @@
             isClicking = true;
             currentColor = getRandomColor();
             changeCursorAppearance();
+            ctx.beginPath();
         });
 
         document.addEventListener("mouseup", () => {
             isClicking = false;
+            ctx.beginPath();
         });
 
         document.addEventListener("touchmove", (e) => {
@@ -147,10 +149,12 @@
             isClicking = true;
             currentColor = getRandomColor();
             changeCursorAppearance();
+            ctx.beginPath();
         });
         
         document.addEventListener("touchend", () => {
             isClicking = false;
+            ctx.beginPath();
         });
 
         const canvas = document.getElementById("drawCanvas");
@@ -164,22 +168,6 @@
                 "#d8a5a5", "#a5b8d8", "#c7a037", "#808000", "#8b3a3a"
             ];
             return colors[Math.floor(Math.random() * colors.length)];
-        }
-
-        function changeCursorAppearance() {
-            cursor.style.backgroundColor = currentColor;
-            cursor.style.width = `${Math.random() * 20 + 10}px`;
-            cursor.style.height = cursor.style.width;
-        }
-
-        function drawTrail(x, y, color, size) {
-            ctx.strokeStyle = color;
-            ctx.globalAlpha = 0.5;
-            ctx.lineWidth = size;
-            ctx.lineTo(x, y);
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.moveTo(x, y);
         }
     </script>
 </body>
