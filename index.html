@@ -92,9 +92,6 @@
             background-color: #c7a037;
         }
         
-        .triangle {
-            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-        }
     </style>
 </head>
 <body>
@@ -119,55 +116,43 @@
         background.style.backgroundImage = `url(${randomImage})`;
 
         const cursor = document.getElementById("cursor");
+        const canvas = document.getElementById("drawCanvas");
+        const ctx = canvas.getContext("2d");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
         let isClicking = false;
         let currentColor = getRandomColor();
+        let currentSize = 10;
         cursor.style.backgroundColor = currentColor;
 
         document.addEventListener("mousemove", (e) => {
             cursor.style.left = `${e.clientX}px`;
             cursor.style.top = `${e.clientY}px`;
             if (isClicking) {
-                drawTrail(e.clientX, e.clientY, currentColor, 5);
+                drawTrail(e.clientX, e.clientY);
             }
         });
         
         document.addEventListener("mousedown", () => {
             isClicking = true;
             currentColor = getRandomColor();
+            currentSize = Math.floor(Math.random() * 15) + 5;
             cursor.style.backgroundColor = currentColor;
-            ctx.beginPath();
+            cursor.style.width = `${currentSize}px`;
+            cursor.style.height = `${currentSize}px`;
         });
 
         document.addEventListener("mouseup", () => {
             isClicking = false;
-            ctx.beginPath();
         });
 
-        document.addEventListener("touchmove", (e) => {
-            let touch = e.touches[0];
-            cursor.style.left = `${touch.clientX}px`;
-            cursor.style.top = `${touch.clientY}px`;
-            if (isClicking) {
-                drawTrail(touch.clientX, touch.clientY, currentColor, 5);
-            }
-        }, { passive: false });
-
-        document.addEventListener("touchstart", () => {
-            isClicking = true;
-            currentColor = getRandomColor();
-            cursor.style.backgroundColor = currentColor;
+        function drawTrail(x, y) {
+            ctx.fillStyle = currentColor;
             ctx.beginPath();
-        });
-        
-        document.addEventListener("touchend", () => {
-            isClicking = false;
-            ctx.beginPath();
-        });
-
-        const canvas = document.getElementById("drawCanvas");
-        const ctx = canvas.getContext("2d");
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+            ctx.arc(x, y, currentSize / 2, 0, Math.PI * 2);
+            ctx.fill();
+        }
         
         function getRandomColor() {
             const colors = [
