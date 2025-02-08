@@ -5,12 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>adam stoves</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><circle cx='8' cy='8' r='6' fill='gray'/></svg>">
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&display=swap" rel="stylesheet">
     <style>
         body {
             background-color: #d3d3d3;
             margin: 0;
-            font-family: "Bebas Neue", sans-serif;
+            font-family: "IBM Plex Mono", monospace;
             overflow: hidden;
             cursor: none;
             touch-action: none;
@@ -63,6 +63,13 @@
             cursor: pointer;
             position: relative;
             z-index: 3;
+            padding: 5px;
+            transition: background 0.3s, color 0.3s;
+        }
+        
+        .menu a:hover {
+            background: black;
+            color: #c7a037;
         }
         
         canvas {
