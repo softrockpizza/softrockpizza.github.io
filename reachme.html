@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reach Me</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><circle cx='8' cy='8' r='6' fill='gray'/></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #d3d3d3;
+            margin: 0;
+            font-family: "Bebas Neue", sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            text-align: center;
+        }
+        
+        .menu {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 30px;
+            font-weight: bold;
+            color: #c7a037;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .menu a {
+            text-decoration: none;
+            color: inherit;
+            cursor: pointer;
+        }
+        
+        .reach-me {
+            font-size: 100px;
+            font-weight: bold;
+            color: #c7a037;
+            margin-bottom: 20px;
+        }
+        
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .contact-form textarea {
+            width: 300px;
+            height: 100px;
+            font-size: 18px;
+            padding: 10px;
+            border: 2px solid #c7a037;
+            resize: none;
+            font-family: "Bebas Neue", sans-serif;
+        }
+        
+        .contact-form button {
+            font-size: 24px;
+            background-color: #c7a037;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-family: "Bebas Neue", sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu">
+        <a href="index.html">Home</a>
+        <a href="ragbag.html">Ragbag</a>
+        <a href="words.html">Words</a>
+        <a href="boths.html">Boths</a>
+    </div>
+    <div class="reach-me">Reach Me</div>
+    <form class="contact-form" action="https://formspree.io/f/https://formspree.io/f/mdkadwka" method="POST">
+        <textarea name="message" placeholder="add words"></textarea>
+        <button type="submit">Reach Me</button>
+    </form>
+</body>
+</html>
