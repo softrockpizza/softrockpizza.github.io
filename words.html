@@ -11,13 +11,15 @@
             margin: 0;
             font-family: "IBM Plex Mono", monospace;
             color: navy;
-            overflow: hidden;
+            overflow: auto;
             cursor: none;
             touch-action: manipulation;
             position: relative;
             display: flex;
             flex-direction: column;
             align-items: center;
+            height: 100vh;
+            width: 100vw;
         }
         
         .menu {
@@ -72,26 +74,23 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            grid-template-rows: repeat(3, 1fr);
-            gap: 10px;
-            width: 80vw;
-            height: 60vh;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            width: 300vw;
+            height: 300vh;
         }
 
         .poem {
             font-size: 24px;
             text-align: center;
             padding: 10px;
+            width: 30vw;
+            height: 30vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
-        }
-
-        .center {
-            grid-column: 2;
-            grid-row: 2;
+            align-items: center;
         }
 
         .redacted span {
@@ -139,16 +138,12 @@
             const grid = document.getElementById("poemGrid");
             grid.innerHTML = "";
             
-            for (let i = 0; i < 9; i++) {
+            for (let i = 0; i < 25; i++) {
                 const poemDiv = document.createElement("div");
                 poemDiv.classList.add("poem");
-                if (i === 4) {
-                    poemDiv.classList.add("center");
-                    poemDiv.innerHTML = poems[0];
-                } else {
-                    poemDiv.classList.add("redacted");
-                    poemDiv.innerHTML = poems[Math.floor(Math.random() * poems.length)].split(" ").map(word => `<span>${word}</span>`).join(" ");
-                }
+                poemDiv.innerHTML = poems[i % poems.length].split(" ").map((word, index) =>
+                    index % 2 === 0 ? `<span>${word}</span>` : `<span style='background:black;color:black;'>${word}</span>`
+                ).join(" ");
                 grid.appendChild(poemDiv);
             }
         }
@@ -159,7 +154,7 @@
             cursor.style.top = `${e.clientY}px`;
         });
 
-        document.addEventListener("touchstart", (e) => {
+        document.addEventListener("touchmove", (e) => {
             const cursor = document.querySelector(".cursor");
             cursor.style.left = `${e.touches[0].clientX}px`;
             cursor.style.top = `${e.touches[0].clientY}px`;
