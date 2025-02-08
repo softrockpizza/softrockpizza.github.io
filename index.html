@@ -144,9 +144,27 @@
             isClicking = false;
         });
 
+        document.addEventListener("touchmove", (e) => {
+            let touch = e.touches[0];
+            cursor.style.left = `${touch.clientX}px`;
+            cursor.style.top = `${touch.clientY}px`;
+            if (isClicking) {
+                drawTrail(touch.clientX, touch.clientY);
+            }
+        });
+
+        document.addEventListener("touchstart", () => {
+            isClicking = true;
+            updateCursorAppearance();
+        });
+        
+        document.addEventListener("touchend", () => {
+            isClicking = false;
+        });
+
         function updateCursorAppearance() {
             currentColor = getRandomColor();
-            currentSize = Math.floor(Math.random() * 100) + 5; // Reduced max size
+            currentSize = Math.floor(Math.random() * 80) + 5; // Reduced max size
             cursor.style.backgroundColor = currentColor;
             cursor.style.width = `${currentSize}px`;
             cursor.style.height = `${currentSize}px`;
@@ -154,16 +172,14 @@
 
         function drawTrail(x, y) {
             ctx.fillStyle = currentColor;
+            ctx.globalAlpha = 1.0; // Make trail fully opaque
             ctx.beginPath();
             ctx.arc(x, y, currentSize / 2, 0, Math.PI * 2);
             ctx.fill();
         }
         
         function getRandomColor() {
-            const colors = [
-                "#b0a999", "#c3b091", "#a89f91", "#978b82", "#d8c3a5", "#a68b76", "#b9a394", 
-                "#d8a5a5", "#a5b8d8", "#c7a037", "#808000", "#8b3a3a"
-            ];
+            const colors = ["#b0a999", "#c3b091", "#a89f91", "#978b82", "#d8c3a5", "#a68b76", "#b9a394", "#d8a5a5", "#a5b8d8", "#c7a037", "#808000", "#8b3a3a"];
             return colors[Math.floor(Math.random() * colors.length)];
         }
     </script>
