@@ -36,10 +36,13 @@
             text-decoration: none;
             color: inherit;
             cursor: pointer;
+            padding: 5px;
+            transition: background 0.3s, color 0.3s;
         }
         
         .menu a:hover, .contact-form button:hover {
             color: #c7a037;
+            background: black;
         }
         
         .contact-form {
@@ -47,6 +50,7 @@
             flex-direction: column;
             align-items: center;
             gap: 10px;
+            transition: opacity 0.5s;
         }
         
         .contact-form textarea {
@@ -68,6 +72,11 @@
             cursor: pointer;
             font-family: "IBM Plex Mono", monospace;
         }
+        
+        .hidden {
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
     </style>
 </head>
 <body>
@@ -81,5 +90,17 @@
         <textarea name="message" placeholder="add words"></textarea>
         <button type="submit">reach me</button>
     </form>
+    
+    <script>
+        document.querySelector(".contact-form").addEventListener("submit", function(event) {
+            event.preventDefault();
+            let form = this;
+            form.classList.add("hidden");
+            setTimeout(() => {
+                form.submit();
+                form.classList.remove("hidden");
+            }, 3000);
+        });
+    </script>
 </body>
 </html>
