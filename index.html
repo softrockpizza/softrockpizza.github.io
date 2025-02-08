@@ -84,8 +84,6 @@
 
         .cursor {
             position: absolute;
-            width: 10px;
-            height: 10px;
             transform: translate(-50%, -50%) rotate(0deg);
             pointer-events: none;
             clip-path: circle(50%);
@@ -125,7 +123,7 @@
         let currentColor = getRandomColor();
         let currentSize = 10;
         cursor.style.backgroundColor = currentColor;
-
+        
         document.addEventListener("mousemove", (e) => {
             cursor.style.left = `${e.clientX}px`;
             cursor.style.top = `${e.clientY}px`;
@@ -136,16 +134,38 @@
         
         document.addEventListener("mousedown", () => {
             isClicking = true;
-            currentColor = getRandomColor();
-            currentSize = Math.floor(Math.random() * 15) + 5;
-            cursor.style.backgroundColor = currentColor;
-            cursor.style.width = `${currentSize}px`;
-            cursor.style.height = `${currentSize}px`;
+            updateCursorAppearance();
         });
 
         document.addEventListener("mouseup", () => {
             isClicking = false;
         });
+
+        document.addEventListener("touchmove", (e) => {
+            let touch = e.touches[0];
+            cursor.style.left = `${touch.clientX}px`;
+            cursor.style.top = `${touch.clientY}px`;
+            if (isClicking) {
+                drawTrail(touch.clientX, touch.clientY);
+            }
+        }, { passive: false });
+
+        document.addEventListener("touchstart", () => {
+            isClicking = true;
+            updateCursorAppearance();
+        });
+        
+        document.addEventListener("touchend", () => {
+            isClicking = false;
+        });
+
+        function updateCursorAppearance() {
+            currentColor = getRandomColor();
+            currentSize = Math.floor(Math.random() * 200) + 5;
+            cursor.style.backgroundColor = currentColor;
+            cursor.style.width = `${currentSize}px`;
+            cursor.style.height = `${currentSize}px`;
+        }
 
         function drawTrail(x, y) {
             ctx.fillStyle = currentColor;
