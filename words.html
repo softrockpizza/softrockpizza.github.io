@@ -10,21 +10,18 @@
             background-color: #d3d3d3;
             margin: 0;
             font-family: "IBM Plex Mono", monospace;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            flex-direction: column;
-            text-align: center;
             color: navy;
             overflow: hidden;
             cursor: none;
             touch-action: manipulation;
             position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         
         .menu {
-            position: absolute;
+            position: fixed;
             top: 20px;
             left: 20px;
             font-size: 30px;
@@ -33,6 +30,7 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
+            z-index: 10;
         }
         
         .menu a {
@@ -70,15 +68,16 @@
         }
 
         .poem-container {
-            position: relative;
-            width: 80vw;
-            height: 60vh;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             grid-template-rows: repeat(3, 1fr);
             gap: 10px;
-            justify-content: center;
-            align-items: center;
+            width: 80vw;
+            height: 60vh;
         }
 
         .poem {
@@ -125,15 +124,35 @@
         <div class="click-text">click for new</div>
     </div>
     <div id="click-text">click for new</div>
-    <div class="poem-container">
-        <div class="poem redacted" id="poem2"><span>dialects first</span><br><span>they end.</span></div>
-        <div class="poem redacted" id="poem3"><span>Figure 1.</span><br><span>where a picture of the divine is emerging...</span></div>
-        <div class="poem redacted" id="poem4"><span>robot tells me to hug it</span><br><span>globs honey on my boo</span></div>
-        <div class="poem center" id="poem1">aura manusia looks super natural <br> in the crick-necked creek of the dead...</div>
-        <div class="poem redacted" id="poem5"><span>dear white tiger in barbed wire</span><br><span>did you know all bubbles pop, popes die...</span></div>
-    </div>
+    <div class="poem-container" id="poemGrid"></div>
 
     <script>
+        const poems = [
+            "aura manusia looks super natural in the crick-necked creek of the dead...",
+            "dialects first they end...",
+            "Figure 1. where a picture of the divine is emerging...",
+            "robot tells me to hug it globs honey on my boo...",
+            "dear white tiger in barbed wire did you know all bubbles pop, popes die..."
+        ];
+
+        function generatePoems() {
+            const grid = document.getElementById("poemGrid");
+            grid.innerHTML = "";
+            
+            for (let i = 0; i < 9; i++) {
+                const poemDiv = document.createElement("div");
+                poemDiv.classList.add("poem");
+                if (i === 4) {
+                    poemDiv.classList.add("center");
+                    poemDiv.innerHTML = poems[0];
+                } else {
+                    poemDiv.classList.add("redacted");
+                    poemDiv.innerHTML = poems[Math.floor(Math.random() * poems.length)].split(" ").map(word => `<span>${word}</span>`).join(" ");
+                }
+                grid.appendChild(poemDiv);
+            }
+        }
+
         document.addEventListener("mousemove", (e) => {
             const cursor = document.querySelector(".cursor");
             cursor.style.left = `${e.clientX}px`;
@@ -145,10 +164,12 @@
             cursor.style.left = `${e.touches[0].clientX}px`;
             cursor.style.top = `${e.touches[0].clientY}px`;
         });
-        
+
         setTimeout(() => {
             document.getElementById("click-text").style.opacity = "0";
         }, 10000);
+
+        generatePoems();
     </script>
 </body>
 </html>
