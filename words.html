@@ -20,6 +20,7 @@
             overflow: hidden;
             cursor: none;
             touch-action: manipulation;
+            position: relative;
         }
         
         .menu {
@@ -51,15 +52,14 @@
             position: absolute;
             width: 20px;
             height: 20px;
-            background: none;
-            border: 2px solid rust;
+            border: 2px solid #b7410e;
             transform: translate(-50%, -50%);
             pointer-events: none;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 20px;
-            color: rust;
+            color: #b7410e;
         }
 
         .click-text {
@@ -73,24 +73,33 @@
             position: relative;
             width: 80vw;
             height: 60vh;
-            display: flex;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 10px;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
         }
 
         .poem {
-            position: absolute;
             font-size: 24px;
             text-align: center;
-            width: 100%;
-            transition: opacity 0.5s, transform 0.5s;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .center {
+            grid-column: 2;
+            grid-row: 2;
         }
 
         .redacted span {
             background: black;
             color: black;
             padding: 2px;
+            display: inline-block;
         }
 
         #click-text {
@@ -117,11 +126,11 @@
     </div>
     <div id="click-text">click for new</div>
     <div class="poem-container">
-        <div class="poem" id="poem1">aura manusia looks super natural <br> in the crick-necked creek of the dead<br> paints holy<br> clusters in squeezed quick final push face<br> just finished testing the waters of making peace <br> for an outline one day will wake up<br> all made up<br> but not today<br> the _____ stream is for wading</div>
-        <div class="poem redacted" id="poem2"><span>dialects first</span><br><span>they end.</span><br><span>bye my civilian accents</span><br><span>my imported</span><br><br><span>into day so moves</span><br><span>difference</span><br><span>some english goons</span><br><span>their parts evolving</span><br><span>the poor lapses.</span><br><span>ellipses.</span></div>
-        <div class="poem redacted" id="poem3"><span>Figure 1.</span><br><span>where a picture of the divine is emerging it looks like a rock slide of the blackest black</span><br><span>one hears in the cascade, an adage: it is important to be [characteristic]</span><br><span>from meteoric to anabolistic</span><br><span>& so our divine, sour, end</span></div>
-        <div class="poem redacted" id="poem4"><span>robot tells me to hug it</span><br><span>globs honey on my boo</span><br><span>sweetheart’s hardon sightsees, writes love notes</span><br><span>phone lines can’t cope with its bylines</span></div>
-        <div class="poem redacted" id="poem5"><span>dear white tiger in barbed wire</span><br><span>did you know all bubbles pop, popes die</span><br><span>both mind & perpetual motion come to a stop</span><br><span>plus, probably cancer is hidden within me</span></div>
+        <div class="poem redacted" id="poem2"><span>dialects first</span><br><span>they end.</span></div>
+        <div class="poem redacted" id="poem3"><span>Figure 1.</span><br><span>where a picture of the divine is emerging...</span></div>
+        <div class="poem redacted" id="poem4"><span>robot tells me to hug it</span><br><span>globs honey on my boo</span></div>
+        <div class="poem center" id="poem1">aura manusia looks super natural <br> in the crick-necked creek of the dead...</div>
+        <div class="poem redacted" id="poem5"><span>dear white tiger in barbed wire</span><br><span>did you know all bubbles pop, popes die...</span></div>
     </div>
 
     <script>
