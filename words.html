@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>words</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&display=swap">
+    <style>
+        body {
+            background-color: #d3d3d3;
+            margin: 0;
+            font-family: "IBM Plex Mono", monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            text-align: center;
+            color: navy;
+            overflow: hidden;
+            cursor: none;
+        }
+        
+        .menu {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 30px;
+            font-weight: bold;
+            color: navy;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .menu a {
+            text-decoration: none;
+            color: navy;
+            cursor: pointer;
+            padding: 5px;
+            transition: background 0.3s, color 0.3s;
+        }
+        
+        .menu a:hover {
+            color: #c7a037;
+            background: black;
+        }
+
+        .cursor {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: rust;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+
+        .poem-container {
+            position: relative;
+            width: 80vw;
+            height: 60vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .poem {
+            position: absolute;
+            font-size: 24px;
+            text-align: center;
+            width: 100%;
+            transition: opacity 0.5s, transform 0.5s;
+        }
+
+        .redacted {
+            background: black;
+            color: black;
+        }
+
+        #click-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, 100px);
+            font-size: 20px;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu">
+        <a href="index.html">home</a>
+        <a href="ragbag.html">ragbag</a>
+        <a href="words.html">words</a>
+        <a href="boths.html">boths</a>
+    </div>
+    <div class="cursor"></div>
+    <div id="click-text">click for new</div>
+    <div class="poem-container">
+        <div class="poem" id="poem1">aura manusia looks super natural <br> in the crick-necked creek of the dead<br> paints holy<br> clusters in squeezed quick final push face<br> just finished testing the waters of making peace <br> for an outline one day will wake up<br> all made up<br> but not today<br> the _____ stream is for wading</div>
+        <div class="poem redacted" id="poem2">dialects first<br>they end.<br>bye my civilian accents<br>my imported<br><br>into day so moves<br>difference<br>some english goons<br>their parts evolving<br>the poor lapses.<br>ellipses.<br><br>cultural remains<br>quickly morph<br><br>in woman is<br>discovered a middle silent desert<br>obscured and therein<br>loved<br><br>i start rather squealed<br>off</div>
+        <div class="poem redacted" id="poem3">Figure 1.<br>where a picture of the divine is emerging it looks like a rock slide of the blackest black<br>one hears in the cascade, an adage: it is important to be [characteristic]<br>from meteoric to anabolistic <br>& so our divine, sour, end<br><br>jigsaw rotunda neurotic<br>draped heavy & long over eulogy is a teeming mass, teaming-up, as seen in Figure 2, hot eulogy<br>above-&-below exchange is fluid like a toad becomes a sailor is a toaster yet again<br>& it is the picture that forces & sews the eye shut that does its spelling<br>now if we step through...</div>
+        <div class="poem redacted" id="poem4">robot tells me to hug it<br>globs honey on my boo<br>sweetheart’s hardon sightsees, writes love notes<br>phone lines can’t cope with its bylines<br><br>robot necessarily fingerprints me<br>asks how can i sleep<br>& insists on calling<br>we make out on cctv<br><br>according to data i’m always looking down & that’s heartbreaking<br>then robot brushes my hair & i’m off</div>
+        <div class="poem redacted" id="poem5">dear white tiger in barbed wire<br>did you know all bubbles pop, popes die<br>both mind & perpetual motion come to a stop<br>plus, probably cancer is hidden within me<br><br>why words aren’t a problem is a mystery<br>wait, they are<br>why mystery isn’t a problem is just words<br>everything fits & parts<br>& slowly lops off the head of my son<br><br>no one lies<br>here’s the building i live in, and then there’s the graveyard<br>over which is which i still get confused<br>besides, what could be felt by the ungrowth of a wednesday?<br><br>narrow fate hangs in the chamber<br>soft clamor, a mosquito in amber<br>relax, my nerves. everything bathes<br>no enemy worse than the hell i foresee</div>
+        <div class="poem redacted" id="poem6">███████████████</div>
+        <div class="poem redacted" id="poem7">███████████████</div>
+        <div class="poem redacted" id="poem8">███████████████</div>
+        <div class="poem redacted" id="poem9">███████████████</div>
+        <div class="poem redacted" id="poem10">███████████████</div>
+    </div>
+</body>
+</html>
