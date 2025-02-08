@@ -30,7 +30,7 @@
             position: absolute;
             top: 20px;
             left: 20px;
-            font-size: 18px;
+            font-size: 24px;
             font-weight: bold;
             text-align: left;
             line-height: 1.2;
@@ -48,7 +48,7 @@
             position: absolute;
             top: 100px;
             left: 20px;
-            font-size: 18px;
+            font-size: 24px;
             font-weight: bold;
             color: #c7a037;
             display: flex;
@@ -113,17 +113,42 @@
         background.style.backgroundImage = `url(${randomImage})`;
 
         const cursor = document.getElementById("cursor");
+        let isClicking = false;
+
         document.addEventListener("mousemove", (e) => {
             cursor.style.left = `${e.clientX}px`;
             cursor.style.top = `${e.clientY}px`;
+            if (isClicking) {
+                drawTrail(e.clientX, e.clientY, getRandomColor(), 10);
+            }
         });
         
+        document.addEventListener("mousedown", () => {
+            isClicking = true;
+            changeCursorAppearance();
+        });
+
+        document.addEventListener("mouseup", () => {
+            isClicking = false;
+        });
+
         document.addEventListener("touchmove", (e) => {
             let touch = e.touches[0];
             cursor.style.left = `${touch.clientX}px`;
             cursor.style.top = `${touch.clientY}px`;
-            drawTrail(touch.clientX, touch.clientY, getRandomColor(), 10);
+            if (isClicking) {
+                drawTrail(touch.clientX, touch.clientY, getRandomColor(), 10);
+            }
         }, { passive: false });
+
+        document.addEventListener("touchstart", () => {
+            isClicking = true;
+            changeCursorAppearance();
+        });
+        
+        document.addEventListener("touchend", () => {
+            isClicking = false;
+        });
 
         const canvas = document.getElementById("drawCanvas");
         const ctx = canvas.getContext("2d");
@@ -138,21 +163,19 @@
             return colors[Math.floor(Math.random() * colors.length)];
         }
 
+        function changeCursorAppearance() {
+            cursor.style.backgroundColor = getRandomColor();
+            cursor.style.width = `${Math.random() * 20 + 10}px`;
+            cursor.style.height = cursor.style.width;
+        }
+
         function drawTrail(x, y, color, size) {
             ctx.fillStyle = color;
             ctx.globalAlpha = 0.5;
             ctx.beginPath();
             ctx.arc(x, y, size / 2, 0, Math.PI * 2);
             ctx.fill();
-            setTimeout(() => {
-                ctx.globalAlpha = 0.05;
-                ctx.fill();
-            }, 60000);
         }
-
-        document.addEventListener("mousemove", (e) => {
-            drawTrail(e.clientX, e.clientY, getRandomColor(), 10);
-        });
     </script>
 </body>
 </html>
