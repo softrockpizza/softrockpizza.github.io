@@ -65,12 +65,12 @@
         .scroll-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 5px;
+            gap: 10px;
             position: absolute;
-            top: 150px;
+            top: 200px;
             left: 200px;
             width: calc(100vw - 220px);
-            height: calc(100vh - 170px);
+            height: calc(100vh - 220px);
             overflow: auto;
         }
 
@@ -79,6 +79,7 @@
             height: auto;
             filter: blur(10px);
             transition: filter 0.5s ease-in-out, transform 0.5s ease-in-out;
+            cursor: pointer;
         }
         
         .media-item img, .media-item video {
@@ -92,7 +93,21 @@
             z-index: 100;
             cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="32" height="32"><line x1="10" y1="10" x2="90" y2="90" stroke="%238C6A29" stroke-width="10"/></svg>') 16 16, auto;
         }
+
+        .media-item.expanded {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(2);
+            z-index: 200;
+            filter: blur(0);
+        }
     </style>
+    <script>
+        function toggleExpand(element) {
+            element.classList.toggle('expanded');
+        }
+    </script>
 </head>
 <body>
     <div class="menu">
@@ -105,11 +120,11 @@
     <div class="title">permanent wave holiday mansion</div>
 
     <div class="scroll-container">
-        <div class="media-item"><video src="fortunepwhm.mp4" autoplay loop muted></video></div>
-        <div class="media-item"><img src="pwhm7_f.jpg" alt="Image 1"></div>
-        <div class="media-item"><img src="pwhm7_b.jpg" alt="Image 2"></div>
-        <div class="media-item"><img src="p_w_h_m.1f.jpg" alt="Image 3"></div>
-        <div class="media-item"><img src="pwhm_1_1117b.jpg" alt="Image 4"></div>
+        <div class="media-item" onclick="toggleExpand(this)"><video src="fortunepwhm.mp4" autoplay loop muted></video></div>
+        <div class="media-item" onclick="toggleExpand(this)"><img src="pwhm7_f.jpg" alt="Image 1"></div>
+        <div class="media-item" onclick="toggleExpand(this)"><img src="pwhm7_b.jpg" alt="Image 2"></div>
+        <div class="media-item" onclick="toggleExpand(this)"><img src="p_w_h_m.1f.jpg" alt="Image 3"></div>
+        <div class="media-item" onclick="toggleExpand(this)"><img src="pwhm_1_1117b.jpg" alt="Image 4"></div>
     </div>
 </body>
 </html>
