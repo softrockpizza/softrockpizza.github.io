@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>boths</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&display=swap">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><circle cx='8' cy='8' r='6' fill='gray'/></svg>">
     <style>
         body {
             background-color: #d3d3d3;
@@ -18,6 +17,7 @@
             justify-content: center;
             height: 100vh;
             width: 100vw;
+            flex-direction: column;
         }
         
         .menu {
@@ -46,32 +46,48 @@
             background: black;
         }
 
+        .title {
+            position: fixed;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 40pt;
+            color: #D8A7B1;
+            font-style: italic;
+            font-family: "IBM Plex Mono", monospace;
+            white-space: nowrap;
+            z-index: 10;
+        }
+
         .scroll-container {
-            display: flex;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 20px;
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 200vw;
-            height: 200vh;
+            width: 300vw;
+            height: 300vh;
+            overflow: scroll;
         }
 
         .media-item {
-            position: absolute;
             width: 300px;
             height: auto;
+            filter: blur(10px);
+            transition: filter 0.5s ease-in-out, transform 0.5s ease-in-out;
         }
         
-        .media-item img {
+        .media-item img, .media-item video {
             width: 100%;
             height: auto;
         }
 
-        .media-item video {
-            width: 100%;
-            height: auto;
+        .media-item:hover {
+            filter: blur(0);
+            transform: scale(1.2);
+            z-index: 100;
         }
     </style>
 </head>
@@ -82,23 +98,15 @@
         <a href="words.html">words</a>
         <a href="reachme.html">reach me</a>
     </div>
+    
+    <div class="title">permanent wave holiday mansion</div>
 
-    <div class="scroll-container" id="scrollContainer">
-        <div class="media-item" style="top: 100px; left: 100px;">
-            <video src="fortunepwhm.mp4" autoplay loop muted></video>
-        </div>
-        <div class="media-item" style="top: 300px; left: 400px;"><img src="pwhm7_f.jpg" alt="Image 1"></div>
-        <div class="media-item" style="top: 500px; left: 700px;"><img src="pwhm7_b.jpg" alt="Image 2"></div>
-        <div class="media-item" style="top: 700px; left: 1000px;"><img src="p_w_h_m.1f.jpg" alt="Image 3"></div>
-        <div class="media-item" style="top: 900px; left: 1300px;"><img src="pwhm_1_1117b.jpg" alt="Image 4"></div>
+    <div class="scroll-container">
+        <div class="media-item"><video src="fortunepwhm.mp4" autoplay loop muted></video></div>
+        <div class="media-item"><img src="pwhm7_f.jpg" alt="Image 1"></div>
+        <div class="media-item"><img src="pwhm7_b.jpg" alt="Image 2"></div>
+        <div class="media-item"><img src="p_w_h_m.1f.jpg" alt="Image 3"></div>
+        <div class="media-item"><img src="pwhm_1_1117b.jpg" alt="Image 4"></div>
     </div>
-
-    <script>
-        document.addEventListener('mousemove', function(event) {
-            const scrollSpeed = 5;
-            const container = document.getElementById('scrollContainer');
-            container.style.transform = `translate(${-event.clientX / scrollSpeed}px, ${-event.clientY / scrollSpeed}px)`;
-        });
-    </script>
 </body>
 </html>
