@@ -14,11 +14,11 @@
             color: navy;
             overflow: auto;
             display: flex;
-            align-items: center;
-            justify-content: center;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: flex-start;
             height: 100vh;
             width: 100vw;
-            flex-direction: column;
             cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="32" height="32"><line x1="10" y1="90" x2="90" y2="10" stroke="%238C6A29" stroke-width="10"/></svg>') 16 16, auto;
             touch-action: manipulation;
         }
@@ -64,14 +64,15 @@
 
         .scroll-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            width: 200vw;
-            height: 200vh;
-            overflow: auto;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(3, auto);
+            gap: 10px;
             position: absolute;
-            top: 0;
-            left: 0;
+            top: 80px;
+            left: 150px;
+            width: calc(100vw - 200px);
+            height: calc(100vh - 100px);
+            overflow: auto;
         }
 
         .media-item {
