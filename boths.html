@@ -12,14 +12,12 @@
             margin: 0;
             font-family: "IBM Plex Mono", monospace;
             color: navy;
-            overflow: auto;
-            touch-action: manipulation;
+            overflow: hidden;
             display: flex;
-            flex-direction: row;
             align-items: center;
+            justify-content: center;
             height: 100vh;
             width: 100vw;
-            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="32" height="32"><line x1="10" y1="90" x2="90" y2="10" stroke="%238C6A29" stroke-width="10"/></svg>') 16 16, auto;
         }
         
         .menu {
@@ -48,42 +46,32 @@
             background: black;
         }
 
-        .title {
-            font-size: 40px;
-            color: #D8A7B1;
-            font-style: italic;
-            margin-left: 50px;
-            margin-top: 50px;
-            white-space: pre-line;
-        }
-
-        .content {
+        .scroll-container {
             display: flex;
-            align-items: center;
-            gap: 50px;
+            flex-wrap: wrap;
+            gap: 20px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200vw;
+            height: 200vh;
         }
 
-        .image-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            width: 80%;
-            margin-top: 20px;
+        .media-item {
+            position: absolute;
+            width: 300px;
+            height: auto;
         }
-
-        .image-grid img {
+        
+        .media-item img {
             width: 100%;
             height: auto;
-            filter: blur(10px);
-            transition: filter 0.5s ease-in-out, transform 0.5s ease-in-out, z-index 0.5s ease-in-out;
-            position: relative;
-            z-index: 1;
         }
 
-        .image-grid img:hover, .image-grid img:active {
-            filter: blur(0);
-            transform: scale(1.5);
-            z-index: 100;
+        .media-item video {
+            width: 100%;
+            height: auto;
         }
     </style>
 </head>
@@ -95,18 +83,22 @@
         <a href="reachme.html">reach me</a>
     </div>
 
-    <div class="content">
-        <div class="title">permanent
-wave
-holiday
-mansion</div>
-
-        <div class="image-grid">
-            <img src="pwhm7_f.jpg" alt="Image 1">
-            <img src="pwhm7_b.jpg" alt="Image 2">
-            <img src="p_w_h_m.1f.jpg" alt="Image 3">
-            <img src="pwhm_1_1117b.jpg" alt="Image 4">
+    <div class="scroll-container" id="scrollContainer">
+        <div class="media-item" style="top: 100px; left: 100px;">
+            <video src="fortunepwhm.mp4" autoplay loop muted></video>
         </div>
+        <div class="media-item" style="top: 300px; left: 400px;"><img src="pwhm7_f.jpg" alt="Image 1"></div>
+        <div class="media-item" style="top: 500px; left: 700px;"><img src="pwhm7_b.jpg" alt="Image 2"></div>
+        <div class="media-item" style="top: 700px; left: 1000px;"><img src="p_w_h_m.1f.jpg" alt="Image 3"></div>
+        <div class="media-item" style="top: 900px; left: 1300px;"><img src="pwhm_1_1117b.jpg" alt="Image 4"></div>
     </div>
+
+    <script>
+        document.addEventListener('mousemove', function(event) {
+            const scrollSpeed = 5;
+            const container = document.getElementById('scrollContainer');
+            container.style.transform = `translate(${-event.clientX / scrollSpeed}px, ${-event.clientY / scrollSpeed}px)`;
+        });
+    </script>
 </body>
 </html>
