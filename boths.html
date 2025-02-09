@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>boths</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&display=swap">
-    <style>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><circle cx='8' cy='8' r='6' fill='gray'/></svg>">  
+<style>
         body {
             background-color: #d3d3d3;
             margin: 0;
@@ -18,6 +19,8 @@
             height: 100vh;
             width: 100vw;
             flex-direction: column;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="32" height="32"><line x1="10" y1="90" x2="90" y2="10" stroke="%238C6A29" stroke-width="10"/></svg>') 16 16, auto;
+            touch-action: manipulation;
         }
         
         .menu {
@@ -84,10 +87,11 @@
             height: auto;
         }
 
-        .media-item:hover {
+        .media-item:hover, .media-item:active {
             filter: blur(0);
             transform: scale(1.2);
             z-index: 100;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="32" height="32"><line x1="10" y1="10" x2="90" y2="90" stroke="%238C6A29" stroke-width="10"/></svg>') 16 16, auto;
         }
     </style>
 </head>
