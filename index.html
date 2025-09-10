@@ -265,101 +265,75 @@
     </main>
     
     <script>
-        // --- HEADER SQUISH SCRIPT ---
-        const nameElement = document.querySelector('.name');
-        const menuBar = document.getElementById('menu-bar');
-        const maxScrollDistance = 1000; 
-        const minScale = 0.1; 
-        let nameHeight;
+    // --- HEADER SQUISH SCRIPT ---
+    const nameElement = document.querySelector('.name');
+    const menuBar = document.getElementById('menu-bar');
+    const maxScrollDistance = 1000;
+    const minScale = 0.1;
+    let nameHeight;
 
-        function handleScrollAnimation() {
-            nameHeight = nameElement.offsetHeight;
-            const scrollY = window.scrollY;
-            let scaleY = 1 - (scrollY / maxScrollDistance);
-            scaleY = Math.max(minScale, Math.min(1, scaleY));
-            nameElement.style.transform = `scaleY(${scaleY})`;
-            const menuTranslateY = -(nameHeight * (1 - scaleY));
-            menuBar.style.transform = `translateY(${menuTranslateY}px)`;
-        }
-        window.addEventListener('scroll', handleScrollAnimation);
-        
-        // --- RANDOM CURSOR SCRIPT ---
-        const cursor = document.getElementById('random-cursor');
-        const cursorPath = document.getElementById('cursor-path');
-        const shapes = [
-            "M16 2 L20 12 L30 12 L22 18 L26 28 L16 22 L6 28 L10 18 L2 12 L12 12 Z", "M2 16 C2 2, 30 2, 30 16 S2 30, 16 30 S2 30, 2 16", "M16 2 Q20 16 30 16 Q16 20 16 30 Q12 16 2 16 Q16 12 16 2", "M2 2 H30 V30 H2 Z", "M16 2 L30 30 L2 30 Z"
-        ];
-        const randomShape = shapes[Math.floor(Math.random() * shapes.length)];
-        cursorPath.setAttribute('d', randomShape);
-        const moveCursor = (e) => {
-            cursor.style.left = `${e.clientX}px`;
-            cursor.style.top = `${e.clientY}px`;
-        };
-        window.addEventListener('mousemove', moveCursor);
-        window.addEventListener('touchmove', (e) => moveCursor(e.touches[0]));
+    function handleScrollAnimation() {
+        nameHeight = nameElement.offsetHeight;
+        const scrollY = window.scrollY;
+        let scaleY = 1 - (scrollY / maxScrollDistance);
+        scaleY = Math.max(minScale, Math.min(1, scaleY));
+        nameElement.style.transform = `scaleY(${scaleY})`;
+        const menuTranslateY = -(nameHeight * (1 - scaleY));
+        menuBar.style.transform = `translateY(${menuTranslateY}px)`;
+    }
+    window.addEventListener('scroll', handleScrollAnimation);
 
-        // --- IMAGE GRID & LIGHTBOX SCRIPT ---
-        const imageGrid = document.getElementById('image-grid');
-        const imageLightbox = document.getElementById('image-lightbox');
-        const lightboxImage = imageLightbox.querySelector('img');
+    // --- RANDOM CURSOR SCRIPT ---
+    const cursor = document.getElementById('random-cursor');
+    const cursorPath = document.getElementById('cursor-path');
+    const shapes = [
+        "M16 2 L20 12 L30 12 L22 18 L26 28 L16 22 L6 28 L10 18 L2 12 L12 12 Z", "M2 16 C2 2, 30 2, 30 16 S2 30, 16 30 S2 30, 2 16", "M16 2 Q20 16 30 16 Q16 20 16 30 Q12 16 2 16 Q16 12 16 2", "M2 2 H30 V30 H2 Z", "M16 2 L30 30 L2 30 Z"
+    ];
+    const randomShape = shapes[Math.floor(Math.random() * shapes.length)];
+    cursorPath.setAttribute('d', randomShape);
+    const moveCursor = (e) => {
+        cursor.style.left = `${e.clientX}px`;
+        cursor.style.top = `${e.clientY}px`;
+    };
+    window.addEventListener('mousemove', moveCursor);
+    window.addEventListener('touchmove', (e) => moveCursor(e.touches[0]));
 
-        // --- EDIT HERE ---
-        // Step 1: Create an array with the paths to your image files.
-        const myImageFiles = [
-            "1.jpg",
-            "IMG_20180328_103203_311.jpg",
-            "nine.jpg",
-            "one.jpg",
-            "IMG_20180402_143642_071.jpg",
-            "image_248.jpg",
-            "image_265.jpg",
-            "image_269.jpg",
-            "image_67.jpg",
-            "image_90 frame sm.jpg",
-            "image_72 frame sm.jpg",
-            "image_67 sm.jpg",
-            "image_65 frame sm.jpg",
-            "image_60 frame sm.jpg",
-            "image_46 frame.jpg",
-            "image_38 frame.jpg",
-            "image_264 frame sm.jpg",
-            "image_257.jpg",
-            "image_251 frame sm.jpg",
-            "image_245 frame sm.jpg",
-            "image_229 frame sm.jpg",
-            "image_214 frame sm.jpg",
-            "image_195 frame sm.jpg",
-            "image_187 frame sm.jpg"
-        ];
+    // --- IMAGE GRID & LIGHTBOX SCRIPT ---
+    const imageGrid = document.getElementById('image-grid');
+    const imageLightbox = document.getElementById('image-lightbox');
+    const lightboxImage = imageLightbox.querySelector('img');
 
-        // Step 2: The loop now uses your array to create the grid.
-        for (let i = 0; i < myImageFiles.length; i++) {
-            const gridItem = document.createElement('div');
-            gridItem.className = 'grid-item';
-            const img = document.createElement('img');
-            
-            // This line now gets the image path from your array
-            img.src = myImageFiles[i];
-            
-            img.alt = `Grid image ${i + 1}`;
-            gridItem.appendChild(img);
-            imageGrid.appendChild(gridItem);
-            gridItem.addEventListener('click', () => {
-                lightboxImage.src = img.src;
-                imageLightbox.classList.add('active');
-            });
-        }
-        imageLightbox.addEventListener('click', () => {
-            imageLightbox.classList.remove('active');
+    const myImageFiles = [
+        "1.jpg", "IMG_20180328_103203_311.jpg", "nine.jpg", "one.jpg", "IMG_20180402_143642_071.jpg", "image_248.jpg", "image_265.jpg", "image_269.jpg", "image_67.jpg", "image_90 frame sm.jpg", "image_72 frame sm.jpg", "image_67 sm.jpg", "image_65 frame sm.jpg", "image_60 frame sm.jpg", "image_46 frame.jpg", "image_38 frame.jpg", "image_264 frame sm.jpg", "image_257.jpg", "image_251 frame sm.jpg", "image_245 frame sm.jpg", "image_229 frame sm.jpg", "image_214 frame sm.jpg", "image_195 frame sm.jpg", "image_187 frame sm.jpg"
+    ];
+
+    // THIS LOOP WAS MISSING
+    for (let i = 0; i < myImageFiles.length; i++) {
+        const gridItem = document.createElement('div');
+        gridItem.className = 'grid-item';
+        const img = document.createElement('img');
+        img.src = myImageFiles[i];
+        img.alt = `Grid image ${i + 1}`;
+        gridItem.appendChild(img);
+        imageGrid.appendChild(gridItem);
+        gridItem.addEventListener('click', () => {
+            lightboxImage.src = img.src;
+            imageLightbox.classList.add('active');
         });
+    }
+    imageLightbox.addEventListener('click', () => {
+        imageLightbox.classList.remove('active');
+    });
 
-        // --- TEXT GRID & LIGHTBOX SCRIPT ---
-        const textGrid = document.getElementById('text-grid');
-        const textLightbox = document.getElementById('text-lightbox');
-        const textLightboxContent = document.getElementById('text-lightbox-content');
-        const totalTextBlocks = 24;
-        const textSnippets = [
-            "on a bluff is a red tomato
+    // --- TEXT GRID & LIGHTBOX SCRIPT ---
+    const textGrid = document.getElementById('text-grid');
+    const textLightbox = document.getElementById('text-lightbox');
+    const textLightboxContent = document.getElementById('text-lightbox-content');
+    const totalTextBlocks = 24;
+    
+    // I've used backticks ` ` here to fix a syntax error from the multi-line text
+    const textSnippets = [
+`on a bluff is a red tomato
 a meter away
 & the jungle deletes me
 on the rabbit-hole goes
@@ -377,45 +351,41 @@ limits one, two, see
 
 on bold conflations
 about madness
-& hoodwinking 
-or how data structure 
+& hoodwinking 
+or how data structure 
 approximates me
 & persists
 must be logic or quit
 
 on perception, it's not
 a wrong language
-& to spare the mess 
+& to spare the mess 
 on balance
 all models are wrong
 & [delete me]
-secrete code in effect
+secrete code in effect`
+    ];
 
+    // THIS LOOP WAS MISSING
+    for (let i = 0; i < totalTextBlocks; i++) {
+        const textItem = document.createElement('div');
+        textItem.className = 'text-grid-item';
+        // Using the single poem for all blocks
+        const snippet = textSnippets[0]; 
+        textItem.textContent = snippet;
+        textGrid.appendChild(textItem);
 
-
-
-
-"
-        ];
-
-        for (let i = 0; i < totalTextBlocks; i++) {
-            const textItem = document.createElement('div');
-            textItem.className = 'text-grid-item';
-            const snippet = textSnippets[i % textSnippets.length] + " (Block " + (i + 1) + ")";
-            textItem.textContent = snippet;
-            textGrid.appendChild(textItem);
-
-            textItem.addEventListener('click', () => {
-                textLightboxContent.textContent = textItem.textContent;
-                textLightbox.classList.add('active');
-            });
-        }
-        textLightbox.addEventListener('click', () => {
-            textLightbox.classList.remove('active');
+        textItem.addEventListener('click', () => {
+            textLightboxContent.innerText = textItem.innerText; // Use innerText to preserve line breaks
+            textLightbox.classList.add('active');
         });
+    }
+    textLightbox.addEventListener('click', () => {
+        textLightbox.classList.remove('active');
+    });
 
-        window.addEventListener('load', handleScrollAnimation);
-    </script>
+    window.addEventListener('load', handleScrollAnimation);
+</script>
 </body>
 </html>
 
