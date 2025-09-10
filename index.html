@@ -414,12 +414,6 @@ secrete code in effect
             textLightbox.classList.remove('active');
         });
 
-        // --- BACKGROUND IMAGE SCRIPT ---
-        const artworks = ["https://placehold.co/1200x800/b0a999/333?text", "https://placehold.co/1200x800/c3b091/333?text", "https://placehold.co/1200x800/a89f91/333?text=Artwork+3"];
-        const background = document.querySelector(".background");
-        const randomBgImage = artworks[Math.floor(Math.random() * artworks.length)];
-        background.style.backgroundImage = `url(${randomBgImage})`;
-
         window.addEventListener('load', handleScrollAnimation);
     </script>
 </body>
