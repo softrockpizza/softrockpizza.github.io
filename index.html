@@ -29,11 +29,10 @@
             margin: 0;
             font-family: "Space Mono", monospace;
             overflow-y: auto; 
-            /* SAFETY FIX: Cursor is visible by default. JS will hide it if active. */
-            cursor: auto; 
+            cursor: auto; /* Default system cursor until JS loads */
         }
 
-        /* Class added by JS to hide cursor only when custom cursor is working */
+        /* Hides system cursor when custom cursor is active */
         body.custom-cursor-active {
             cursor: none;
         }
@@ -93,15 +92,28 @@
             color: var(--ink-color);
         }
         
+        /* --- CUSTOM CURSOR STYLING --- */
         .random-cursor {
             position: fixed;
-            width: 60px; 
-            height: 60px;
+            width: 40px; 
+            height: 40px;
             pointer-events: none;
-            transform: translate(-50%, -50%);
             z-index: 9999;
             mix-blend-mode: difference; 
-            display: none; /* Hidden by default until JS wakes it up */
+            display: none; 
+            
+            /* ANIMATION LOGIC */
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy transition */
+            /* Default State: X (Rotated 45deg) */
+            transform: translate(-50%, -50%) rotate(45deg);
+        }
+
+        /* Hover State: + (Rotated 0deg) */
+        .random-cursor.hovering {
+            transform: translate(-50%, -50%) rotate(90deg);
+            /* Optional: Make it slightly bigger on hover */
+            width: 50px;
+            height: 50px;
         }
 
         .random-cursor svg {
@@ -165,7 +177,7 @@
             filter: grayscale(100%); 
             transition: all 0s; 
             mix-blend-mode: multiply;
-            display: block; /* Removes tiny bottom gap */
+            display: block; 
         }
 
         .grid-item:hover img {
@@ -268,6 +280,7 @@
             z-index: 10000;
             padding: 2em;
             box-sizing: border-box;
+            cursor: auto; /* Restore normal cursor inside lightbox */
         }
 
         .lightbox.active, .text-lightbox.active {
@@ -309,8 +322,9 @@
     </header>
 
     <div class="random-cursor" id="random-cursor">
-        <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="image-rendering: pixelated;">
-            <path id="cursor-path" d="" fill="#FFFFFF"/> 
+        <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+            <rect x="16" y="0" width="8" height="40" fill="white"/>
+            <rect x="0" y="16" width="40" height="8" fill="white"/>
         </svg>
     </div>
 
@@ -350,7 +364,6 @@
     </main>
     
     <script>
-    // Wrapped in DOMContentLoaded to ensure HTML exists before JS runs
     document.addEventListener('DOMContentLoaded', () => {
 
         // --- 1. HEADER SQUISH SCRIPT ---
@@ -372,25 +385,14 @@
                 menuBar.style.transform = `translateY(${menuTranslateY}px)`;
             }
             window.addEventListener('scroll', handleScrollAnimation);
-            // Run once on load to set initial state
             handleScrollAnimation();
         }
 
-        // --- 2. RANDOM CURSOR SCRIPT ---
+        // --- 2. X-TO-PLUS CURSOR SCRIPT ---
         const cursor = document.getElementById('random-cursor');
-        const cursorPath = document.getElementById('cursor-path');
         
-        if (cursor && cursorPath) {
-            const shapes = [
-                "M16 2 L20 12 L30 12 L22 18 L26 28 L16 22 L6 28 L10 18 L2 12 L12 12 Z", 
-                "M2 16 C2 2, 30 2, 30 16 S2 30, 16 30 S2 30, 2 16", 
-                "M16 2 Q20 16 30 16 Q16 20 16 30 Q12 16 2 16 Q16 12 16 2", 
-                "M2 2 H30 V30 H2 Z", 
-                "M16 2 L30 30 L2 30 Z"
-            ];
-            const randomShape = shapes[Math.floor(Math.random() * shapes.length)];
-            cursorPath.setAttribute('d', randomShape);
-            
+        if (cursor) {
+            // Move cursor
             const moveCursor = (e) => {
                 cursor.style.left = `${e.clientX}px`;
                 cursor.style.top = `${e.clientY}px`;
@@ -398,9 +400,22 @@
             window.addEventListener('mousemove', moveCursor);
             window.addEventListener('touchmove', (e) => moveCursor(e.touches[0]));
 
-            // Activate custom cursor (hide system cursor) now that JS is running
+            // Activate custom cursor
             document.body.classList.add('custom-cursor-active');
             cursor.style.display = 'block';
+
+            // HOVER EFFECT LOGIC
+            // Select all things that should trigger the X -> + change
+            const interactiveElements = document.querySelectorAll('a, button, input, textarea, .grid-item, .text-grid-item');
+            
+            interactiveElements.forEach(el => {
+                el.addEventListener('mouseenter', () => {
+                    cursor.classList.add('hovering');
+                });
+                el.addEventListener('mouseleave', () => {
+                    cursor.classList.remove('hovering');
+                });
+            });
         }
 
         // --- 3. IMAGE GRID ---
@@ -423,13 +438,15 @@
                 gridItem.className = 'grid-item';
                 const img = document.createElement('img');
                 
-                // Using encodeURI to safely handle spaces in filenames
                 img.src = encodeURI(myImageFiles[i]);
                 img.alt = `Image ${i}`;
                 img.loading = "lazy"; 
                 
                 gridItem.appendChild(img);
                 imageGrid.appendChild(gridItem);
+                
+                // Note: We don't need to add hover listeners here because
+                // we added them to .grid-item in the cursor section above
                 
                 gridItem.addEventListener('click', () => {
                     lightboxImage.src = img.src;
@@ -496,9 +513,7 @@ secrete code in effect`;
                 textLightbox.classList.remove('active');
             });
         }
-        
     });
     </script>
 </body>
-    </html>
-    
+</html>
