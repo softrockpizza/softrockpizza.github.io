@@ -4,88 +4,95 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ADAM STOVES</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><circle cx='8' cy='8' r='6' fill='gray'/></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><rect width='16' height='16' fill='%23CCFF00'/><text x='50%' y='55%' dominant-baseline='middle' text-anchor='middle' font-family='monospace' font-weight='bold' font-size='12' fill='black'>A</text></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&family=Saira:wght@900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Saira:wght@900&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-color: #ffffff;
+            --ink-color: #000000;
+            --accent-color: #CCFF00; /* Acid Green */
+            --secondary-accent: #ff00ff; /* Hot Magenta */
+            --border-thick: 3px solid var(--ink-color);
+        }
+
         html {
             scroll-behavior: smooth;
         }
 
         body {
-            background-color: #d3d3d3;
+            background-color: var(--bg-color);
+            color: var(--ink-color);
             margin: 0;
-            font-family: "IBM Plex Mono", monospace;
+            font-family: "Space Mono", monospace;
             overflow-y: auto; 
-            cursor: none;
-        }
-        
-        .background {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-size: 200%;
-            background-position: center;
-            z-index: -1; 
+            cursor: none; 
         }
         
         header {
             position: sticky;
             top: 0;
-            z-index: 10;
+            z-index: 100;
+            border-bottom: var(--border-thick);
+            background: var(--bg-color);
         }
 
         .name {
             font-family: 'Saira', sans-serif;
             font-weight: 900;
-            background-color: #2c2c2c;
-            color: white;
+            background-color: var(--accent-color);
+            color: var(--ink-color);
             text-align: center;
             font-size: 14vw;
-            line-height: 1;
+            line-height: 0.85; 
             padding: 10px 0;
             transform-origin: top;
             user-select: none;
             text-transform: uppercase;
             position: relative;
             z-index: 2;
+            letter-spacing: -0.05em; 
+            border-bottom: var(--border-thick);
         }
         
         .menu-bar {
             display: flex;
-            justify-content: space-around;
-            align-items: center;
-            background-color: #c7a037;
-            padding: 15px 0;
+            justify-content: space-between;
+            align-items: stretch;
+            background-color: var(--ink-color);
             position: relative;
             z-index: 1;
+            padding: 0;
         }
         
         .menu-bar a {
-            font-family: 'Saira', sans-serif;
-            font-weight: 900;
+            flex-grow: 1;
+            text-align: center;
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
             text-decoration: none;
-            color: #2c2c2c;
-            font-size: 1.5rem;
+            color: var(--bg-color);
+            font-size: 1.2rem;
             text-transform: uppercase;
-            padding: 5px 10px;
-            transition: color 0.3s;
+            padding: 15px 0;
+            transition: all 0.1s;
+            border-right: 1px solid #333;
         }
-        
+
         .menu-bar a:hover {
-            color: white;
+            background-color: var(--bg-color);
+            color: var(--ink-color);
         }
         
         .random-cursor {
             position: fixed;
-            width: 48px;
-            height: 48px;
+            width: 60px; 
+            height: 60px;
             pointer-events: none;
             transform: translate(-50%, -50%);
             z-index: 9999;
+            mix-blend-mode: difference; 
         }
 
         .random-cursor svg {
@@ -95,89 +102,155 @@
         }
         
         .page-section {
-            min-height: 100vh; 
-            padding: 80px 40px;
-            max-width: 900px;
+            min-height: auto; 
+            padding: 0;
+            max-width: 100%; 
             margin: 0 auto;
-            color: #333;
-            background-color: rgba(211, 211, 211, 0.9);
-            box-sizing: border-box;
-            border-bottom: 2px solid #2c2c2c;
-        }
-
-        .page-section:last-of-type {
-            border-bottom: none;
+            border-bottom: var(--border-thick);
         }
 
         .page-section h2 {
-            font-family: 'Saira', sans-serif;
-            font-weight: 900;
-            font-size: 5rem;
-            color: #2c2c2c;
-            margin-top: 0;
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            font-size: 2rem;
+            color: var(--bg-color);
+            background-color: var(--ink-color);
+            margin: 0;
+            padding: 20px;
             text-transform: uppercase;
+            letter-spacing: -2px;
+            border-bottom: var(--border-thick);
+            position: sticky;
+            top: 0; 
         }
 
-        /* --- Grid and Lightbox Styling --- */
-        #images, #words {
-            max-width: none;
-            padding-left: 0;
-            padding-right: 0;
-        }
-        
-        #images h2, #words h2 {
-            padding-left: 40px;
-        }
-
+        /* --- GRID STYLING --- */
         .image-grid, .text-grid {
             display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 4px;
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 0; 
+            background-color: var(--ink-color);
+            border-bottom: var(--border-thick);
+        }
+
+        @media (max-width: 768px) {
+            .image-grid, .text-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
         .grid-item {
             aspect-ratio: 1 / 1;
             overflow: hidden;
             cursor: pointer;
+            position: relative;
+            border-right: var(--border-thick);
+            border-bottom: var(--border-thick);
+            background-color: var(--bg-color);
         }
 
         .grid-item img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            filter: blur(5px);
-            transition: filter 0.3s ease-out;
+            filter: grayscale(100%); 
+            transition: all 0s; 
+            mix-blend-mode: multiply;
         }
 
         .grid-item:hover img {
-            filter: blur(0);
+            filter: grayscale(0%) contrast(120%);
+        }
+        
+        .grid-item:hover {
+            background-color: var(--secondary-accent); 
         }
 
+        /* --- TEXT GRID STYLING --- */
         .text-grid-item {
             aspect-ratio: 1 / 1;
             overflow: hidden;
             cursor: pointer;
             padding: 1em;
             box-sizing: border-box;
-            background-color: #e0e0e0;
-            color: #333;
-            filter: blur(3px);
-            transition: filter 0.3s ease-out;
-            font-size: 0.8rem;
-            line-height: 1.4;
+            background-color: var(--bg-color);
+            color: var(--ink-color);
+            font-size: 0.75rem;
+            line-height: 1.2;
+            border-right: var(--border-thick);
+            border-bottom: var(--border-thick);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.1s;
         }
 
         .text-grid-item:hover {
-            filter: blur(0);
+            background-color: var(--ink-color);
+            color: var(--accent-color);
+            transform: scale(0.95); 
+            box-shadow: inset 0 0 0 2px var(--accent-color);
         }
 
+        /* --- FORM STYLING --- */
+        #reachme form {
+            padding: 40px;
+            display: grid;
+            gap: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        label {
+            display: flex;
+            flex-direction: column;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        input, textarea, button {
+            margin-top: 10px;
+            padding: 15px;
+            border: var(--border-thick);
+            background: transparent;
+            font-family: "Space Mono", monospace;
+            font-size: 1rem;
+            border-radius: 0; 
+            box-shadow: 5px 5px 0px var(--ink-color); 
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            background-color: var(--accent-color);
+        }
+
+        button {
+            background-color: var(--ink-color);
+            color: var(--accent-color);
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        button:hover {
+            transform: translate(2px, 2px);
+            box-shadow: 3px 3px 0px var(--ink-color);
+        }
+
+        button:active {
+            transform: translate(5px, 5px);
+            box-shadow: 0px 0px 0px var(--ink-color);
+        }
+
+        /* --- LIGHTBOX --- */
         .lightbox, .text-lightbox {
+            background-color: rgba(204, 255, 0, 0.95); 
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.85);
             display: none;
             align-items: center;
             justify-content: center;
@@ -194,11 +267,16 @@
             max-width: 90%;
             max-height: 90%;
             object-fit: contain;
+            border: 4px solid black; 
+            box-shadow: 10px 10px 0 black;
         }
         
         .text-lightbox-content {
-            background: #d3d3d3;
-            color: #2c2c2c;
+            background: var(--ink-color);
+            color: var(--bg-color); 
+            border: 4px solid var(--ink-color);
+            box-shadow: 10px 10px 0px rgba(0,0,0,0.2);
+            font-size: 1.2rem;
             padding: 2em;
             max-width: 800px;
             max-height: 90vh;
@@ -209,7 +287,6 @@
     </style>
 </head>
 <body>
-    <div class="background"></div>
     
     <header id="main-header">
         <div class="name">ADAM STOVES</div>
@@ -222,7 +299,7 @@
 
     <div class="random-cursor" id="random-cursor">
         <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="image-rendering: pixelated;">
-            <path id="cursor-path" d="" fill="#b7410e"/>
+            <path id="cursor-path" d="" fill="#FFFFFF"/> 
         </svg>
     </div>
 
@@ -236,31 +313,28 @@
 
     <main>
         <section id="images" class="page-section">
-            <h2>Images</h2>
+            <h2>// IMAGES_LOG</h2>
             <div class="image-grid" id="image-grid"></div>
         </section>
 
         <section id="words" class="page-section">
-            <h2>Words</h2>
+            <h2>// WORDS_DATA</h2>
             <div class="text-grid" id="text-grid"></div>
         </section>
 
         <section id="reachme" class="page-section">
-            <form
-  action="https://formspree.io/f/mdkadwka"
-  method="POST"
->
-  <label>
-    Your email:
-    <input type="email" name="email">
-  </label>
-  <label>
-    Your message:
-    <textarea name="message"></textarea>
-  </label>
-  <!-- your other form fields go here -->
-  <button type="submit">Send</button>
-</form>
+            <h2>// INPUT_STREAM</h2>
+            <form action="https://formspree.io/f/mdkadwka" method="POST">
+                <label>
+                    USER_EMAIL:
+                    <input type="email" name="email" placeholder="you@example.com">
+                </label>
+                <label>
+                    MESSAGE_PAYLOAD:
+                    <textarea name="message" rows="5" placeholder="Type here..."></textarea>
+                </label>
+                <button type="submit">TRANSMIT</button>
+            </form>
         </section>
     </main>
     
@@ -287,10 +361,15 @@
     const cursor = document.getElementById('random-cursor');
     const cursorPath = document.getElementById('cursor-path');
     const shapes = [
-        "M16 2 L20 12 L30 12 L22 18 L26 28 L16 22 L6 28 L10 18 L2 12 L12 12 Z", "M2 16 C2 2, 30 2, 30 16 S2 30, 16 30 S2 30, 2 16", "M16 2 Q20 16 30 16 Q16 20 16 30 Q12 16 2 16 Q16 12 16 2", "M2 2 H30 V30 H2 Z", "M16 2 L30 30 L2 30 Z"
+        "M16 2 L20 12 L30 12 L22 18 L26 28 L16 22 L6 28 L10 18 L2 12 L12 12 Z", 
+        "M2 16 C2 2, 30 2, 30 16 S2 30, 16 30 S2 30, 2 16", 
+        "M16 2 Q20 16 30 16 Q16 20 16 30 Q12 16 2 16 Q16 12 16 2", 
+        "M2 2 H30 V30 H2 Z", 
+        "M16 2 L30 30 L2 30 Z"
     ];
     const randomShape = shapes[Math.floor(Math.random() * shapes.length)];
     cursorPath.setAttribute('d', randomShape);
+    
     const moveCursor = (e) => {
         cursor.style.left = `${e.clientX}px`;
         cursor.style.top = `${e.clientY}px`;
@@ -298,22 +377,27 @@
     window.addEventListener('mousemove', moveCursor);
     window.addEventListener('touchmove', (e) => moveCursor(e.touches[0]));
 
-    // --- IMAGE GRID & LIGHTBOX SCRIPT ---
+    // --- GRID POPULATION (UPDATED WITH YOUR FILES) ---
     const imageGrid = document.getElementById('image-grid');
     const imageLightbox = document.getElementById('image-lightbox');
     const lightboxImage = imageLightbox.querySelector('img');
 
     const myImageFiles = [
-        "1.jpg", "IMG_20180328_103203_311.jpg", "nine.jpg", "one.jpg", "IMG_20180402_143642_071.jpg", "image_248.jpg", "image_265.jpg", "image_269.jpg", "image_67.jpg", "image_90 frame sm.jpg", "image_72 frame sm.jpg", "image_67 sm.jpg", "image_65 frame sm.jpg", "image_60 frame sm.jpg", "image_46 frame.jpg", "image_38 frame.jpg", "image_264 frame sm.jpg", "image_257.jpg", "image_251 frame sm.jpg", "image_245 frame sm.jpg", "image_229 frame sm.jpg", "image_214 frame sm.jpg", "image_195 frame sm.jpg", "image_187 frame sm.jpg"
+        "1.jpg", "IMG_20180328_103203_311.jpg", "nine.jpg", "one.jpg", 
+        "IMG_20180402_143642_071.jpg", "image_248.jpg", "image_265.jpg", "image_269.jpg", 
+        "image_67.jpg", "image_90 frame sm.jpg", "image_72 frame sm.jpg", "image_67 sm.jpg", 
+        "image_65 frame sm.jpg", "image_60 frame sm.jpg", "image_46 frame.jpg", "image_38 frame.jpg", 
+        "image_264 frame sm.jpg", "image_257.jpg", "image_251 frame sm.jpg", "image_245 frame sm.jpg", 
+        "image_229 frame sm.jpg", "image_214 frame sm.jpg", "image_195 frame sm.jpg", "image_187 frame sm.jpg"
     ];
 
-    // THIS LOOP WAS MISSING
     for (let i = 0; i < myImageFiles.length; i++) {
         const gridItem = document.createElement('div');
         gridItem.className = 'grid-item';
         const img = document.createElement('img');
         img.src = myImageFiles[i];
-        img.alt = `Grid image ${i + 1}`;
+        img.alt = `Image ${myImageFiles[i]}`;
+        img.loading = "lazy"; 
         gridItem.appendChild(img);
         imageGrid.appendChild(gridItem);
         gridItem.addEventListener('click', () => {
@@ -325,15 +409,14 @@
         imageLightbox.classList.remove('active');
     });
 
-    // --- TEXT GRID & LIGHTBOX SCRIPT ---
+    // --- TEXT GRID (Using your original poem) ---
     const textGrid = document.getElementById('text-grid');
     const textLightbox = document.getElementById('text-lightbox');
     const textLightboxContent = document.getElementById('text-lightbox-content');
     const totalTextBlocks = 24;
     
-    // I've used backticks ` ` here to fix a syntax error from the multi-line text
-    const textSnippets = [
-`on a bluff is a red tomato
+    // I restored your original poem here
+    const snippet = `on a bluff is a red tomato
 a meter away
 & the jungle deletes me
 on the rabbit-hole goes
@@ -363,20 +446,19 @@ a wrong language
 on balance
 all models are wrong
 & [delete me]
-secrete code in effect`
-    ];
+secrete code in effect`;
 
-    // THIS LOOP WAS MISSING
     for (let i = 0; i < totalTextBlocks; i++) {
         const textItem = document.createElement('div');
         textItem.className = 'text-grid-item';
-        // Using the single poem for all blocks
-        const snippet = textSnippets[0]; 
-        textItem.textContent = snippet;
+        // I kept the 'ID_REF' badge because it fits the aesthetic, 
+        // but used just a small slice of the poem for the preview
+        const poemSlice = snippet.split('\n').slice(0, 3).join('<br>');
+        textItem.innerHTML = `<span style="opacity:0.5; font-size: 0.6em; font-weight:bold;">ID_REF_${i+100}</span><br>${poemSlice}...`;
         textGrid.appendChild(textItem);
 
         textItem.addEventListener('click', () => {
-            textLightboxContent.innerText = textItem.innerText; // Use innerText to preserve line breaks
+            textLightboxContent.innerText = snippet; 
             textLightbox.classList.add('active');
         });
     }
@@ -385,7 +467,8 @@ secrete code in effect`
     });
 
     window.addEventListener('load', handleScrollAnimation);
-</script>
+    </script>
 </body>
 </html>
+
 
