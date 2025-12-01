@@ -45,7 +45,7 @@
             background: var(--bg-color);
         }
 
-        /* --- NAME STYLING (REVERTED TO CLEAN LOOK) --- */
+        /* --- NAME STYLING --- */
         .name {
             font-family: 'Space Mono', monospace; 
             font-weight: 700;
@@ -55,20 +55,14 @@
             width: 100%;
             padding: 15px 0;
             box-sizing: border-box;
-            
-            /* Reverted size */
             font-size: 8vw; 
             line-height: 1; 
-            
-            /* Removed text-stroke and tracking */
-            
             transform-origin: top;
             user-select: none;
             text-transform: uppercase;
             position: relative;
             z-index: 2;
             border-bottom: var(--border-thick);
-            will-change: transform;
         }
 
         .name span {
@@ -229,19 +223,25 @@
         .poem-content {
             font-size: 1.1rem;
             line-height: 1.6;
-            white-space: pre-wrap; 
+            white-space: pre-wrap; /* THIS PRESERVES YOUR FORMATTING */
             font-weight: 400;
+            font-family: 'Space Mono', monospace;
         }
 
-        /* The Reload Button */
+        /* The Reload & Read Controls */
         .poem-controls {
             position: absolute;
-            top: -25px;
-            left: 10px;
+            top: -30px;
+            left: 0;
+            right: 0;
             z-index: 5;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 10px;
         }
 
-        .reload-btn {
+        /* Unified Button Style */
+        .control-btn {
             width: 60px;
             height: 60px;
             border-radius: 50%;
@@ -257,23 +257,29 @@
             padding: 0;
         }
 
-        .reload-btn svg {
+        .control-btn svg {
             width: 30px;
             height: 30px;
             fill: var(--ink-color);
             transition: transform 0.3s ease;
         }
 
-        .reload-btn:hover {
+        .control-btn:hover {
             transform: translate(2px, 2px);
             box-shadow: 3px 3px 0px var(--ink-color);
+            background-color: var(--secondary-accent);
         }
         
-        .reload-btn:hover svg {
+        .control-btn:hover svg {
+            fill: white;
+        }
+
+        /* Specific hover for reload to spin */
+        #reload-poem-btn:hover svg {
             transform: rotate(180deg);
         }
 
-        .reload-btn:active {
+        .control-btn:active {
             transform: translate(5px, 5px);
             box-shadow: 0px 0px 0px var(--ink-color);
         }
@@ -394,9 +400,14 @@
             
             <div class="poem-wrapper">
                 <div class="poem-controls">
-                    <button id="reload-poem-btn" class="reload-btn" aria-label="Load new poem">
+                    <button id="reload-poem-btn" class="control-btn" aria-label="Load new poem" title="New Poem">
                         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46A7.93 7.93 0 0020 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74A7.93 7.93 0 004 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/>
+                        </svg>
+                    </button>
+                    <button id="read-poem-btn" class="control-btn" aria-label="Read Poem" title="Read Aloud">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
                         </svg>
                     </button>
                 </div>
@@ -452,7 +463,7 @@
             }
         }
 
-        // --- 2. SMOOTH RELATIVE SCROLL ANIMATION ---
+        // --- 2. HEADER SQUISH SCRIPT ---
         const nameElement = document.querySelector('.name');
         const menuBar = document.getElementById('menu-bar');
         
@@ -542,7 +553,6 @@
                 img.alt = `Image ${i}`;
                 img.loading = "lazy"; 
                 
-                // ERROR HANDLER: Red box with ?
                 img.onerror = function() {
                     this.style.display = "none";
                     gridItem.style.backgroundColor = "red";
@@ -573,13 +583,18 @@
             });
         }
 
-        // --- 5. POEM GENERATOR ---
+        // --- 5. POEM GENERATOR & READER ---
         const poemContent = document.getElementById('poem-content');
         const reloadBtn = document.getElementById('reload-poem-btn');
+        const readBtn = document.getElementById('read-poem-btn');
+        
+        let currentPoemText = ""; 
+        let synth = window.speechSynthesis;
+
         const rainbowText = '<span style="color:#ff0000">s</span><span style="color:#ff8c00">p</span><span style="color:#e6b800">e</span><span style="color:#008000">c</span><span style="color:#0000ff">i</span><span style="color:#4b0082">a</span><span style="color:#8f00ff">l</span> <span style="color:#ff0000">e</span><span style="color:#ff8c00">f</span><span style="color:#e6b800">f</span><span style="color:#e6b800">e</span><span style="color:#008000">c</span><span style="color:#0000ff">t</span>';
 
         const poems = [
-`on a bluff is a red tomato
+            { text: `on a bluff is a red tomato
 a meter away
 & the jungle deletes me
 on the rabbit-hole goes
@@ -609,9 +624,8 @@ a wrong language
 on balance
 all models are wrong
 & [delete me]
-secrete code in effect`,
-
-`a)
+secrete code in effect` },
+            { text: `a)
 penny moon
 always dings
 think a
@@ -637,9 +651,8 @@ less &
 my head
 was in
 the helmet
-penny moon`,
-
-`aura manusia looks super natural 
+penny moon` },
+            { text: `aura manusia looks super natural 
  in the crick-necked creek of the dead
   paints holy
    clusters in squeezed quick final push face
@@ -647,9 +660,8 @@ penny moon`,
      for an outline one day will wake up
       all made up
        but not today
-        the _____ stream is for wading`,
-
-`dialects first
+        the _____ stream is for wading` },
+            { text: `dialects first
 they end. 
 bye my civilian accents       
                   my imported
@@ -670,9 +682,9 @@ obscured and therein 
 loved
 
 i start rather squealed 
-off`,
-
-`we sound a portrait object–pumice
+off` },
+            { 
+                display: `we sound a portrait object–pumice
 aka monument’s kiss
 you wake
 from a 50 year coma
@@ -680,8 +692,16 @@ to my cover band: I Am Bone Person
 now i’m no artist, but i tried my best
 @ the endless dilemma
 [${rainbowText}]`,
-
-`dear white tiger in barbed wire
+                read: `we sound a portrait object–pumice
+aka monument’s kiss
+you wake
+from a 50 year coma
+to my cover band: I Am Bone Person
+now i’m no artist, but i tried my best
+@ the endless dilemma
+[special effect]`
+            },
+            { text: `dear white tiger in barbed wire
 did you know all bubbles pop, popes die
 both mind & perpetual motion come to a stop
 plus, probably cancer is hidden within me
@@ -700,9 +720,8 @@ besides, what could be felt by the ungrowth of a wednesday?
 narrow fate hangs in the chamber
 soft clamor, a mosquito in amber
 relax, my nerves. everything bathes
-no enemy worse than the hell i foresee`,
-
-`robot tells me to hug it
+no enemy worse than the hell i foresee` },
+            { text: `robot tells me to hug it
 globs honey on my boo
 sweetheart’s hardon sightsees, writes love notes
 phone lines can’t cope with its bylines
@@ -713,9 +732,8 @@ asks how can i sleep
 we make out on cctv
 
 according to data i’m always looking down & that’s heartbreaking
-then robot brushes my hair & i’m off`,
-
-`motivation for the upcoming
+then robot brushes my hair & i’m off` },
+            { text: `motivation for the upcoming
 dry season
 includes
 long exposure of
@@ -734,9 +752,8 @@ blowhole rainbow
 and one tiny beauty–little
 ants
 shifting their
-nest  `,
-
-`       mom makes a hairpin left turn
+nest  ` },
+            { text: `       mom makes a hairpin left turn
       toward lamplit verandas
    which quickly mirage.
  a sulfur smell hangs
@@ -751,11 +768,10 @@ ly
 good
  attack
    on real
-     magic.`,
-
-`most pictures, you see, of photographs of ‘people talk,’
-quite frankly, by a painting of the picture, you say here’s a painting but it’s a picture, or it represents but it doesn’t represent,
-two different therapies, there was a picture of a woman who had burgers and children, and they put in an element of stock, people act if people aren’t
+     magic.` },
+            { text: `most pictures, you see, of photographs of ‘people talk,’
+quite frankly, by a painting of the picture, you say here’s a painting but it’s a picture, or it represents but it doesn’t represent,,
+two different therapies, there was a picture of a woman who had burgers and children, and they put in an element of stock,, people act if people aren’t
  
 I came to see how things knock down, the way you would respond to a picture of a monster, & everybody said, you should be abstracter in the future.
  
@@ -768,7 +784,7 @@ the claim that the little mind is American is a doctor’s shadow
 they were almost monsters, third generation, what gave structures pressure,
 the caps of a figure, in a certain kind of way,
 because figures will do what you can see, what they were, that they were,
-the elephant, the alphabet,
+the elephant, the alphabet,,
  
  
 worker where there were Daguerre, a predator,
@@ -777,9 +793,8 @@ registering movement. it was a movement, was sort of the last overworked movemen
  
 they were almost monsters, third generation abstract specialists’ sons,
 what made structures pressure didn’t have the idea of letting yourself gold,
-marketed, maneuvered, directing any traffic`,
-
-`™ 
+marketed,, maneuvered,, directing any traffic` },
+            { text: `™ 
 every thing in the entire life can be solved. make it into patterns
 i mean look at me, an exploded champion divides by three
 
@@ -790,9 +805,35 @@ it never gets stagnant
 exactly
 stream that flows it never stops
 a stream it flows
-i thought what a stream`,
-
-`i spoke at highly polished sand
+i thought what a stream` },
+            { text: `[ages ago,
+                jungle soundscapes waxing unadopted]
+large fire erupts,
+mythology whateverness
+now power
+         poison
+         props the
+         perfect
+         pit stop
+fits a statue in 
+         position,
+                       an other people’s products glitch
+the research reaffirms,
+                                     these are soaps
+simple.
+summer
+style is toxic
+ages ago,
+              accidental purpose seeded trails
+now it needs
+          a name card.
+             now it goes
+to church
+now it’s
+[hell scammed 
+  o  p  e  n]
+  on a map` },
+            { text: `i spoke at highly polished sand
 it mimicked trick missiles
 in patterns
 and told me i am bland
@@ -811,9 +852,8 @@ sand goes comatose
 now it's wet
 angrily i suss, this metallic gravitas…
 and of all the tools we have…
-i shut it off`,
-
-`i, like catching a mechanism pants-down,
+i shut it off` },
+            { text: `i, like catching a mechanism pants-down,
 choose a common noun. this time it is time.
 is this mayhem? i ask my calculator,
 a finer instrument than infinity.
@@ -828,9 +868,8 @@ oh hell, since logic cannot help
 with such simple problems,
 look at its rump,
 its fundament,
-which somehow must be us.`,
-
-`set a body, annealing,
+which somehow must be us.` },
+            { text: `set a body, annealing,
 in superposition.
 then see.
 it collates, collapses a vast tiny distance
@@ -838,9 +877,8 @@ and is perceived
    as the needle
       in a haystack
 of needles
- `,
-
-`my twins might matter, squared
+ ` },
+            { text: `my twins might matter, squared
 how they outrun my intellect
 to measurements, my little antecedents.
 is this thing on?
@@ -853,23 +891,63 @@ pray tell, what the hell is any one of us?
 answer simply, in classic doctrine.
 where inside i am deaf in it,
 indefinite. oh, where are you cosmos?
-goddamn, is this thing on?`
+goddamn, is this thing on?` }
         ];
         
         function setRandomPoem() {
+            synth.cancel();
             const randomIndex = Math.floor(Math.random() * poems.length);
-            poemContent.innerHTML = poems[randomIndex];
+            const poemObj = poems[randomIndex];
+            currentPoemText = poemObj.read || poemObj.text;
+            // The display text (with formatting) goes into innerHTML
+            poemContent.innerHTML = poemObj.display || poemObj.text;
         }
+
+        function getAlexVoice() {
+            const voices = synth.getVoices();
+            let selectedVoice = voices.find(v => v.name.includes("Alex"));
+            if (!selectedVoice) selectedVoice = voices.find(v => v.name.includes("Fred"));
+            if (!selectedVoice) selectedVoice = voices.find(v => v.name.includes("Zira"));
+            if (!selectedVoice) selectedVoice = voices.find(v => v.name.includes("Google US English"));
+            return selectedVoice || voices[0];
+        }
+
+        readBtn.addEventListener('click', () => {
+            synth.cancel();
+            const voice = getAlexVoice(); 
+            const lines = currentPoemText.split('\n');
+            let i = 0;
+            
+            function playNextLine() {
+                if (i >= lines.length) return;
+                const line = lines[i].trim();
+                
+                if (line.length === 0) {
+                    i++;
+                    setTimeout(playNextLine, 600); 
+                } else {
+                    const utterance = new SpeechSynthesisUtterance(line);
+                    utterance.voice = voice;
+                    utterance.rate = 0.9; 
+                    utterance.pitch = 1.0;
+                    
+                    utterance.onend = function() {
+                        i++;
+                        setTimeout(playNextLine, 150); 
+                    };
+                    synth.speak(utterance);
+                }
+            }
+            playNextLine();
+        });
 
         if(reloadBtn && poemContent) {
             setRandomPoem();
-            
-            reloadBtn.addEventListener('click', () => {
-                setRandomPoem();
+            reloadBtn.addEventListener('click', () => { setRandomPoem(); });
+            [reloadBtn, readBtn].forEach(btn => {
+                btn.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
+                btn.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
             });
-
-            reloadBtn.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
-            reloadBtn.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
         }
         
     });
