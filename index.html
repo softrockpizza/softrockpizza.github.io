@@ -484,7 +484,7 @@
             });
         }
 
-        // --- 4. IMAGE GRID (RESTORED WITH ERROR CHECKER) ---
+        // --- 4. IMAGE GRID ---
         const imageGrid = document.getElementById('image-grid');
         const imageLightbox = document.getElementById('image-lightbox');
         const lightboxImage = imageLightbox ? imageLightbox.querySelector('img') : null;
@@ -497,7 +497,7 @@
             "IMG_20180402_143642_071.jpg", 
             "image_248.jpg", 
             "image_265.jpg", 
-            "image_269.jpg", // Restored 
+            "image_109 frame sm.jpg", // SWAPPED IN
             "image_67.jpg", 
             "image_90 frame sm.jpg", 
             "image_72 frame sm.jpg", 
@@ -547,7 +547,6 @@
                 gridItem.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
 
                 gridItem.addEventListener('click', () => {
-                    // Only open lightbox if image loaded successfully
                     if(img.style.display !== "none") {
                         lightboxImage.src = img.src;
                         imageLightbox.classList.add('active');
