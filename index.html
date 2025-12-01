@@ -16,7 +16,7 @@
             --ink-color: #000000;
             --accent-color: #CCFF00; 
             --secondary-accent: #0055ff; 
-            --silver-color: #e6e6e6; /* New color for Read button */
+            --silver-color: #e6e6e6; 
             --border-thick: 3px solid var(--ink-color);
         }
 
@@ -219,29 +219,29 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative; /* Anchor for controls */
+            position: relative; 
         }
 
         .poem-content {
             font-size: 1.1rem;
             line-height: 1.6;
-            white-space: pre-wrap; 
+            white-space: pre-wrap; /* Preserves poem shape */
             font-weight: 400;
         }
 
-        /* --- CONTROLS STYLING (UPDATED) --- */
+        /* --- CONTROLS STYLING --- */
         .poem-controls {
             position: absolute;
-            left: -80px; /* Push to the left outside the box */
+            left: -80px; /* Anchored to the LEFT side of the window */
             top: 0;
             display: flex;
-            flex-direction: column; /* Stack vertically */
+            flex-direction: column; /* Stacked vertically */
             gap: 15px;
             z-index: 5;
         }
 
-        /* Mobile Adjustment: Move buttons to top if screen is small */
-        @media (max-width: 1000px) {
+        /* Only un-anchor on very small screens (phones) */
+        @media (max-width: 768px) {
             .poem-controls {
                 position: relative;
                 left: 0;
@@ -266,12 +266,10 @@
             padding: 0;
         }
 
-        /* RELOAD BUTTON (Acid Green) */
         #reload-poem-btn {
             background-color: var(--accent-color);
         }
 
-        /* READ BUTTON (Concrete Silver) */
         #read-poem-btn {
             background-color: var(--silver-color);
         }
@@ -292,7 +290,6 @@
             transform: rotate(180deg);
         }
 
-        /* Hover state for Read Button - stays greyish but darker */
         #read-poem-btn:hover {
             background-color: #d4d4d4;
         }
@@ -417,7 +414,6 @@
             <h2>Words</h2>
             
             <div class="poem-wrapper">
-                
                 <div class="poem-window">
                     <div class="poem-controls">
                         <button id="reload-poem-btn" class="control-btn" aria-label="Load new poem" title="New Poem">
@@ -575,7 +571,7 @@
             });
         }
 
-        // --- 5. POEM GENERATOR & "PATIENT" READER ---
+        // --- 5. POEM GENERATOR & READER ---
         const poemContent = document.getElementById('poem-content');
         const reloadBtn = document.getElementById('reload-poem-btn');
         const readBtn = document.getElementById('read-poem-btn');
@@ -645,21 +641,21 @@ was in
 the helmet
 penny moon` },
             { text: `aura manusia looks super natural 
- in the crick-necked creek of the dead
-  paints holy
-   clusters in squeezed quick final push face
-    just finished testing the waters of making peace 
-     for an outline one day will wake up
-      all made up
-       but not today
-        the _____ stream is for wading` },
+ in the crick-necked creek of the dead
+  paints holy
+   clusters in squeezed quick final push face
+    just finished testing the waters of making peace 
+     for an outline one day will wake up
+      all made up
+       but not today
+        the _____ stream is for wading` },
             { text: `dialects first
 they end. 
-bye my civilian accents       
-                  my imported
+bye my civilian accents       
+                  my imported
 
-into day so moves     
-              difference
+into day so moves     
+              difference
 some english goons 
 their parts evolving
 the poor lapses.
@@ -744,23 +740,23 @@ blowhole rainbow
 and one tiny beauty–little
 ants
 shifting their
-nest  ` },
-            { text: `       mom makes a hairpin left turn
-      toward lamplit verandas
-   which quickly mirage.
- a sulfur smell hangs
+nest  ` },
+            { text: `       mom makes a hairpin left turn
+      toward lamplit verandas
+   which quickly mirage.
+ a sulfur smell hangs
 in the guest wing
- cue hierarchy of needs
-  make a bomb out of
-   bathroom supplies
-  show us what you
- can do. a
+ cue hierarchy of needs
+  make a bomb out of
+   bathroom supplies
+  show us what you
+ can do. a
 fair-
 ly
 good
- attack
-   on real
-     magic.` },
+ attack
+   on real
+     magic.` },
             { text: `most pictures, you see, of photographs of ‘people talk,’
 quite frankly, by a painting of the picture, you say here’s a painting but it’s a picture, or it represents but it doesn’t represent,,
 two different therapies, there was a picture of a woman who had burgers and children, and they put in an element of stock,, people act if people aren’t
@@ -799,32 +795,32 @@ stream that flows it never stops
 a stream it flows
 i thought what a stream` },
             { text: `[ages ago,
-                jungle soundscapes waxing unadopted]
+                jungle soundscapes waxing unadopted]
 large fire erupts,
 mythology whateverness
 now power
-         poison
-         props the
-         perfect
-         pit stop
+         poison
+         props the
+         perfect
+         pit stop
 fits a statue in 
-         position,
-                       an other people’s products glitch
+         position,
+                       an other people’s products glitch
 the research reaffirms,
-                                     these are soaps
+                                     these are soaps
 simple.
 summer
 style is toxic
 ages ago,
-              accidental purpose seeded trails
+              accidental purpose seeded trails
 now it needs
-          a name card.
-             now it goes
+          a name card.
+             now it goes
 to church
 now it’s
 [hell scammed 
-  o  p  e  n]
-  on a map` },
+  o  p  e  n]
+  on a map` },
             { text: `i spoke at highly polished sand
 it mimicked trick missiles
 in patterns
@@ -866,8 +862,8 @@ in superposition.
 then see.
 it collates, collapses a vast tiny distance
 and is perceived
-   as the needle
-      in a haystack
+   as the needle
+      in a haystack
 of needles
  ` },
             { text: `my twins might matter, squared
@@ -891,7 +887,7 @@ goddamn, is this thing on?` }
             const randomIndex = Math.floor(Math.random() * poems.length);
             const poemObj = poems[randomIndex];
             currentPoemText = poemObj.read || poemObj.text;
-            poemContent.innerHTML = poemObj.display || poemObj.text; 
+            poemContent.innerHTML = poemObj.display || poemObj.text; 
         }
 
         function getAlexVoice() {
@@ -906,7 +902,6 @@ goddamn, is this thing on?` }
         readBtn.addEventListener('click', () => {
             synth.cancel();
             const voice = getAlexVoice();
-            // CHUNKING LOGIC FOR NUANCE
             const segments = currentPoemText.split(/([.,;?!—]+|\n+)/g);
             
             let i = 0;
@@ -921,18 +916,15 @@ goddamn, is this thing on?` }
                     return;
                 }
 
-                // CHECK IF CHUNK IS PUNCTUATION OR NEWLINE
                 const isPunctuation = /^[.,;?!—]+$/.test(chunk);
-                const isNewline = /^\n+$/.test(segments[i]); 
+                const isNewline = /^\n+$/.test(segments[i]); 
 
                 if (isNewline) {
-                    // Stanza break (more than 1 newline) vs Line break
-                    const pauseTime = segments[i].length > 1 ? 1200 : 200; 
+                    const pauseTime = segments[i].length > 1 ? 1200 : 200; 
                     i++;
                     setTimeout(playNextChunk, pauseTime);
-                } 
+                } 
                 else if (isPunctuation) {
-                    // It's punctuation. Calculate pause based on type.
                     let pauseTime = 0;
                     if (chunk.includes('.')) pauseTime = 800;
                     else if (chunk.includes('?')) pauseTime = 800;
@@ -943,12 +935,11 @@ goddamn, is this thing on?` }
                     
                     i++;
                     setTimeout(playNextChunk, pauseTime);
-                } 
+                } 
                 else {
-                    // It is text. Speak it.
                     const utterance = new SpeechSynthesisUtterance(chunk);
                     utterance.voice = voice;
-                    utterance.rate = 0.85; // Patient speed
+                    utterance.rate = 0.85; 
                     utterance.pitch = 1.0;
                     
                     utterance.onend = function() {
