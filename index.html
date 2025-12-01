@@ -16,6 +16,7 @@
             --ink-color: #000000;
             --accent-color: #CCFF00; 
             --secondary-accent: #0055ff; 
+            --silver-color: #e6e6e6; /* New color for Read button */
             --border-thick: 3px solid var(--ink-color);
         }
 
@@ -218,34 +219,42 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            position: relative; /* Anchor for controls */
         }
 
         .poem-content {
             font-size: 1.1rem;
             line-height: 1.6;
-            white-space: pre-wrap; /* THIS PRESERVES YOUR FORMATTING */
+            white-space: pre-wrap; 
             font-weight: 400;
-            font-family: 'Space Mono', monospace;
         }
 
-        /* The Reload & Read Controls */
+        /* --- CONTROLS STYLING (UPDATED) --- */
         .poem-controls {
             position: absolute;
-            top: -30px;
-            left: 0;
-            right: 0;
-            z-index: 5;
+            left: -80px; /* Push to the left outside the box */
+            top: 0;
             display: flex;
-            justify-content: space-between;
-            padding: 0 10px;
+            flex-direction: column; /* Stack vertically */
+            gap: 15px;
+            z-index: 5;
         }
 
-        /* Unified Button Style */
+        /* Mobile Adjustment: Move buttons to top if screen is small */
+        @media (max-width: 1000px) {
+            .poem-controls {
+                position: relative;
+                left: 0;
+                top: 0;
+                flex-direction: row;
+                margin-bottom: 20px;
+            }
+        }
+
         .control-btn {
             width: 60px;
             height: 60px;
             border-radius: 50%;
-            background-color: var(--accent-color);
             border: var(--border-thick);
             cursor: pointer;
             display: flex;
@@ -255,6 +264,16 @@
             transition: transform 0.1s, box-shadow 0.1s;
             margin: 0; 
             padding: 0;
+        }
+
+        /* RELOAD BUTTON (Acid Green) */
+        #reload-poem-btn {
+            background-color: var(--accent-color);
+        }
+
+        /* READ BUTTON (Concrete Silver) */
+        #read-poem-btn {
+            background-color: var(--silver-color);
         }
 
         .control-btn svg {
@@ -267,16 +286,15 @@
         .control-btn:hover {
             transform: translate(2px, 2px);
             box-shadow: 3px 3px 0px var(--ink-color);
-            background-color: var(--secondary-accent);
         }
         
-        .control-btn:hover svg {
-            fill: white;
-        }
-
-        /* Specific hover for reload to spin */
         #reload-poem-btn:hover svg {
             transform: rotate(180deg);
+        }
+
+        /* Hover state for Read Button - stays greyish but darker */
+        #read-poem-btn:hover {
+            background-color: #d4d4d4;
         }
 
         .control-btn:active {
@@ -399,20 +417,21 @@
             <h2>Words</h2>
             
             <div class="poem-wrapper">
-                <div class="poem-controls">
-                    <button id="reload-poem-btn" class="control-btn" aria-label="Load new poem" title="New Poem">
-                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46A7.93 7.93 0 0020 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74A7.93 7.93 0 004 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/>
-                        </svg>
-                    </button>
-                    <button id="read-poem-btn" class="control-btn" aria-label="Read Poem" title="Read Aloud">
-                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
-                        </svg>
-                    </button>
-                </div>
                 
                 <div class="poem-window">
+                    <div class="poem-controls">
+                        <button id="reload-poem-btn" class="control-btn" aria-label="Load new poem" title="New Poem">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46A7.93 7.93 0 0020 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74A7.93 7.93 0 004 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/>
+                            </svg>
+                        </button>
+                        <button id="read-poem-btn" class="control-btn" aria-label="Read Poem" title="Read Aloud">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                            </svg>
+                        </button>
+                    </div>
+
                     <div id="poem-content" class="poem-content"></div>
                 </div>
             </div>
@@ -471,23 +490,17 @@
             function handleScrollAnimation() {
                 const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
                 if (scrollableHeight <= 0) return;
-
                 const scrollPercentage = window.scrollY / scrollableHeight;
                 const maxScale = 1;
                 const minScale = 0.15;
-                
                 let currentScale = maxScale - (scrollPercentage * (maxScale - minScale));
                 currentScale = Math.max(minScale, Math.min(maxScale, currentScale));
-
                 nameElement.style.transform = `scaleY(${currentScale})`;
-                
                 const originalHeight = nameElement.offsetHeight;
                 const squishedHeight = originalHeight * currentScale;
                 const translateY = -(originalHeight - squishedHeight);
-                
                 menuBar.style.transform = `translateY(${translateY}px)`;
             }
-
             window.addEventListener('scroll', handleScrollAnimation);
             window.addEventListener('resize', handleScrollAnimation);
             handleScrollAnimation();
@@ -517,30 +530,14 @@
         const lightboxImage = imageLightbox ? imageLightbox.querySelector('img') : null;
 
         const myImageFiles = [
-            "1.jpg", 
-            "IMG_20180328_103203_311.jpg", 
-            "nine.jpg", 
-            "one.jpg", 
-            "IMG_20180402_143642_071.jpg", 
-            "image_248.jpg", 
-            "image_265.jpg", 
-            "image_109 frame sm.jpg",
-            "image_67.jpg", 
-            "image_90 frame sm.jpg", 
-            "image_72 frame sm.jpg", 
-            "image_67 sm.jpg", 
-            "image_65 frame sm.jpg", 
-            "image_60 frame sm.jpg", 
-            "image_46 frame.jpg", 
-            "image_38 frame.jpg", 
-            "image_264 frame sm.jpg", 
-            "image_257.jpg", 
-            "image_251 frame sm.jpg", 
-            "image_245 frame sm.jpg", 
-            "image_229 frame sm.jpg", 
-            "image_214 frame sm.jpg", 
-            "image_195 frame sm.jpg", 
-            "image_187 frame sm.jpg"
+            "1.jpg", "IMG_20180328_103203_311.jpg", "nine.jpg", "one.jpg", 
+            "IMG_20180402_143642_071.jpg", "image_248.jpg", "image_265.jpg", 
+            "image_109 frame sm.jpg", "image_67.jpg", "image_90 frame sm.jpg", 
+            "image_72 frame sm.jpg", "image_67 sm.jpg", "image_65 frame sm.jpg", 
+            "image_60 frame sm.jpg", "image_46 frame.jpg", "image_38 frame.jpg", 
+            "image_264 frame sm.jpg", "image_257.jpg", "image_251 frame sm.jpg", 
+            "image_245 frame sm.jpg", "image_229 frame sm.jpg", "image_214 frame sm.jpg", 
+            "image_195 frame sm.jpg", "image_187 frame sm.jpg"
         ];
 
         if(imageGrid && imageLightbox) {
@@ -548,11 +545,9 @@
                 const gridItem = document.createElement('div');
                 gridItem.className = 'grid-item';
                 const img = document.createElement('img');
-                
                 img.src = encodeURI(myImageFiles[i]);
                 img.alt = `Image ${i}`;
                 img.loading = "lazy"; 
-                
                 img.onerror = function() {
                     this.style.display = "none";
                     gridItem.style.backgroundColor = "red";
@@ -564,13 +559,10 @@
                     gridItem.style.fontWeight = "bold";
                     gridItem.innerText = "?";
                 };
-
                 gridItem.appendChild(img);
                 imageGrid.appendChild(gridItem);
-                
                 gridItem.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
                 gridItem.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
-
                 gridItem.addEventListener('click', () => {
                     if(img.style.display !== "none") {
                         lightboxImage.src = img.src;
@@ -583,7 +575,7 @@
             });
         }
 
-        // --- 5. POEM GENERATOR & READER ---
+        // --- 5. POEM GENERATOR & "PATIENT" READER ---
         const poemContent = document.getElementById('poem-content');
         const reloadBtn = document.getElementById('reload-poem-btn');
         const readBtn = document.getElementById('read-poem-btn');
@@ -899,8 +891,7 @@ goddamn, is this thing on?` }
             const randomIndex = Math.floor(Math.random() * poems.length);
             const poemObj = poems[randomIndex];
             currentPoemText = poemObj.read || poemObj.text;
-            // The display text (with formatting) goes into innerHTML
-            poemContent.innerHTML = poemObj.display || poemObj.text;
+            poemContent.innerHTML = poemObj.display || poemObj.text; 
         }
 
         function getAlexVoice() {
@@ -914,31 +905,62 @@ goddamn, is this thing on?` }
 
         readBtn.addEventListener('click', () => {
             synth.cancel();
-            const voice = getAlexVoice(); 
-            const lines = currentPoemText.split('\n');
-            let i = 0;
+            const voice = getAlexVoice();
+            // CHUNKING LOGIC FOR NUANCE
+            const segments = currentPoemText.split(/([.,;?!—]+|\n+)/g);
             
-            function playNextLine() {
-                if (i >= lines.length) return;
-                const line = lines[i].trim();
+            let i = 0;
+            function playNextChunk() {
+                if (i >= segments.length) return;
                 
-                if (line.length === 0) {
+                const chunk = segments[i].trim();
+                
+                if (!chunk) {
                     i++;
-                    setTimeout(playNextLine, 600); 
-                } else {
-                    const utterance = new SpeechSynthesisUtterance(line);
+                    playNextChunk();
+                    return;
+                }
+
+                // CHECK IF CHUNK IS PUNCTUATION OR NEWLINE
+                const isPunctuation = /^[.,;?!—]+$/.test(chunk);
+                const isNewline = /^\n+$/.test(segments[i]); 
+
+                if (isNewline) {
+                    // Stanza break (more than 1 newline) vs Line break
+                    const pauseTime = segments[i].length > 1 ? 1200 : 200; 
+                    i++;
+                    setTimeout(playNextChunk, pauseTime);
+                } 
+                else if (isPunctuation) {
+                    // It's punctuation. Calculate pause based on type.
+                    let pauseTime = 0;
+                    if (chunk.includes('.')) pauseTime = 800;
+                    else if (chunk.includes('?')) pauseTime = 800;
+                    else if (chunk.includes('!')) pauseTime = 800;
+                    else if (chunk.includes(',')) pauseTime = 350;
+                    else if (chunk.includes('—')) pauseTime = 500;
+                    else if (chunk.includes(';')) pauseTime = 600;
+                    
+                    i++;
+                    setTimeout(playNextChunk, pauseTime);
+                } 
+                else {
+                    // It is text. Speak it.
+                    const utterance = new SpeechSynthesisUtterance(chunk);
                     utterance.voice = voice;
-                    utterance.rate = 0.9; 
+                    utterance.rate = 0.85; // Patient speed
                     utterance.pitch = 1.0;
                     
                     utterance.onend = function() {
                         i++;
-                        setTimeout(playNextLine, 150); 
+                        playNextChunk();
                     };
+                    
                     synth.speak(utterance);
                 }
             }
-            playNextLine();
+            
+            playNextChunk();
         });
 
         if(reloadBtn && poemContent) {
