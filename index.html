@@ -225,8 +225,9 @@
         .poem-content {
             font-size: 1.1rem;
             line-height: 1.6;
-            white-space: pre-wrap; 
+            white-space: pre-wrap; /* Essential for your formatting */
             font-weight: 400;
+            font-family: 'Space Mono', monospace;
         }
 
         /* --- CONTROLS STYLING --- */
@@ -293,7 +294,6 @@
             background-color: #d4d4d4;
         }
 
-        /* Active State for Read Button (When Reading) */
         #read-poem-btn.is-reading {
             background-color: var(--secondary-accent);
         }
@@ -551,9 +551,12 @@
                 const gridItem = document.createElement('div');
                 gridItem.className = 'grid-item';
                 const img = document.createElement('img');
-                img.src = encodeURI(myImageFiles[i]);
+                
+                // Using just image name to avoid path issues
+                img.src = myImageFiles[i]; 
                 img.alt = `Image ${i}`;
                 img.loading = "lazy"; 
+                
                 img.onerror = function() {
                     this.style.display = "none";
                     gridItem.style.backgroundColor = "red";
@@ -567,8 +570,10 @@
                 };
                 gridItem.appendChild(img);
                 imageGrid.appendChild(gridItem);
+                
                 gridItem.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
                 gridItem.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+                
                 gridItem.addEventListener('click', () => {
                     if(img.style.display !== "none") {
                         lightboxImage.src = img.src;
@@ -581,6 +586,4 @@
             });
         }
 
-        // --- 5. POEM GENERATOR & READER ---
-        const poemContent = document.getElementById('poem-content');
-        const reloadBtn = document.getElementB
+        // ---
