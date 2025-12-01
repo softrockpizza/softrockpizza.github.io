@@ -216,11 +216,10 @@
             box-shadow: 15px 15px 0px var(--ink-color);
             padding: 40px;
             min-height: 400px;
-            position: relative; 
-            /* Flex layout by default for desktop to center text */
             display: flex;
             align-items: center;
             justify-content: center;
+            position: relative; 
         }
 
         .poem-content {
@@ -228,36 +227,26 @@
             line-height: 1.6;
             white-space: pre-wrap; 
             font-weight: 400;
-            width: 100%; /* Ensure text container takes space */
         }
 
         /* --- CONTROLS STYLING --- */
         .poem-controls {
             position: absolute;
-            left: -80px; /* DESKTOP: Hanging in left margin */
+            left: -80px; 
             top: 0;
             display: flex;
-            flex-direction: column; /* DESKTOP: Stacked vertically */
+            flex-direction: column; 
             gap: 15px;
             z-index: 5;
         }
 
-        /* MOBILE/TABLET ADJUSTMENT (Prevents Overlap) */
-        @media (max-width: 900px) {
-            .poem-window {
-                /* On mobile, we switch to BLOCK layout. 
-                   This allows the buttons to sit 'on top' of the text physically */
-                display: block; 
-                padding-top: 20px;
-            }
-
+        @media (max-width: 1000px) {
             .poem-controls {
-                position: static; /* Remove absolute positioning */
-                flex-direction: row; /* Side by side buttons */
-                justify-content: flex-start;
-                margin-bottom: 30px; /* Physical space between buttons and poem */
-                left: auto;
-                top: auto;
+                position: relative;
+                left: 0;
+                top: 0;
+                flex-direction: row;
+                margin-bottom: 20px;
             }
         }
 
@@ -579,4 +568,19 @@
                 gridItem.appendChild(img);
                 imageGrid.appendChild(gridItem);
                 gridItem.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
-                gridIte
+                gridItem.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+                gridItem.addEventListener('click', () => {
+                    if(img.style.display !== "none") {
+                        lightboxImage.src = img.src;
+                        imageLightbox.classList.add('active');
+                    }
+                });
+            }
+            imageLightbox.addEventListener('click', () => {
+                imageLightbox.classList.remove('active');
+            });
+        }
+
+        // --- 5. POEM GENERATOR & READER ---
+        const poemContent = document.getElementById('poem-content');
+        const reloadBtn = document.getElementB
