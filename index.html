@@ -15,7 +15,8 @@
             --bg-color: #ffffff;
             --ink-color: #000000;
             --accent-color: #CCFF00; /* Acid Green */
-            --secondary-accent: #ff00ff; /* Hot Magenta */
+            /* CHANGE: Updated magenta to Electric Blue */
+            --secondary-accent: #0055ff; 
             --border-thick: 3px solid var(--ink-color);
         }
 
@@ -432,7 +433,7 @@
         const nameContainer = document.getElementById('dynamic-name');
         
         // Define the name parts
-        // "ADAM" (Black) and "STOVES" (Magenta)
+        // "ADAM" (Black) and "STOVES" (Electric Blue)
         const nameString = "ADAMSTOVES"; 
         
         if(nameContainer) {
@@ -449,7 +450,7 @@
                     // ADAM (First 4 chars)
                     span.style.color = 'var(--ink-color)'; 
                 } else {
-                    // STOVES (Rest)
+                    // STOVES (Rest) - Now uses the new blue secondary accent
                     span.style.color = 'var(--secondary-accent)'; 
                 }
                 
