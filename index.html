@@ -225,23 +225,23 @@
         .poem-content {
             font-size: 1.1rem;
             line-height: 1.6;
-            white-space: pre-wrap; /* Preserves poem shape */
+            white-space: pre-wrap; /* CRITICAL: This preserves your spacing */
             font-weight: 400;
+            font-family: 'Space Mono', monospace;
         }
 
         /* --- CONTROLS STYLING --- */
         .poem-controls {
             position: absolute;
-            left: -80px; /* Anchored to the LEFT side of the window */
+            left: -80px; 
             top: 0;
             display: flex;
-            flex-direction: column; /* Stacked vertically */
+            flex-direction: column; 
             gap: 15px;
             z-index: 5;
         }
 
-        /* Only un-anchor on very small screens (phones) */
-        @media (max-width: 768px) {
+        @media (max-width: 1000px) {
             .poem-controls {
                 position: relative;
                 left: 0;
@@ -292,6 +292,14 @@
 
         #read-poem-btn:hover {
             background-color: #d4d4d4;
+        }
+
+        /* Active State for Read Button (When Reading) */
+        #read-poem-btn.is-reading {
+            background-color: var(--secondary-accent);
+        }
+        #read-poem-btn.is-reading svg {
+            fill: white;
         }
 
         .control-btn:active {
@@ -422,8 +430,11 @@
                             </svg>
                         </button>
                         <button id="read-poem-btn" class="control-btn" aria-label="Read Poem" title="Read Aloud">
-                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <svg id="icon-play" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                            </svg>
+                            <svg id="icon-pause" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="display:none;">
+                                <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
                             </svg>
                         </button>
                     </div>
@@ -575,9 +586,15 @@
         const poemContent = document.getElementById('poem-content');
         const reloadBtn = document.getElementById('reload-poem-btn');
         const readBtn = document.getElementById('read-poem-btn');
+        const iconPlay = document.getElementById('icon-play');
+        const iconPause = document.getElementById('icon-pause');
         
         let currentPoemText = ""; 
         let synth = window.speechSynthesis;
+        let isReading = false;
+        let isPaused = false;
+        let segmentIndex = 0;
+        let segmentTimeout = null;
 
         const rainbowText = '<span style="color:#ff0000">s</span><span style="color:#ff8c00">p</span><span style="color:#e6b800">e</span><span style="color:#008000">c</span><span style="color:#0000ff">i</span><span style="color:#4b0082">a</span><span style="color:#8f00ff">l</span> <span style="color:#ff0000">e</span><span style="color:#ff8c00">f</span><span style="color:#e6b800">f</span><span style="color:#e6b800">e</span><span style="color:#008000">c</span><span style="color:#0000ff">t</span>';
 
@@ -882,81 +899,136 @@ indefinite. oh, where are you cosmos?
 goddamn, is this thing on?` }
         ];
         
-        function setRandomPoem() {
+        function getBestVoice() {
+            const voices = synth.getVoices();
+            // Try to find natural/Google/Neural voices first
+            let voice = voices.find(v => v.name.includes("Google US English"));
+            if (!voice) voice = voices.find(v => v.name.includes("Samantha")); // Mac natural
+            if (!voice) voice = voices.find(v => v.name.includes("Zira")); // Windows natural
+            if (!voice) voice = voices.find(v => v.name.includes("English"));
+            return voice || voices[0];
+        }
+
+        function stopReading() {
+            if (segmentTimeout) clearTimeout(segmentTimeout);
             synth.cancel();
+            isReading = false;
+            isPaused = false;
+            readBtn.classList.remove('is-reading');
+            iconPlay.style.display = 'block';
+            iconPause.style.display = 'none';
+            segmentIndex = 0;
+        }
+
+        function setRandomPoem() {
+            stopReading(); // Stop previous read
             const randomIndex = Math.floor(Math.random() * poems.length);
             const poemObj = poems[randomIndex];
             currentPoemText = poemObj.read || poemObj.text;
             poemContent.innerHTML = poemObj.display || poemObj.text; 
         }
 
-        function getAlexVoice() {
-            const voices = synth.getVoices();
-            let selectedVoice = voices.find(v => v.name.includes("Alex"));
-            if (!selectedVoice) selectedVoice = voices.find(v => v.name.includes("Fred"));
-            if (!selectedVoice) selectedVoice = voices.find(v => v.name.includes("Zira"));
-            if (!selectedVoice) selectedVoice = voices.find(v => v.name.includes("Google US English"));
-            return selectedVoice || voices[0];
+        function playNextChunk() {
+            if (!isReading || isPaused) return;
+            const segments = currentPoemText.split(/([.,;?!—]+|\n+)/g);
+            
+            if (segmentIndex >= segments.length) {
+                stopReading();
+                return;
+            }
+            
+            const chunk = segments[segmentIndex].trim();
+            
+            // Skip empty chunks
+            if (!chunk) {
+                segmentIndex++;
+                playNextChunk();
+                return;
+            }
+
+            // Punctuation Logic
+            const isPunctuation = /^[.,;?!—]+$/.test(chunk);
+            const isNewline = /^\n+$/.test(segments[segmentIndex]); 
+
+            if (isNewline || isPunctuation) {
+                let pauseTime = 200; // Default pause
+                
+                if (isNewline) {
+                    // Stanza break vs Line break
+                    pauseTime = segments[segmentIndex].length > 1 ? 1200 : 250; 
+                } 
+                else if (isPunctuation) {
+                    if (chunk.includes('.')) pauseTime = 900;
+                    else if (chunk.includes('?')) pauseTime = 900;
+                    else if (chunk.includes('!')) pauseTime = 900;
+                    else if (chunk.includes(',')) pauseTime = 400;
+                    else if (chunk.includes('—')) pauseTime = 600;
+                } 
+                
+                segmentIndex++;
+                segmentTimeout = setTimeout(playNextChunk, pauseTime);
+            } 
+            else {
+                // Read Text
+                const utterance = new SpeechSynthesisUtterance(chunk);
+                utterance.voice = getBestVoice();
+                utterance.rate = 0.9; 
+                
+                // Add slight pitch drop for sentence endings
+                if (segments[segmentIndex+1] && /[.?!]/.test(segments[segmentIndex+1])) {
+                     utterance.pitch = 0.9;
+                } else {
+                     utterance.pitch = 1.0;
+                }
+                
+                utterance.onend = function() {
+                    segmentIndex++;
+                    playNextChunk();
+                };
+                
+                synth.speak(utterance);
+            }
         }
 
         readBtn.addEventListener('click', () => {
-            synth.cancel();
-            const voice = getAlexVoice();
-            const segments = currentPoemText.split(/([.,;?!—]+|\n+)/g);
-            
-            let i = 0;
-            function playNextChunk() {
-                if (i >= segments.length) return;
-                
-                const chunk = segments[i].trim();
-                
-                if (!chunk) {
-                    i++;
+            // TOGGLE LOGIC
+            if (isReading) {
+                if (isPaused) {
+                    // RESUME
+                    isPaused = false;
+                    iconPlay.style.display = 'none';
+                    iconPause.style.display = 'block';
                     playNextChunk();
-                    return;
+                } else {
+                    // PAUSE
+                    isPaused = true;
+                    if (segmentTimeout) clearTimeout(segmentTimeout);
+                    synth.cancel();
+                    iconPlay.style.display = 'block';
+                    iconPause.style.display = 'none';
                 }
-
-                const isPunctuation = /^[.,;?!—]+$/.test(chunk);
-                const isNewline = /^\n+$/.test(segments[i]); 
-
-                if (isNewline) {
-                    const pauseTime = segments[i].length > 1 ? 1200 : 200; 
-                    i++;
-                    setTimeout(playNextChunk, pauseTime);
-                } 
-                else if (isPunctuation) {
-                    let pauseTime = 0;
-                    if (chunk.includes('.')) pauseTime = 800;
-                    else if (chunk.includes('?')) pauseTime = 800;
-                    else if (chunk.includes('!')) pauseTime = 800;
-                    else if (chunk.includes(',')) pauseTime = 350;
-                    else if (chunk.includes('—')) pauseTime = 500;
-                    else if (chunk.includes(';')) pauseTime = 600;
-                    
-                    i++;
-                    setTimeout(playNextChunk, pauseTime);
-                } 
-                else {
-                    const utterance = new SpeechSynthesisUtterance(chunk);
-                    utterance.voice = voice;
-                    utterance.rate = 0.85; 
-                    utterance.pitch = 1.0;
-                    
-                    utterance.onend = function() {
-                        i++;
-                        playNextChunk();
-                    };
-                    
-                    synth.speak(utterance);
-                }
+            } else {
+                // START NEW
+                synth.cancel();
+                segmentIndex = 0;
+                isReading = true;
+                isPaused = false;
+                
+                readBtn.classList.add('is-reading');
+                iconPlay.style.display = 'none';
+                iconPause.style.display = 'block';
+                
+                playNextChunk();
             }
-            
-            playNextChunk();
         });
 
         if(reloadBtn && poemContent) {
             setRandomPoem();
-            reloadBtn.addEventListener('click', () => { setRandomPoem(); });
+            
+            reloadBtn.addEventListener('click', () => {
+                setRandomPoem(); 
+            });
+
             [reloadBtn, readBtn].forEach(btn => {
                 btn.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
                 btn.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
