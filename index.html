@@ -497,7 +497,7 @@
             "IMG_20180402_143642_071.jpg", 
             "image_248.jpg", 
             "image_265.jpg", 
-            "image_109 frame sm.jpg", // SWAPPED IN
+            "image_109 frame sm.jpg", // UPDATED HERE
             "image_67.jpg", 
             "image_90 frame sm.jpg", 
             "image_72 frame sm.jpg", 
@@ -526,7 +526,7 @@
                 img.alt = `Image ${i}`;
                 img.loading = "lazy"; 
                 
-                // ERROR HANDLER: If image fails, show red box + filename
+                // ERROR HANDLER: Red box with ?
                 img.onerror = function() {
                     this.style.display = "none";
                     gridItem.style.backgroundColor = "red";
@@ -534,10 +534,9 @@
                     gridItem.style.alignItems = "center";
                     gridItem.style.justifyContent = "center";
                     gridItem.style.color = "white";
-                    gridItem.style.padding = "10px";
-                    gridItem.style.fontSize = "10px";
-                    gridItem.style.wordBreak = "break-all";
-                    gridItem.innerText = "MISSING: " + myImageFiles[i];
+                    gridItem.style.fontSize = "3rem";
+                    gridItem.style.fontWeight = "bold";
+                    gridItem.innerText = "?";
                 };
 
                 gridItem.appendChild(img);
