@@ -29,10 +29,10 @@
             margin: 0;
             font-family: "Space Mono", monospace;
             overflow-y: auto; 
-            cursor: auto; /* Default system cursor until JS loads */
+            cursor: auto; 
+            overflow-x: hidden; /* Prevents scrollbar if letters stretch too wide */
         }
 
-        /* Hides system cursor when custom cursor is active */
         body.custom-cursor-active {
             cursor: none;
         }
@@ -45,22 +45,40 @@
             background: var(--bg-color);
         }
 
+        /* UPDATED NAME STYLING FOR FULL WIDTH */
         .name {
             font-family: 'Space Mono', monospace; 
             font-weight: 700;
             background-color: var(--accent-color);
             color: var(--ink-color);
-            text-align: center;
-            font-size: 11.5vw; 
-            line-height: 1; 
+            
+            /* Flexbox to spread letters to edges */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
             padding: 15px 0;
+            box-sizing: border-box;
+            overflow: hidden; /* Clip aggressive scales */
+            
+            /* The base size */
+            font-size: 13vw; 
+            line-height: 0.8; 
+            
             transform-origin: top;
             user-select: none;
             text-transform: uppercase;
             position: relative;
             z-index: 2;
-            letter-spacing: -0.05em; 
             border-bottom: var(--border-thick);
+        }
+
+        /* Individual Letter Styling */
+        .name span {
+            display: inline-block;
+            transform-origin: center;
+            /* This ensures the browser handles the transforms smoothly */
+            backface-visibility: hidden; 
         }
         
         .menu-bar {
@@ -92,7 +110,7 @@
             color: var(--ink-color);
         }
         
-        /* --- CUSTOM CURSOR STYLING --- */
+        /* --- CUSTOM CURSOR --- */
         .random-cursor {
             position: fixed;
             width: 40px; 
@@ -101,17 +119,12 @@
             z-index: 9999;
             mix-blend-mode: difference; 
             display: none; 
-            
-            /* ANIMATION LOGIC */
-            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy transition */
-            /* Default State: X (Rotated 45deg) */
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
             transform: translate(-50%, -50%) rotate(45deg);
         }
 
-        /* Hover State: + (Rotated 0deg) */
         .random-cursor.hovering {
             transform: translate(-50%, -50%) rotate(90deg);
-            /* Optional: Make it slightly bigger on hover */
             width: 50px;
             height: 50px;
         }
@@ -143,10 +156,11 @@
             border-bottom: var(--border-thick);
             position: sticky;
             top: 0; 
+            z-index: 10;
         }
 
         /* --- GRID STYLING --- */
-        .image-grid, .text-grid {
+        .image-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr); 
             gap: 0; 
@@ -155,7 +169,7 @@
         }
 
         @media (max-width: 768px) {
-            .image-grid, .text-grid {
+            .image-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
         }
@@ -188,30 +202,80 @@
             background-color: var(--secondary-accent); 
         }
 
-        /* --- TEXT GRID STYLING --- */
-        .text-grid-item {
-            aspect-ratio: 1 / 1;
-            overflow: hidden;
-            cursor: pointer;
-            padding: 1em;
-            box-sizing: border-box;
-            background-color: var(--bg-color);
-            color: var(--ink-color);
-            font-size: 0.75rem;
-            line-height: 1.2;
-            border-right: var(--border-thick);
-            border-bottom: var(--border-thick);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            transition: all 0.1s;
+        /* --- WORDS SECTION STYLING --- */
+        #words {
+            padding: 0;
+            background-color: #f0f0f0; 
         }
 
-        .text-grid-item:hover {
-            background-color: var(--ink-color);
-            color: var(--accent-color);
-            transform: scale(0.95); 
-            box-shadow: inset 0 0 0 2px var(--accent-color);
+        .poem-wrapper {
+            position: relative;
+            max-width: 800px;
+            margin: 80px auto; 
+            padding: 0 20px;
+        }
+
+        .poem-window {
+            background: var(--bg-color);
+            border: var(--border-thick);
+            box-shadow: 15px 15px 0px var(--ink-color);
+            padding: 40px;
+            min-height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .poem-content {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            white-space: pre-wrap; 
+            font-weight: 400;
+        }
+
+        /* The Reload Button */
+        .poem-controls {
+            position: absolute;
+            top: -25px;
+            left: 10px;
+            z-index: 5;
+        }
+
+        .reload-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+            border: var(--border-thick);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 5px 5px 0px var(--ink-color);
+            transition: transform 0.1s, box-shadow 0.1s;
+            margin: 0; 
+            padding: 0;
+        }
+
+        .reload-btn svg {
+            width: 30px;
+            height: 30px;
+            fill: var(--ink-color);
+            transition: transform 0.3s ease;
+        }
+
+        .reload-btn:hover {
+            transform: translate(2px, 2px);
+            box-shadow: 3px 3px 0px var(--ink-color);
+        }
+        
+        .reload-btn:hover svg {
+            transform: rotate(180deg);
+        }
+
+        .reload-btn:active {
+            transform: translate(5px, 5px);
+            box-shadow: 0px 0px 0px var(--ink-color);
         }
 
         /* --- FORM STYLING --- */
@@ -267,7 +331,7 @@
         }
 
         /* --- LIGHTBOX --- */
-        .lightbox, .text-lightbox {
+        .lightbox {
             background-color: rgba(204, 255, 0, 0.95); 
             position: fixed;
             top: 0;
@@ -280,10 +344,10 @@
             z-index: 10000;
             padding: 2em;
             box-sizing: border-box;
-            cursor: auto; /* Restore normal cursor inside lightbox */
+            cursor: auto; 
         }
 
-        .lightbox.active, .text-lightbox.active {
+        .lightbox.active {
             display: flex;
         }
 
@@ -294,26 +358,13 @@
             border: 4px solid black; 
             box-shadow: 10px 10px 0 black;
         }
-        
-        .text-lightbox-content {
-            background: var(--ink-color);
-            color: var(--bg-color); 
-            border: 4px solid var(--ink-color);
-            box-shadow: 10px 10px 0px rgba(0,0,0,0.2);
-            font-size: 1.2rem;
-            padding: 2em;
-            max-width: 800px;
-            max-height: 90vh;
-            overflow-y: auto;
-            line-height: 1.6;
-        }
 
     </style>
 </head>
 <body>
     
     <header id="main-header">
-        <div class="name">ADAM STOVES</div>
+        <div class="name" id="dynamic-name"></div>
         <nav class="menu-bar" id="menu-bar">
             <a href="#images">Images</a>
             <a href="#words">Words</a>
@@ -331,10 +382,6 @@
     <div class="lightbox" id="image-lightbox">
         <img src="" alt="Enlarged image">
     </div>
-    
-    <div class="text-lightbox" id="text-lightbox">
-        <div class="text-lightbox-content" id="text-lightbox-content"></div>
-    </div>
 
     <main>
         <section id="images" class="page-section">
@@ -344,7 +391,21 @@
 
         <section id="words" class="page-section">
             <h2>Words</h2>
-            <div class="text-grid" id="text-grid"></div>
+            
+            <div class="poem-wrapper">
+                <div class="poem-controls">
+                    <button id="reload-poem-btn" class="reload-btn" aria-label="Load new poem">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46A7.93 7.93 0 0020 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74A7.93 7.93 0 004 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/>
+                        </svg>
+                    </button>
+                </div>
+                
+                <div class="poem-window">
+                    <div id="poem-content" class="poem-content"></div>
+                </div>
+            </div>
+
         </section>
 
         <section id="reachme" class="page-section">
@@ -366,7 +427,33 @@
     <script>
     document.addEventListener('DOMContentLoaded', () => {
 
-        // --- 1. HEADER SQUISH SCRIPT ---
+        // --- 1. DYNAMIC NAME RANDOMIZER ---
+        const nameContainer = document.getElementById('dynamic-name');
+        const fullName = "ADAM STOVES";
+        
+        if(nameContainer) {
+            // Split string into array
+            const chars = fullName.split('');
+            nameContainer.innerHTML = ''; // Clear existing text
+            
+            chars.forEach(char => {
+                const span = document.createElement('span');
+                span.innerText = char;
+                
+                if (char === ' ') {
+                    // Handle space character width
+                    span.style.minWidth = '4vw'; 
+                } else {
+                    // RANDOMIZER LOGIC
+                    // We generate a random scale between 0.6 (narrow) and 2.2 (wide)
+                    const randomScale = Math.random() * (2.2 - 0.6) + 0.6;
+                    span.style.transform = `scaleX(${randomScale})`;
+                }
+                nameContainer.appendChild(span);
+            });
+        }
+
+        // --- 2. HEADER SQUISH SCRIPT ---
         const nameElement = document.querySelector('.name');
         const menuBar = document.getElementById('menu-bar');
         
@@ -385,14 +472,14 @@
                 menuBar.style.transform = `translateY(${menuTranslateY}px)`;
             }
             window.addEventListener('scroll', handleScrollAnimation);
+            // Run initially to set position
             handleScrollAnimation();
         }
 
-        // --- 2. X-TO-PLUS CURSOR SCRIPT ---
+        // --- 3. X-TO-PLUS CURSOR SCRIPT ---
         const cursor = document.getElementById('random-cursor');
         
         if (cursor) {
-            // Move cursor
             const moveCursor = (e) => {
                 cursor.style.left = `${e.clientX}px`;
                 cursor.style.top = `${e.clientY}px`;
@@ -400,13 +487,11 @@
             window.addEventListener('mousemove', moveCursor);
             window.addEventListener('touchmove', (e) => moveCursor(e.touches[0]));
 
-            // Activate custom cursor
             document.body.classList.add('custom-cursor-active');
             cursor.style.display = 'block';
 
-            // HOVER EFFECT LOGIC
-            // Select all things that should trigger the X -> + change
-            const interactiveElements = document.querySelectorAll('a, button, input, textarea, .grid-item, .text-grid-item');
+            // Select elements for hover effect
+            const interactiveElements = document.querySelectorAll('a, button, input, textarea, .grid-item');
             
             interactiveElements.forEach(el => {
                 el.addEventListener('mouseenter', () => {
@@ -418,18 +503,36 @@
             });
         }
 
-        // --- 3. IMAGE GRID ---
+        // --- 4. IMAGE GRID ---
         const imageGrid = document.getElementById('image-grid');
         const imageLightbox = document.getElementById('image-lightbox');
         const lightboxImage = imageLightbox ? imageLightbox.querySelector('img') : null;
 
         const myImageFiles = [
-            "1.jpg", "IMG_20180328_103203_311.jpg", "nine.jpg", "one.jpg", 
-            "IMG_20180402_143642_071.jpg", "image_248.jpg", "image_265.jpg", "image_269.jpg", 
-            "image_67.jpg", "image_90 frame sm.jpg", "image_72 frame sm.jpg", "image_67 sm.jpg", 
-            "image_65 frame sm.jpg", "image_60 frame sm.jpg", "image_46 frame.jpg", "image_38 frame.jpg", 
-            "image_264 frame sm.jpg", "image_257.jpg", "image_251 frame sm.jpg", "image_245 frame sm.jpg", 
-            "image_229 frame sm.jpg", "image_214 frame sm.jpg", "image_195 frame sm.jpg", "image_187 frame sm.jpg"
+            "1.jpg", 
+            "IMG_20180328_103203_311.jpg", 
+            "nine.jpg", 
+            "one.jpg", 
+            "IMG_20180402_143642_071.jpg", 
+            "image_248.jpg", 
+            "image_265.jpg", 
+            "image_269.jpg", 
+            "image_67.jpg", 
+            "image_90 frame sm.jpg", 
+            "image_72 frame sm.jpg", 
+            "image_67 sm.jpg", 
+            "image_65 frame sm.jpg", 
+            "image_60 frame sm.jpg", 
+            "image_46 frame.jpg", 
+            "image_38 frame.jpg", 
+            "image_264 frame sm.jpg", 
+            "image_257.jpg", 
+            "image_251 frame sm.jpg", 
+            "image_245 frame sm.jpg", 
+            "image_229 frame sm.jpg", 
+            "image_214 frame sm.jpg", 
+            "image_195 frame sm.jpg", 
+            "image_187 frame sm.jpg"
         ];
 
         if(imageGrid && imageLightbox) {
@@ -445,9 +548,10 @@
                 gridItem.appendChild(img);
                 imageGrid.appendChild(gridItem);
                 
-                // Note: We don't need to add hover listeners here because
-                // we added them to .grid-item in the cursor section above
-                
+                // Add hover effect for cursor
+                gridItem.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
+                gridItem.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+
                 gridItem.addEventListener('click', () => {
                     lightboxImage.src = img.src;
                     imageLightbox.classList.add('active');
@@ -458,12 +562,16 @@
             });
         }
 
-        // --- 4. TEXT GRID ---
-        const textGrid = document.getElementById('text-grid');
-        const textLightbox = document.getElementById('text-lightbox');
-        const textLightboxContent = document.getElementById('text-lightbox-content');
-        
-        const snippet = `on a bluff is a red tomato
+        // --- 5. POEM GENERATOR (ALL 16 POEMS) ---
+        const poemContent = document.getElementById('poem-content');
+        const reloadBtn = document.getElementById('reload-poem-btn');
+
+        // PRE-GENERATED RAINBOW TEXT FOR POEM 5
+        const rainbowText = '<span style="color:#ff0000">s</span><span style="color:#ff8c00">p</span><span style="color:#e6b800">e</span><span style="color:#008000">c</span><span style="color:#0000ff">i</span><span style="color:#4b0082">a</span><span style="color:#8f00ff">l</span> <span style="color:#ff0000">e</span><span style="color:#ff8c00">f</span><span style="color:#e6b800">f</span><span style="color:#e6b800">e</span><span style="color:#008000">c</span><span style="color:#0000ff">t</span>';
+
+        const poems = [
+            // Poem 1
+`on a bluff is a red tomato
 a meter away
 & the jungle deletes me
 on the rabbit-hole goes
@@ -493,26 +601,324 @@ a wrong language
 on balance
 all models are wrong
 & [delete me]
-secrete code in effect`;
+secrete code in effect`,
 
-        if(textGrid && textLightbox) {
-            const totalTextBlocks = 24;
-            for (let i = 0; i < totalTextBlocks; i++) {
-                const textItem = document.createElement('div');
-                textItem.className = 'text-grid-item';
-                const poemSlice = snippet.split('\n').slice(0, 3).join('<br>');
-                textItem.innerHTML = `<span style="opacity:0.5; font-size: 0.6em; font-weight:bold;">ID_REF_${i+100}</span><br>${poemSlice}...`;
-                textGrid.appendChild(textItem);
+            // Poem 2
+`a)
+penny moon
+always dings
+think a
+thrumming bell
+in helmet
+twit soft
 
-                textItem.addEventListener('click', () => {
-                    textLightboxContent.innerText = snippet; 
-                    textLightbox.classList.add('active');
-                });
-            }
-            textLightbox.addEventListener('click', () => {
-                textLightbox.classList.remove('active');
-            });
+sings echolalia
+so brain
+explodes by
+plasmic hum/
+violent fits/
+itchy gnats/
+plastic rim
+excised bits
+pitty pats
+lifts off
+
+b)
+less like
+less &
+less &
+my head
+was in
+the helmet
+penny moon`,
+
+            // Poem 3
+`aura manusia looks super natural 
+ in the crick-necked creek of the dead
+  paints holy
+   clusters in squeezed quick final push face
+    just finished testing the waters of making peace 
+     for an outline one day will wake up
+      all made up
+       but not today
+        the _____ stream is for wading`,
+
+            // Poem 4
+`dialects first
+they end. 
+bye my civilian accents       
+                  my imported
+
+into day so moves     
+              difference
+some english goons 
+their parts evolving
+the poor lapses.
+ellipses.
+
+cultural remains
+quickly morph
+
+in woman is 
+discovered a middle silent desert
+obscured and therein 
+loved
+
+i start rather squealed 
+off`,
+
+            // Poem 5 (With Rainbow)
+`we sound a portrait object–pumice
+aka monument’s kiss
+you wake
+from a 50 year coma
+to my cover band: I Am Bone Person
+now i’m no artist, but i tried my best
+@ the endless dilemma
+[${rainbowText}]`,
+
+            // Poem 6
+`dear white tiger in barbed wire
+did you know all bubbles pop, popes die
+both mind & perpetual motion come to a stop
+plus, probably cancer is hidden within me
+
+why words aren’t a problem is a mystery
+wait, they are
+why mystery isn’t a problem is just words
+everything fits & parts
+& slowly lops off the head of my son
+
+no one lies
+here’s the building i live in, and then there’s the graveyard
+over which is which i still get confused
+besides, what could be felt by the ungrowth of a wednesday?
+
+narrow fate hangs in the chamber
+soft clamor, a mosquito in amber
+relax, my nerves. everything bathes
+no enemy worse than the hell i foresee`,
+
+            // Poem 7
+`
+
+
+
+
+
+
+
+
+
+
+
+robot tells me to hug it
+globs honey on my boo
+sweetheart’s hardon sightsees, writes love notes
+phone lines can’t cope with its bylines
+
+robot necessarily fingerprints me
+asks how can i sleep
+& insists on calling
+we make out on cctv
+
+according to data i’m always looking down & that’s heartbreaking
+then robot brushes my hair & i’m off`,
+
+            // Poem 8
+`motivation for the upcoming
+dry season
+includes
+long exposure of
+lake
+where
+pig-tailed macaques
+are busy working from home
+three sisters
+crying instantly at
+new color
+they’ve not seen before
+majestic cliffhanger
+crystal
+to
+blowhole rainbow
+and one tiny beauty–little
+ants
+shifting their
+nest  `,
+
+            // Poem 9
+`       mom makes a hairpin left turn
+      toward lamplit verandas
+   which quickly mirage.
+ a sulfur smell hangs
+in the guest wing
+ cue hierarchy of needs
+  make a bomb out of
+   bathroom supplies
+  show us what you
+ can do. a
+fair-
+ly
+good
+ attack
+   on real
+     magic.`,
+
+            // Poem 10
+`most pictures, you see, of photographs of ‘people talk,’
+quite frankly, by a painting of the picture, you say here’s a painting but it’s a picture, or it represents but it doesn’t represent,,
+two different therapies, there was a picture of a woman who had burgers and children, and they put in an element of stock,, people act if people aren’t
+ 
+I came to see how things knock down, the way you would respond to a picture of a monster, & everybody said, you should be abstracter in the future.
+ 
+right must Wayne over wrong! in other words,
+people of tonight’s lengthy, imposed visit, even, simply,
+the audacity of being mindful, the un-elected,
+proves I have nothing to prove.
+ 
+the claim that the little mind is American is a doctor’s shadow
+they were almost monsters, third generation, what gave structures pressure,
+the caps of a figure, in a certain kind of way,
+because figures will do what you can see, what they were, that they were,
+the elephant, the alphabet,,
+ 
+ 
+worker where there were Daguerre, a predator,
+registering movement. it was a movement, was sort of the last overworked movement forward, the thought of, the thought dot, is not big and clear,
+ 
+ 
+they were almost monsters, third generation abstract specialists’ sons,
+what made structures pressure didn’t have the idea of letting yourself gold,
+marketed,, maneuvered,, directing any traffic`,
+
+            // Poem 11
+`™ 
+every thing in the entire life can be solved. make it into patterns
+i mean look at me, an exploded champion divides by three
+
+no suntan boy
+no scorpion
+and then again how many strokes of the pen the word red is carved in
+it never gets stagnant
+exactly
+stream that flows it never stops
+a stream it flows
+i thought what a stream`,
+
+            // Poem 12
+`[ages ago,
+                jungle soundscapes waxing unadopted]
+large fire erupts,
+mythology whateverness
+now power
+         poison
+         props the
+         perfect
+         pit stop
+fits a statue in 
+         position,
+                       an other people’s products glitch
+the research reaffirms,
+                                     these are soaps
+simple.
+summer
+style is toxic
+ages ago,
+              accidental purpose seeded trails
+now it needs
+          a name card.
+             now it goes
+to church
+now it’s
+[hell scammed 
+  o  p  e  n]
+  on a map`,
+
+            // Poem 13
+`i spoke at highly polished sand
+it mimicked trick missiles
+in patterns
+and told me i am bland
+things escalated
+
+it tore at me, violently 
+quietly it doomed my id
+implied that thy–
+thy mind, is pure cacophony
+
+thus i override
+tell it, thou art somber.
+somber in sombrero cosmos!
+sand goes comatose
+
+now it's wet
+angrily i suss, this metallic gravitas…
+and of all the tools we have…
+i shut it off`,
+
+            // Poem 14
+`i, like catching a mechanism pants-down,
+choose a common noun. this time it is time.
+is this mayhem? i ask my calculator,
+a finer instrument than infinity.
+after it evaporates, it computes,
+composes me to compost/
+coerces me to stardust/
+corners me immodest/
+i me my me me,
+eucatastrophe.
+
+oh hell, since logic cannot help
+with such simple problems,
+look at its rump,
+its fundament,
+which somehow must be us.`,
+
+            // Poem 15
+`set a body, annealing,
+in superposition.
+then see.
+it collates, collapses a vast tiny distance
+and is perceived
+   as the needle
+      in a haystack
+of needles
+ `,
+
+            // Poem 16 (ADDED)
+`my twins might matter, squared
+how they outrun my intellect
+to measurements, my little antecedents.
+is this thing on?
+
+where are you in the cosmos?
+when in multiplicities? where municipalities?
+do you whisper to babies? but Copernicus—
+pray tell, what the hell is any one of us?
+
+answer simply, in classic doctrine.
+where inside i am deaf in it,
+indefinite. oh, where are you cosmos?
+goddamn, is this thing on?`
+        ];
+        
+        function setRandomPoem() {
+            const randomIndex = Math.floor(Math.random() * poems.length);
+            poemContent.innerHTML = poems[randomIndex];
         }
+
+        if(reloadBtn && poemContent) {
+            setRandomPoem();
+            
+            reloadBtn.addEventListener('click', () => {
+                setRandomPoem();
+            });
+
+            reloadBtn.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
+            reloadBtn.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+        }
+        
     });
     </script>
 </body>
