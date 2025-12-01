@@ -225,9 +225,8 @@
         .poem-content {
             font-size: 1.1rem;
             line-height: 1.6;
-            white-space: pre-wrap; /* CRITICAL: This preserves your spacing */
+            white-space: pre-wrap; 
             font-weight: 400;
-            font-family: 'Space Mono', monospace;
         }
 
         /* --- CONTROLS STYLING --- */
@@ -598,6 +597,7 @@
 
         const rainbowText = '<span style="color:#ff0000">s</span><span style="color:#ff8c00">p</span><span style="color:#e6b800">e</span><span style="color:#008000">c</span><span style="color:#0000ff">i</span><span style="color:#4b0082">a</span><span style="color:#8f00ff">l</span> <span style="color:#ff0000">e</span><span style="color:#ff8c00">f</span><span style="color:#e6b800">f</span><span style="color:#e6b800">e</span><span style="color:#008000">c</span><span style="color:#0000ff">t</span>';
 
+        // NOTE: Strict formatting preserved in template literals
         const poems = [
             { text: `on a bluff is a red tomato
 a meter away
@@ -899,16 +899,21 @@ indefinite. oh, where are you cosmos?
 goddamn, is this thing on?` }
         ];
         
+        // --- VOICE SELECTOR: Hunts for Natural/Online voices ---
         function getBestVoice() {
             const voices = synth.getVoices();
-            // Try to find natural/Google/Neural voices first
+            // Priority List:
+            // 1. Google "Online" voices (Chrome/Android)
+            // 2. Microsoft "Natural" voices (Edge)
+            // 3. Apple "Samantha" or "Enhanced" (Safari)
             let voice = voices.find(v => v.name.includes("Google US English"));
-            if (!voice) voice = voices.find(v => v.name.includes("Samantha")); // Mac natural
-            if (!voice) voice = voices.find(v => v.name.includes("Zira")); // Windows natural
-            if (!voice) voice = voices.find(v => v.name.includes("English"));
+            if (!voice) voice = voices.find(v => v.name.includes("Natural"));
+            if (!voice) voice = voices.find(v => v.name.includes("Samantha")); 
+            if (!voice) voice = voices.find(v => v.name.includes("Zira")); 
             return voice || voices[0];
         }
 
+        // --- READING ENGINE ---
         function stopReading() {
             if (segmentTimeout) clearTimeout(segmentTimeout);
             synth.cancel();
@@ -921,7 +926,7 @@ goddamn, is this thing on?` }
         }
 
         function setRandomPoem() {
-            stopReading(); // Stop previous read
+            stopReading(); // Stop any audio immediately on reload
             const randomIndex = Math.floor(Math.random() * poems.length);
             const poemObj = poems[randomIndex];
             currentPoemText = poemObj.read || poemObj.text;
@@ -930,6 +935,7 @@ goddamn, is this thing on?` }
 
         function playNextChunk() {
             if (!isReading || isPaused) return;
+            // Split by punctuation chars + preserve delimiters
             const segments = currentPoemText.split(/([.,;?!—]+|\n+)/g);
             
             if (segmentIndex >= segments.length) {
@@ -939,22 +945,22 @@ goddamn, is this thing on?` }
             
             const chunk = segments[segmentIndex].trim();
             
-            // Skip empty chunks
+            // Skip empty whitespace chunks
             if (!chunk) {
                 segmentIndex++;
                 playNextChunk();
                 return;
             }
 
-            // Punctuation Logic
             const isPunctuation = /^[.,;?!—]+$/.test(chunk);
             const isNewline = /^\n+$/.test(segments[segmentIndex]); 
 
+            // HANDLING SILENCE
             if (isNewline || isPunctuation) {
-                let pauseTime = 200; // Default pause
+                let pauseTime = 200; // Base pause
                 
                 if (isNewline) {
-                    // Stanza break vs Line break
+                    // 2+ newlines = Stanza Break (Longer pause)
                     pauseTime = segments[segmentIndex].length > 1 ? 1200 : 250; 
                 } 
                 else if (isPunctuation) {
@@ -968,13 +974,13 @@ goddamn, is this thing on?` }
                 segmentIndex++;
                 segmentTimeout = setTimeout(playNextChunk, pauseTime);
             } 
+            // HANDLING SPEECH
             else {
-                // Read Text
                 const utterance = new SpeechSynthesisUtterance(chunk);
                 utterance.voice = getBestVoice();
-                utterance.rate = 0.9; 
+                utterance.rate = 0.85; // Slow down slightly for effect
                 
-                // Add slight pitch drop for sentence endings
+                // Dynamic Pitch: Drop pitch at end of sentences
                 if (segments[segmentIndex+1] && /[.?!]/.test(segments[segmentIndex+1])) {
                      utterance.pitch = 0.9;
                 } else {
@@ -1008,8 +1014,10 @@ goddamn, is this thing on?` }
                     iconPause.style.display = 'none';
                 }
             } else {
-                // START NEW
+                // START NEW READ
                 synth.cancel();
+                // Ensure voices are loaded (Chrome sometimes needs a kick)
+                const voice = getBestVoice(); 
                 segmentIndex = 0;
                 isReading = true;
                 isPaused = false;
@@ -1022,6 +1030,7 @@ goddamn, is this thing on?` }
             }
         });
 
+        // Initialize
         if(reloadBtn && poemContent) {
             setRandomPoem();
             
