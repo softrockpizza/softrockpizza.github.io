@@ -45,7 +45,7 @@
             background: var(--bg-color);
         }
 
-        /* --- NAME STYLING --- */
+        /* --- UPDATED CHUNKY NAME STYLING --- */
         .name {
             font-family: 'Space Mono', monospace; 
             font-weight: 700;
@@ -53,16 +53,29 @@
             display: flex;
             align-items: center;
             width: 100%;
-            padding: 15px 0;
+            /* Increased padding for bulk */
+            padding: 20px 0;
             box-sizing: border-box;
-            font-size: 8vw; 
-            line-height: 1; 
+            
+            /* Massive font size */
+            font-size: 15vw; 
+            line-height: 0.8; 
+            
+            /* Tighten it up to make it a solid block */
+            letter-spacing: -0.08em; 
+            
+            /* Text Stroke makes it bolder than bold */
+            -webkit-text-stroke: 2px var(--ink-color);
+            
             transform-origin: top;
             user-select: none;
             text-transform: uppercase;
             position: relative;
             z-index: 2;
             border-bottom: var(--border-thick);
+            
+            /* Ensure it stays strictly 2D for clean scaling */
+            will-change: transform;
         }
 
         .name span {
@@ -446,23 +459,49 @@
             }
         }
 
-        // --- 2. HEADER SQUISH SCRIPT ---
+        // --- 2. SMOOTH RELATIVE SCROLL ANIMATION ---
         const nameElement = document.querySelector('.name');
         const menuBar = document.getElementById('menu-bar');
         
         if(nameElement && menuBar) {
-            const maxScrollDistance = 1000;
-            const minScale = 0.1;
             function handleScrollAnimation() {
-                const nameHeight = nameElement.offsetHeight;
-                const scrollY = window.scrollY;
-                let scaleY = 1 - (scrollY / maxScrollDistance);
-                scaleY = Math.max(minScale, Math.min(1, scaleY));
-                nameElement.style.transform = `scaleY(${scaleY})`;
-                const menuTranslateY = -(nameHeight * (1 - scaleY));
-                menuBar.style.transform = `translateY(${menuTranslateY}px)`;
+                // Calculate total scrollable height of the document
+                const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
+                
+                // Safety check
+                if (scrollableHeight <= 0) return;
+
+                // How far down are we? (0 to 1)
+                const scrollPercentage = window.scrollY / scrollableHeight;
+
+                // Scale logic: 
+                // Start at 1.0
+                // End at 0.15 (very squished)
+                const maxScale = 1;
+                const minScale = 0.15;
+                
+                // Calculate current scale
+                let currentScale = maxScale - (scrollPercentage * (maxScale - minScale));
+                
+                // Ensure we don't go outside bounds
+                currentScale = Math.max(minScale, Math.min(maxScale, currentScale));
+
+                // Apply the squish
+                nameElement.style.transform = `scaleY(${currentScale})`;
+                
+                // IMPORTANT: Move the menu up to follow the squished header
+                // We calculate the difference between original height and squished height
+                const originalHeight = nameElement.offsetHeight;
+                const squishedHeight = originalHeight * currentScale;
+                const translateY = -(originalHeight - squishedHeight);
+                
+                menuBar.style.transform = `translateY(${translateY}px)`;
             }
+
             window.addEventListener('scroll', handleScrollAnimation);
+            // Also listen for resize, as page height might change
+            window.addEventListener('resize', handleScrollAnimation);
+            // Run once on load
             handleScrollAnimation();
         }
 
@@ -497,7 +536,7 @@
             "IMG_20180402_143642_071.jpg", 
             "image_248.jpg", 
             "image_265.jpg", 
-            "image_109 frame sm.jpg", // UPDATED HERE
+            "image_109 frame sm.jpg",
             "image_67.jpg", 
             "image_90 frame sm.jpg", 
             "image_72 frame sm.jpg", 
@@ -686,19 +725,7 @@ soft clamor, a mosquito in amber
 relax, my nerves. everything bathes
 no enemy worse than the hell i foresee`,
 
-`
-
-
-
-
-
-
-
-
-
-
-
-robot tells me to hug it
+`robot tells me to hug it
 globs honey on my boo
 sweetheart’s hardon sightsees, writes love notes
 phone lines can’t cope with its bylines
