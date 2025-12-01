@@ -902,10 +902,6 @@ goddamn, is this thing on?` }
         // --- VOICE SELECTOR: Hunts for Natural/Online voices ---
         function getBestVoice() {
             const voices = synth.getVoices();
-            // Priority List:
-            // 1. Google "Online" voices (Chrome/Android)
-            // 2. Microsoft "Natural" voices (Edge)
-            // 3. Apple "Samantha" or "Enhanced" (Safari)
             let voice = voices.find(v => v.name.includes("Google US English"));
             if (!voice) voice = voices.find(v => v.name.includes("Natural"));
             if (!voice) voice = voices.find(v => v.name.includes("Samantha")); 
@@ -936,6 +932,7 @@ goddamn, is this thing on?` }
         function playNextChunk() {
             if (!isReading || isPaused) return;
             // Split by punctuation chars + preserve delimiters
+            // IMPORTANT UPDATE: Logic to correctly identify newlines vs empty strings
             const segments = currentPoemText.split(/([.,;?!—]+|\n+)/g);
             
             if (segmentIndex >= segments.length) {
@@ -943,17 +940,19 @@ goddamn, is this thing on?` }
                 return;
             }
             
-            const chunk = segments[segmentIndex].trim();
+            const rawSegment = segments[segmentIndex];
+            const chunk = rawSegment.trim();
             
-            // Skip empty whitespace chunks
-            if (!chunk) {
+            // NEW LOGIC: Check if it is a newline BEFORE skipping empty chunks
+            const isNewline = /^\n+$/.test(rawSegment);
+            const isPunctuation = /^[.,;?!—]+$/.test(chunk);
+
+            // Skip empty chunks ONLY if they aren't newlines
+            if (!chunk && !isNewline) {
                 segmentIndex++;
                 playNextChunk();
                 return;
             }
-
-            const isPunctuation = /^[.,;?!—]+$/.test(chunk);
-            const isNewline = /^\n+$/.test(segments[segmentIndex]); 
 
             // HANDLING SILENCE
             if (isNewline || isPunctuation) {
@@ -961,7 +960,7 @@ goddamn, is this thing on?` }
                 
                 if (isNewline) {
                     // 2+ newlines = Stanza Break (Longer pause)
-                    pauseTime = segments[segmentIndex].length > 1 ? 1200 : 250; 
+                    pauseTime = rawSegment.length > 1 ? 1200 : 250; 
                 } 
                 else if (isPunctuation) {
                     if (chunk.includes('.')) pauseTime = 900;
