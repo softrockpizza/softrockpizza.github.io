@@ -30,7 +30,7 @@
             font-family: "Space Mono", monospace;
             overflow-y: auto; 
             cursor: auto; 
-            overflow-x: hidden; /* Prevents scrollbar if letters stretch too wide */
+            overflow-x: hidden; 
         }
 
         body.custom-cursor-active {
@@ -45,25 +45,22 @@
             background: var(--bg-color);
         }
 
-        /* UPDATED NAME STYLING FOR FULL WIDTH */
+        /* --- UPDATED NAME STYLING --- */
         .name {
             font-family: 'Space Mono', monospace; 
             font-weight: 700;
             background-color: var(--accent-color);
-            color: var(--ink-color);
             
-            /* Flexbox to spread letters to edges */
+            /* Flexbox to handle the spacing distribution */
             display: flex;
-            justify-content: space-between;
             align-items: center;
             width: 100%;
             padding: 15px 0;
             box-sizing: border-box;
-            overflow: hidden; /* Clip aggressive scales */
             
-            /* The base size */
-            font-size: 13vw; 
-            line-height: 0.8; 
+            /* Base font size */
+            font-size: 8vw; 
+            line-height: 1; 
             
             transform-origin: top;
             user-select: none;
@@ -73,12 +70,16 @@
             border-bottom: var(--border-thick);
         }
 
-        /* Individual Letter Styling */
+        /* Letters */
         .name span {
-            display: inline-block;
-            transform-origin: center;
-            /* This ensures the browser handles the transforms smoothly */
-            backface-visibility: hidden; 
+            display: block;
+            white-space: pre;
+        }
+
+        /* The invisible springs between letters */
+        .name-spacer {
+            height: 1px;
+            visibility: hidden;
         }
         
         .menu-bar {
@@ -427,30 +428,49 @@
     <script>
     document.addEventListener('DOMContentLoaded', () => {
 
-        // --- 1. DYNAMIC NAME RANDOMIZER ---
+        // --- 1. RANDOM SPACING HEADER ENGINE ---
         const nameContainer = document.getElementById('dynamic-name');
-        const fullName = "ADAM STOVES";
+        
+        // Define the name parts
+        // "ADAM" (Black) and "STOVES" (Magenta)
+        const nameString = "ADAMSTOVES"; 
         
         if(nameContainer) {
-            // Split string into array
-            const chars = fullName.split('');
-            nameContainer.innerHTML = ''; // Clear existing text
+            nameContainer.innerHTML = '';
             
-            chars.forEach(char => {
+            // Loop through letters
+            for(let i = 0; i < nameString.length; i++) {
+                const char = nameString[i];
                 const span = document.createElement('span');
                 span.innerText = char;
                 
-                if (char === ' ') {
-                    // Handle space character width
-                    span.style.minWidth = '4vw'; 
+                // Color Logic
+                if (i < 4) { 
+                    // ADAM (First 4 chars)
+                    span.style.color = 'var(--ink-color)'; 
                 } else {
-                    // RANDOMIZER LOGIC
-                    // We generate a random scale between 0.6 (narrow) and 2.2 (wide)
-                    const randomScale = Math.random() * (2.2 - 0.6) + 0.6;
-                    span.style.transform = `scaleX(${randomScale})`;
+                    // STOVES (Rest)
+                    span.style.color = 'var(--secondary-accent)'; 
                 }
+                
                 nameContainer.appendChild(span);
-            });
+
+                // Add random spacer after every letter EXCEPT the very last one
+                if (i < nameString.length - 1) {
+                    const spacer = document.createElement('div');
+                    spacer.className = 'name-spacer';
+                    
+                    // Generate random flex-grow value
+                    // The gap between "ADAM" and "STOVES" (index 3) should be larger
+                    let weight = Math.random(); 
+                    if (i === 3) {
+                        weight = Math.random() * 4 + 2; // Make the middle gap significantly larger
+                    }
+                    
+                    spacer.style.flexGrow = weight;
+                    nameContainer.appendChild(spacer);
+                }
+            }
         }
 
         // --- 2. HEADER SQUISH SCRIPT ---
@@ -472,11 +492,10 @@
                 menuBar.style.transform = `translateY(${menuTranslateY}px)`;
             }
             window.addEventListener('scroll', handleScrollAnimation);
-            // Run initially to set position
             handleScrollAnimation();
         }
 
-        // --- 3. X-TO-PLUS CURSOR SCRIPT ---
+        // --- 3. CUSTOM CURSOR ---
         const cursor = document.getElementById('random-cursor');
         
         if (cursor) {
@@ -490,16 +509,10 @@
             document.body.classList.add('custom-cursor-active');
             cursor.style.display = 'block';
 
-            // Select elements for hover effect
             const interactiveElements = document.querySelectorAll('a, button, input, textarea, .grid-item');
-            
             interactiveElements.forEach(el => {
-                el.addEventListener('mouseenter', () => {
-                    cursor.classList.add('hovering');
-                });
-                el.addEventListener('mouseleave', () => {
-                    cursor.classList.remove('hovering');
-                });
+                el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
             });
         }
 
@@ -509,30 +522,12 @@
         const lightboxImage = imageLightbox ? imageLightbox.querySelector('img') : null;
 
         const myImageFiles = [
-            "1.jpg", 
-            "IMG_20180328_103203_311.jpg", 
-            "nine.jpg", 
-            "one.jpg", 
-            "IMG_20180402_143642_071.jpg", 
-            "image_248.jpg", 
-            "image_265.jpg", 
-            "image_269.jpg", 
-            "image_67.jpg", 
-            "image_90 frame sm.jpg", 
-            "image_72 frame sm.jpg", 
-            "image_67 sm.jpg", 
-            "image_65 frame sm.jpg", 
-            "image_60 frame sm.jpg", 
-            "image_46 frame.jpg", 
-            "image_38 frame.jpg", 
-            "image_264 frame sm.jpg", 
-            "image_257.jpg", 
-            "image_251 frame sm.jpg", 
-            "image_245 frame sm.jpg", 
-            "image_229 frame sm.jpg", 
-            "image_214 frame sm.jpg", 
-            "image_195 frame sm.jpg", 
-            "image_187 frame sm.jpg"
+            "1.jpg", "IMG_20180328_103203_311.jpg", "nine.jpg", "one.jpg", 
+            "IMG_20180402_143642_071.jpg", "image_248.jpg", "image_265.jpg", "image_269.jpg", 
+            "image_67.jpg", "image_90 frame sm.jpg", "image_72 frame sm.jpg", "image_67 sm.jpg", 
+            "image_65 frame sm.jpg", "image_60 frame sm.jpg", "image_46 frame.jpg", "image_38 frame.jpg", 
+            "image_264 frame sm.jpg", "image_257.jpg", "image_251 frame sm.jpg", "image_245 frame sm.jpg", 
+            "image_229 frame sm.jpg", "image_214 frame sm.jpg", "image_195 frame sm.jpg", "image_187 frame sm.jpg"
         ];
 
         if(imageGrid && imageLightbox) {
@@ -548,7 +543,6 @@
                 gridItem.appendChild(img);
                 imageGrid.appendChild(gridItem);
                 
-                // Add hover effect for cursor
                 gridItem.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
                 gridItem.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
 
@@ -562,15 +556,13 @@
             });
         }
 
-        // --- 5. POEM GENERATOR (ALL 16 POEMS) ---
+        // --- 5. POEM GENERATOR ---
         const poemContent = document.getElementById('poem-content');
         const reloadBtn = document.getElementById('reload-poem-btn');
 
-        // PRE-GENERATED RAINBOW TEXT FOR POEM 5
         const rainbowText = '<span style="color:#ff0000">s</span><span style="color:#ff8c00">p</span><span style="color:#e6b800">e</span><span style="color:#008000">c</span><span style="color:#0000ff">i</span><span style="color:#4b0082">a</span><span style="color:#8f00ff">l</span> <span style="color:#ff0000">e</span><span style="color:#ff8c00">f</span><span style="color:#e6b800">f</span><span style="color:#e6b800">e</span><span style="color:#008000">c</span><span style="color:#0000ff">t</span>';
 
         const poems = [
-            // Poem 1
 `on a bluff is a red tomato
 a meter away
 & the jungle deletes me
@@ -603,7 +595,6 @@ all models are wrong
 & [delete me]
 secrete code in effect`,
 
-            // Poem 2
 `a)
 penny moon
 always dings
@@ -632,7 +623,6 @@ was in
 the helmet
 penny moon`,
 
-            // Poem 3
 `aura manusia looks super natural 
  in the crick-necked creek of the dead
   paints holy
@@ -643,7 +633,6 @@ penny moon`,
        but not today
         the _____ stream is for wading`,
 
-            // Poem 4
 `dialects first
 they end. 
 bye my civilian accents       
@@ -667,7 +656,6 @@ loved
 i start rather squealed 
 off`,
 
-            // Poem 5 (With Rainbow)
 `we sound a portrait object–pumice
 aka monument’s kiss
 you wake
@@ -677,7 +665,6 @@ now i’m no artist, but i tried my best
 @ the endless dilemma
 [${rainbowText}]`,
 
-            // Poem 6
 `dear white tiger in barbed wire
 did you know all bubbles pop, popes die
 both mind & perpetual motion come to a stop
@@ -699,7 +686,6 @@ soft clamor, a mosquito in amber
 relax, my nerves. everything bathes
 no enemy worse than the hell i foresee`,
 
-            // Poem 7
 `
 
 
@@ -725,7 +711,6 @@ we make out on cctv
 according to data i’m always looking down & that’s heartbreaking
 then robot brushes my hair & i’m off`,
 
-            // Poem 8
 `motivation for the upcoming
 dry season
 includes
@@ -747,7 +732,6 @@ ants
 shifting their
 nest  `,
 
-            // Poem 9
 `       mom makes a hairpin left turn
       toward lamplit verandas
    which quickly mirage.
@@ -765,7 +749,6 @@ good
    on real
      magic.`,
 
-            // Poem 10
 `most pictures, you see, of photographs of ‘people talk,’
 quite frankly, by a painting of the picture, you say here’s a painting but it’s a picture, or it represents but it doesn’t represent,,
 two different therapies, there was a picture of a woman who had burgers and children, and they put in an element of stock,, people act if people aren’t
@@ -792,7 +775,6 @@ they were almost monsters, third generation abstract specialists’ sons,
 what made structures pressure didn’t have the idea of letting yourself gold,
 marketed,, maneuvered,, directing any traffic`,
 
-            // Poem 11
 `™ 
 every thing in the entire life can be solved. make it into patterns
 i mean look at me, an exploded champion divides by three
@@ -806,7 +788,6 @@ stream that flows it never stops
 a stream it flows
 i thought what a stream`,
 
-            // Poem 12
 `[ages ago,
                 jungle soundscapes waxing unadopted]
 large fire erupts,
@@ -835,7 +816,6 @@ now it’s
   o  p  e  n]
   on a map`,
 
-            // Poem 13
 `i spoke at highly polished sand
 it mimicked trick missiles
 in patterns
@@ -857,7 +837,6 @@ angrily i suss, this metallic gravitas…
 and of all the tools we have…
 i shut it off`,
 
-            // Poem 14
 `i, like catching a mechanism pants-down,
 choose a common noun. this time it is time.
 is this mayhem? i ask my calculator,
@@ -875,7 +854,6 @@ look at its rump,
 its fundament,
 which somehow must be us.`,
 
-            // Poem 15
 `set a body, annealing,
 in superposition.
 then see.
@@ -886,7 +864,6 @@ and is perceived
 of needles
  `,
 
-            // Poem 16 (ADDED)
 `my twins might matter, squared
 how they outrun my intellect
 to measurements, my little antecedents.
