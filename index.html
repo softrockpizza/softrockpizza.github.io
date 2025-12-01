@@ -45,7 +45,7 @@
             background: var(--bg-color);
         }
 
-        /* --- UPDATED CHUNKY NAME STYLING --- */
+        /* --- NAME STYLING (REVERTED TO CLEAN LOOK) --- */
         .name {
             font-family: 'Space Mono', monospace; 
             font-weight: 700;
@@ -53,19 +53,14 @@
             display: flex;
             align-items: center;
             width: 100%;
-            /* Increased padding for bulk */
-            padding: 20px 0;
+            padding: 15px 0;
             box-sizing: border-box;
             
-            /* Massive font size */
-            font-size: 15vw; 
-            line-height: 0.8; 
+            /* Reverted size */
+            font-size: 8vw; 
+            line-height: 1; 
             
-            /* Tighten it up to make it a solid block */
-            letter-spacing: -0.08em; 
-            
-            /* Text Stroke makes it bolder than bold */
-            -webkit-text-stroke: 2px var(--ink-color);
+            /* Removed text-stroke and tracking */
             
             transform-origin: top;
             user-select: none;
@@ -73,8 +68,6 @@
             position: relative;
             z-index: 2;
             border-bottom: var(--border-thick);
-            
-            /* Ensure it stays strictly 2D for clean scaling */
             will-change: transform;
         }
 
@@ -465,32 +458,18 @@
         
         if(nameElement && menuBar) {
             function handleScrollAnimation() {
-                // Calculate total scrollable height of the document
                 const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
-                
-                // Safety check
                 if (scrollableHeight <= 0) return;
 
-                // How far down are we? (0 to 1)
                 const scrollPercentage = window.scrollY / scrollableHeight;
-
-                // Scale logic: 
-                // Start at 1.0
-                // End at 0.15 (very squished)
                 const maxScale = 1;
                 const minScale = 0.15;
                 
-                // Calculate current scale
                 let currentScale = maxScale - (scrollPercentage * (maxScale - minScale));
-                
-                // Ensure we don't go outside bounds
                 currentScale = Math.max(minScale, Math.min(maxScale, currentScale));
 
-                // Apply the squish
                 nameElement.style.transform = `scaleY(${currentScale})`;
                 
-                // IMPORTANT: Move the menu up to follow the squished header
-                // We calculate the difference between original height and squished height
                 const originalHeight = nameElement.offsetHeight;
                 const squishedHeight = originalHeight * currentScale;
                 const translateY = -(originalHeight - squishedHeight);
@@ -499,9 +478,7 @@
             }
 
             window.addEventListener('scroll', handleScrollAnimation);
-            // Also listen for resize, as page height might change
             window.addEventListener('resize', handleScrollAnimation);
-            // Run once on load
             handleScrollAnimation();
         }
 
@@ -777,8 +754,8 @@ good
      magic.`,
 
 `most pictures, you see, of photographs of ‘people talk,’
-quite frankly, by a painting of the picture, you say here’s a painting but it’s a picture, or it represents but it doesn’t represent,,
-two different therapies, there was a picture of a woman who had burgers and children, and they put in an element of stock,, people act if people aren’t
+quite frankly, by a painting of the picture, you say here’s a painting but it’s a picture, or it represents but it doesn’t represent,
+two different therapies, there was a picture of a woman who had burgers and children, and they put in an element of stock, people act if people aren’t
  
 I came to see how things knock down, the way you would respond to a picture of a monster, & everybody said, you should be abstracter in the future.
  
@@ -791,7 +768,7 @@ the claim that the little mind is American is a doctor’s shadow
 they were almost monsters, third generation, what gave structures pressure,
 the caps of a figure, in a certain kind of way,
 because figures will do what you can see, what they were, that they were,
-the elephant, the alphabet,,
+the elephant, the alphabet,
  
  
 worker where there were Daguerre, a predator,
@@ -800,7 +777,7 @@ registering movement. it was a movement, was sort of the last overworked movemen
  
 they were almost monsters, third generation abstract specialists’ sons,
 what made structures pressure didn’t have the idea of letting yourself gold,
-marketed,, maneuvered,, directing any traffic`,
+marketed, maneuvered, directing any traffic`,
 
 `™ 
 every thing in the entire life can be solved. make it into patterns
