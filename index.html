@@ -15,8 +15,7 @@
             --bg-color: #ffffff;
             --ink-color: #000000;
             --accent-color: #CCFF00; /* Acid Green */
-            /* CHANGE: Updated magenta to Electric Blue */
-            --secondary-accent: #0055ff; 
+            --secondary-accent: #0055ff; /* Electric Blue */
             --border-thick: 3px solid var(--ink-color);
         }
 
@@ -46,23 +45,18 @@
             background: var(--bg-color);
         }
 
-        /* --- UPDATED NAME STYLING --- */
+        /* --- NAME STYLING --- */
         .name {
             font-family: 'Space Mono', monospace; 
             font-weight: 700;
             background-color: var(--accent-color);
-            
-            /* Flexbox to handle the spacing distribution */
             display: flex;
             align-items: center;
             width: 100%;
             padding: 15px 0;
             box-sizing: border-box;
-            
-            /* Base font size */
             font-size: 8vw; 
             line-height: 1; 
-            
             transform-origin: top;
             user-select: none;
             text-transform: uppercase;
@@ -71,13 +65,11 @@
             border-bottom: var(--border-thick);
         }
 
-        /* Letters */
         .name span {
             display: block;
             white-space: pre;
         }
 
-        /* The invisible springs between letters */
         .name-spacer {
             height: 1px;
             visibility: hidden;
@@ -431,43 +423,32 @@
 
         // --- 1. RANDOM SPACING HEADER ENGINE ---
         const nameContainer = document.getElementById('dynamic-name');
-        
-        // Define the name parts
-        // "ADAM" (Black) and "STOVES" (Electric Blue)
         const nameString = "ADAMSTOVES"; 
         
         if(nameContainer) {
             nameContainer.innerHTML = '';
             
-            // Loop through letters
             for(let i = 0; i < nameString.length; i++) {
                 const char = nameString[i];
                 const span = document.createElement('span');
                 span.innerText = char;
                 
-                // Color Logic
+                // Color Logic: First 4 letters Ink, rest Electric Blue
                 if (i < 4) { 
-                    // ADAM (First 4 chars)
                     span.style.color = 'var(--ink-color)'; 
                 } else {
-                    // STOVES (Rest) - Now uses the new blue secondary accent
                     span.style.color = 'var(--secondary-accent)'; 
                 }
                 
                 nameContainer.appendChild(span);
 
-                // Add random spacer after every letter EXCEPT the very last one
                 if (i < nameString.length - 1) {
                     const spacer = document.createElement('div');
                     spacer.className = 'name-spacer';
-                    
-                    // Generate random flex-grow value
-                    // The gap between "ADAM" and "STOVES" (index 3) should be larger
                     let weight = Math.random(); 
                     if (i === 3) {
-                        weight = Math.random() * 4 + 2; // Make the middle gap significantly larger
+                        weight = Math.random() * 4 + 2; 
                     }
-                    
                     spacer.style.flexGrow = weight;
                     nameContainer.appendChild(spacer);
                 }
@@ -522,13 +503,32 @@
         const imageLightbox = document.getElementById('image-lightbox');
         const lightboxImage = imageLightbox ? imageLightbox.querySelector('img') : null;
 
+        // REMOVED "image_269.jpg" (Index 7 in original array)
         const myImageFiles = [
-            "1.jpg", "IMG_20180328_103203_311.jpg", "nine.jpg", "one.jpg", 
-            "IMG_20180402_143642_071.jpg", "image_248.jpg", "image_265.jpg", "image_269.jpg", 
-            "image_67.jpg", "image_90 frame sm.jpg", "image_72 frame sm.jpg", "image_67 sm.jpg", 
-            "image_65 frame sm.jpg", "image_60 frame sm.jpg", "image_46 frame.jpg", "image_38 frame.jpg", 
-            "image_264 frame sm.jpg", "image_257.jpg", "image_251 frame sm.jpg", "image_245 frame sm.jpg", 
-            "image_229 frame sm.jpg", "image_214 frame sm.jpg", "image_195 frame sm.jpg", "image_187 frame sm.jpg"
+            "1.jpg", 
+            "IMG_20180328_103203_311.jpg", 
+            "nine.jpg", 
+            "one.jpg", 
+            "IMG_20180402_143642_071.jpg", 
+            "image_248.jpg", 
+            "image_265.jpg", 
+            // "image_269.jpg" REMOVED
+            "image_67.jpg", 
+            "image_90 frame sm.jpg", 
+            "image_72 frame sm.jpg", 
+            "image_67 sm.jpg", 
+            "image_65 frame sm.jpg", 
+            "image_60 frame sm.jpg", 
+            "image_46 frame.jpg", 
+            "image_38 frame.jpg", 
+            "image_264 frame sm.jpg", 
+            "image_257.jpg", 
+            "image_251 frame sm.jpg", 
+            "image_245 frame sm.jpg", 
+            "image_229 frame sm.jpg", 
+            "image_214 frame sm.jpg", 
+            "image_195 frame sm.jpg", 
+            "image_187 frame sm.jpg"
         ];
 
         if(imageGrid && imageLightbox) {
@@ -563,6 +563,7 @@
 
         const rainbowText = '<span style="color:#ff0000">s</span><span style="color:#ff8c00">p</span><span style="color:#e6b800">e</span><span style="color:#008000">c</span><span style="color:#0000ff">i</span><span style="color:#4b0082">a</span><span style="color:#8f00ff">l</span> <span style="color:#ff0000">e</span><span style="color:#ff8c00">f</span><span style="color:#e6b800">f</span><span style="color:#e6b800">e</span><span style="color:#008000">c</span><span style="color:#0000ff">t</span>';
 
+        // REMOVED poem starting with "[ages ago,"
         const poems = [
 `on a bluff is a red tomato
 a meter away
@@ -788,34 +789,6 @@ exactly
 stream that flows it never stops
 a stream it flows
 i thought what a stream`,
-
-`[ages ago,
-                jungle soundscapes waxing unadopted]
-large fire erupts,
-mythology whateverness
-now power
-         poison
-         props the
-         perfect
-         pit stop
-fits a statue in 
-         position,
-                       an other people’s products glitch
-the research reaffirms,
-                                     these are soaps
-simple.
-summer
-style is toxic
-ages ago,
-              accidental purpose seeded trails
-now it needs
-          a name card.
-             now it goes
-to church
-now it’s
-[hell scammed 
-  o  p  e  n]
-  on a map`,
 
 `i spoke at highly polished sand
 it mimicked trick missiles
