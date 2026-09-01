@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADAM STOVES</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><rect width='16' height='16' fill='%23CCFF00'/><text x='50%' y='55%' dominant-baseline='middle' text-anchor='middle' font-family='monospace' font-weight='bold' font-size='12' fill='black'>A</text></svg>">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --ink-color: #000000;
+            --accent-color: #CCFF00; 
+            --secondary-accent: #0055ff; 
+            --silver-color: #e6e6e6; 
+            --border-thick: 3px solid var(--ink-color);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--ink-color);
+            margin: 0;
+            font-family: "Space Mono", monospace;
+            overflow-y: auto; 
+            cursor: auto; 
+            overflow-x: hidden; 
+        }
+
+        body.custom-cursor-active {
+            cursor: none;
+        }
+        
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: var(--border-thick);
+            background: var(--bg-color);
+        }
+
+        /* --- NAME STYLING --- */
+        .name {
+            font-family: 'Space Mono', monospace; 
+            font-weight: 700;
+            background-color: var(--accent-color);
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 15px 0;
+            box-sizing: border-box;
+            font-size: 8vw; 
+            line-height: 1; 
+            transform-origin: top;
+            user-select: none;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 2;
+            border-bottom: var(--border-thick);
+        }
+
+        .name span {
+            display: block;
+            white-space: pre;
+        }
+
+        .name-spacer {
+            height: 1px;
+            visibility: hidden;
+        }
+        
+        .menu-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: stretch;
+            background-color: var(--ink-color);
+            position: relative;
+            z-index: 1;
+            padding: 0;
+        }
+        
+        .menu-bar a {
+            flex-grow: 1;
+            text-align: center;
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            text-decoration: none;
+            color: var(--bg-color);
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            padding: 15px 0;
+            transition: all 0.1s;
+            border-right: 1px solid #333;
+        }
+
+        .menu-bar a:hover {
+            background-color: var(--bg-color);
+            color: var(--ink-color);
+        }
+        
+        /* --- CUSTOM CURSOR --- */
+        .random-cursor {
+            position: fixed;
+            width: 40px; 
+            height: 40px;
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: difference; 
+            display: none; 
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            transform: translate(-50%, -50%) rotate(45deg);
+        }
+
+        .random-cursor.hovering {
+            transform: translate(-50%, -50%) rotate(90deg);
+            width: 50px;
+            height: 50px;
+        }
+
+        .random-cursor svg {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+        
+        .page-section {
+            min-height: auto; 
+            padding: 0;
+            max-width: 100%; 
+            margin: 0 auto;
+            border-bottom: var(--border-thick);
+        }
+
+        .page-section h2 {
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            font-size: 2rem;
+            color: var(--bg-color);
+            background-color: var(--ink-color);
+            margin: 0;
+            padding: 20px;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+            border-bottom: var(--border-thick);
+            position: sticky;
+            top: 0; 
+            z-index: 10;
+        }
+
+        /* --- GRID STYLING --- */
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 0; 
+            background-color: var(--ink-color);
+            border-bottom: var(--border-thick);
+        }
+
+        @media (max-width: 768px) {
+            .image-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .grid-item {
+            aspect-ratio: 1 / 1;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+            border-right: var(--border-thick);
+            border-bottom: var(--border-thick);
+            background-color: var(--bg-color);
+        }
+
+        .grid-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(100%); 
+            transition: all 0s; 
+            mix-blend-mode: multiply;
+            display: block; 
+        }
+
+        .grid-item:hover img {
+            filter: grayscale(0%) contrast(120%);
+        }
+        
+        .grid-item:hover {
+            background-color: var(--secondary-accent); 
+        }
+
+        /* --- WORDS SECTION STYLING --- */
+        #words {
+            padding: 0;
+            background-color: #f0f0f0; 
+        }
+
+        .poem-wrapper {
+            position: relative;
+            max-width: 800px;
+            margin: 80px auto; 
+            padding: 0 20px;
+        }
+
+        .poem-window {
+            background: var(--bg-color);
+            border: var(--border-thick);
+            box-shadow: 15px 15px 0px var(--ink-color);
+            padding: 40px;
+            min-height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative; 
+        }
+
+        .poem-content {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            white-space: pre-wrap; 
+            font-weight: 400;
+        }
+
+        /* --- CONTROLS STYLING --- */
+        .poem-controls {
+            position: absolute;
+            left: -80px; 
+            top: 0;
+            display: flex;
+            flex-direction: column; 
+            gap: 15px;
+            z-index: 5;
+        }
+
+        @media (max-width: 1000px) {
+            .poem-controls {
+                position: relative;
+                left: 0;
+                top: 0;
+                flex-direction: row;
+                margin-bottom: 20px;
+            }
+        }
+
+        .control-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: var(--border-thick);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 5px 5px 0px var(--ink-color);
+            transition: transform 0.1s, box-shadow 0.1s;
+            margin: 0; 
+            padding: 0;
+        }
+
+        #reload-poem-btn {
+            background-color: var(--accent-color);
+        }
+
+        #read-poem-btn {
+            background-color: var(--silver-color);
+        }
+
+        .control-btn svg {
+            width: 30px;
+            height: 30px;
+            fill: var(--ink-color);
+            transition: transform 0.3s ease;
+        }
+
+        .control-btn:hover {
+            transform: translate(2px, 2px);
+            box-shadow: 3px 3px 0px var(--ink-color);
+        }
+        
+        #reload-poem-btn:hover svg {
+            transform: rotate(180deg);
+        }
+
+        #read-poem-btn:hover {
+            background-color: #d4d4d4;
+        }
+
+        /* Active State for Read Button (When Reading) */
+        #read-poem-btn.is-reading {
+            background-color: var(--secondary-accent);
+        }
+        #read-poem-btn.is-reading svg {
+            fill: white;
+        }
+
+        .control-btn:active {
+            transform: translate(5px, 5px);
+            box-shadow: 0px 0px 0px var(--ink-color);
+        }
+
+        /* --- FORM STYLING --- */
+        #reachme form {
+            padding: 40px;
+            display: grid;
+            gap: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        label {
+            display: flex;
+            flex-direction: column;
+            font-weight: bold;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+        }
+
+        input, textarea, button {
+            margin-top: 10px;
+            padding: 15px;
+            border: var(--border-thick);
+            background: transparent;
+            font-family: "Space Mono", monospace;
+            font-size: 1rem;
+            border-radius: 0; 
+            box-shadow: 5px 5px 0px var(--ink-color); 
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            background-color: var(--accent-color);
+        }
+
+        button {
+            background-color: var(--ink-color);
+            color: var(--accent-color);
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        button:hover {
+            transform: translate(2px, 2px);
+            box-shadow: 3px 3px 0px var(--ink-color);
+        }
+
+        button:active {
+            transform: translate(5px, 5px);
+            box-shadow: 0px 0px 0px var(--ink-color);
+        }
+
+        /* --- LIGHTBOX --- */
+        .lightbox {
+            background-color: rgba(204, 255, 0, 0.95); 
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            padding: 2em;
+            box-sizing: border-box;
+            cursor: auto; 
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            border: 4px solid black; 
+            box-shadow: 10px 10px 0 black;
+        }
+
+    </style>
+</head>
+<body>
+    
+    <header id="main-header">
+        <div class="name" id="dynamic-name"></div>
+        <nav class="menu-bar" id="menu-bar">
+            <a href="#images">Images</a>
+            <a href="#words">Words</a>
+        </nav>
+    </header>
+
+    <div class="random-cursor" id="random-cursor">
+        <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+            <rect x="16" y="0" width="8" height="40" fill="white"/>
+            <rect x="0" y="16" width="40" height="8" fill="white"/>
+        </svg>
+    </div>
+
+    <div class="lightbox" id="image-lightbox">
+        <img src="" alt="Enlarged image">
+    </div>
+
+    <main>
+        <section id="images" class="page-section">
+            <h2>Images</h2>
+            <div class="image-grid" id="image-grid"></div>
+        </section>
+
+        <section id="words" class="page-section">
+            <h2>Words</h2>
+            
+            <div class="poem-wrapper">
+                <div class="poem-window">
+                    <div class="poem-controls">
+                        <button id="reload-poem-btn" class="control-btn" aria-label="Load new poem" title="New Poem">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46A7.93 7.93 0 0020 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74A7.93 7.93 0 004 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/>
+                            </svg>
+                        </button>
+                        <button id="read-poem-btn" class="control-btn" aria-label="Read Poem" title="Read Aloud">
+                            <svg id="icon-play" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                            </svg>
+                            <svg id="icon-pause" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="display:none;">
+                                <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div id="poem-content" class="poem-content"></div>
+                </div>
+            </div>
+
+        </section>
+    </main>
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // --- 1. RANDOM SPACING HEADER ---
+        const nameContainer = document.getElementById('dynamic-name');
+        const nameString = "ADAMSTOVES"; 
+        
+        if(nameContainer) {
+            nameContainer.innerHTML = '';
+            for(let i = 0; i < nameString.length; i++) {
+                const char = nameString[i];
+                const span = document.createElement('span');
+                span.innerText = char;
+                if (i < 4) { span.style.color = 'var(--ink-color)'; } 
+                else { span.style.color = 'var(--secondary-accent)'; }
+                nameContainer.appendChild(span);
+
+                if (i < nameString.length - 1) {
+                    const spacer = document.createElement('div');
+                    spacer.className = 'name-spacer';
+                    let weight = Math.random(); 
+                    if (i === 3) { weight = Math.random() * 4 + 2; }
+                    spacer.style.flexGrow = weight;
+                    nameContainer.appendChild(spacer);
+                }
+            }
+        }
+
+        // --- 2. HEADER SQUISH SCRIPT ---
+        const nameElement = document.querySelector('.name');
+        const menuBar = document.getElementById('menu-bar');
+        
+        if(nameElement && menuBar) {
+            function handleScrollAnimation() {
+                const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
+                if (scrollableHeight <= 0) return;
+                const scrollPercentage = window.scrollY / scrollableHeight;
+                const maxScale = 1;
+                const minScale = 0.15;
+                let currentScale = maxScale - (scrollPercentage * (maxScale - minScale));
+                currentScale = Math.max(minScale, Math.min(maxScale, currentScale));
+                nameElement.style.transform = `scaleY(${currentScale})`;
+                const originalHeight = nameElement.offsetHeight;
+                const squishedHeight = originalHeight * currentScale;
+                const translateY = -(originalHeight - squishedHeight);
+                menuBar.style.transform = `translateY(${translateY}px)`;
+            }
+            window.addEventListener('scroll', handleScrollAnimation);
+            window.addEventListener('resize', handleScrollAnimation);
+            handleScrollAnimation();
+        }
+
+        // --- 3. CUSTOM CURSOR ---
+        const cursor = document.getElementById('random-cursor');
+        if (cursor) {
+            const moveCursor = (e) => {
+                cursor.style.left = `${e.clientX}px`;
+                cursor.style.top = `${e.clientY}px`;
+            };
+            window.addEventListener('mousemove', moveCursor);
+            window.addEventListener('touchmove', (e) => moveCursor(e.touches[0]));
+            document.body.classList.add('custom-cursor-active');
+            cursor.style.display = 'block';
+            const interactiveElements = document.querySelectorAll('a, button, input, textarea, .grid-item');
+            interactiveElements.forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+            });
+        }
+
+        // --- 4. IMAGE GRID ---
+        const imageGrid = document.getElementById('image-grid');
+        const imageLightbox = document.getElementById('image-lightbox');
+        const lightboxImage = imageLightbox ? imageLightbox.querySelector('img') : null;
+
+        const myImageFiles = [
+            "1.jpg", "IMG_20180328_103203_311.jpg", "nine.jpg", "one.jpg", 
+            "IMG_20180402_143642_071.jpg", "image_248.jpg", "image_265.jpg", 
+            "image_109 frame sm.jpg", "image_67.jpg", "image_90 frame sm.jpg", 
+            "image_72 frame sm.jpg", "image_67 sm.jpg", "image_65 frame sm.jpg", 
+            "image_60 frame sm.jpg", "image_46 frame.jpg", "image_38 frame.jpg", 
+            "image_264 frame sm.jpg", "image_257.jpg", "image_251 frame sm.jpg", 
+            "image_245 frame sm.jpg", "image_229 frame sm.jpg", "image_214 frame sm.jpg", 
+            "image_195 frame sm.jpg", "image_187 frame sm.jpg"
+        ];
+
+        if(imageGrid && imageLightbox) {
+            for (let i = 0; i < myImageFiles.length; i++) {
+                const gridItem = document.createElement('div');
+                gridItem.className = 'grid-item';
+                const img = document.createElement('img');
+                img.src = encodeURI(myImageFiles[i]);
+                img.alt = `Image ${i}`;
+                img.loading = "lazy"; 
+                img.onerror = function() {
+                    this.style.display = "none";
+                    gridItem.style.backgroundColor = "red";
+                    gridItem.style.display = "flex";
+                    gridItem.style.alignItems = "center";
+                    gridItem.style.justifyContent = "center";
+                    gridItem.style.color = "white";
+                    gridItem.style.fontSize = "3rem";
+                    gridItem.style.fontWeight = "bold";
+                    gridItem.innerText = "?";
+                };
+                gridItem.appendChild(img);
+                imageGrid.appendChild(gridItem);
+                gridItem.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
+                gridItem.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+                gridItem.addEventListener('click', () => {
+                    if(img.style.display !== "none") {
+                        lightboxImage.src = img.src;
+                        imageLightbox.classList.add('active');
+                    }
+                });
+            }
+            imageLightbox.addEventListener('click', () => {
+                imageLightbox.classList.remove('active');
+            });
+        }
+
+        // --- 5. POEM GENERATOR & READER ---
+        const poemContent = document.getElementById('poem-content');
+        const reloadBtn = document.getElementById('reload-poem-btn');
+        const readBtn = document.getElementById('read-poem-btn');
+        const iconPlay = document.getElementById('icon-play');
+        const iconPause = document.getElementById('icon-pause');
+        
+        let currentPoemText = ""; 
+        let synth = window.speechSynthesis;
+        let isReading = false;
+        let isPaused = false;
+        let segmentIndex = 0;
+        let segmentTimeout = null;
+
+        const rainbowText = '<span style="color:#ff0000">s</span><span style="color:#ff8c00">p</span><span style="color:#e6b800">e</span><span style="color:#008000">c</span><span style="color:#0000ff">i</span><span style="color:#4b0082">a</span><span style="color:#8f00ff">l</span> <span style="color:#ff0000">e</span><span style="color:#ff8c00">f</span><span style="color:#e6b800">f</span><span style="color:#e6b800">e</span><span style="color:#008000">c</span><span style="color:#0000ff">t</span>';
+
+        // NOTE: Strict formatting preserved in template literals
+        const poems = [
+            { text: `on a bluff is a red tomato a meter away
+& the jungle deletes me
+on the rabbit-hole goes a lie down & shapes to motion act dumb in affect
+
+on niches, sea creatures. a quasar, saccades
+& the gender of flies. on blue, on AT&T
+all mimics & moreover
+limits one, two, see
+
+on bold conflations about madness
+& hoodwinking 
+or how data structure approximates me & persists
+must be logic or quit
+
+on perception, it's not a wrong language
+& to spare the mess, on balance all models are wrong
+& [delete me]
+secrete code in effect` },
+            { text: `a)
+penny moon always dings
+think a thrumming bell in helmet, twit soft
+
+sings echolalia
+so brain explodes by
+plasmic hum/
+violent fits/
+itchy gnats/
+plastic rim
+excised bits
+pitty pats lifts off
+
+b)
+less like less & less &
+my head was in the helmet penny moon` },
+            { text: `aura manusia looks super natural 
+ in the crick-necked creek of the dead
+  paints holy
+   clusters in squeezed quick final push face
+    just finished testing the waters of making peace 
+     for an outline one day will wake up
+      all made up
+       but not today
+        the _____ stream is for wading` },
+            { text: `dialects first
+they end. 
+bye my civilian accents, my imported
+
+into day so moves difference.
+some english goons, their parts evolving
+the poor lapses.
+ellipses.
+
+cultural remains quickly morph
+in woman is discovered a middle silent desert
+obscured and therein loved
+
+i start rather squealed off` },
+            { 
+                display: `we sound a portrait object–pumice
+aka monument’s kiss
+you wake, from a 50 year coma
+to my cover band: I Am Bone Person
+now i’m no artist, but i tried my best
+@ the endless dilemma
+[${rainbowText}]`,
+                read: `we sound a portrait object–pumice
+aka monument’s kiss
+you wake
+from a 50 year coma
+to my cover band: I Am Bone Person
+now i’m no artist, but i tried my best
+@ the endless dilemma
+[special effect]`
+            },
+            { text: `dear white tiger in barbed wire
+did you know all bubbles pop, popes die
+both mind & perpetual motion come to a stop
+plus, probably cancer is hidden within me
+
+why words aren’t a problem is a mystery
+wait, they are
+why mystery isn’t a problem is just words
+everything fits & parts
+& slowly lops off the head of my son
+
+no one lies
+here’s the building i live in, and then there’s the graveyard
+over which is which i still get confused
+besides, what could be felt by the ungrowth of a wednesday?
+
+narrow fate hangs in the chamber
+soft clamor, a mosquito in amber
+relax, my nerves. everything bathes
+no enemy worse than the hell i foresee` },
+            { text: `drawn ground
+in simple lingo:
+thick and high.
+monosyllabic were their plans. paleolithic.
+such silk-stocking thoughts are soft seductions
+dot dot dot…
+when we are but schmucks above,
+checking the work.` },
+            { text: `motivation for the upcoming
+dry season
+includes
+long exposure of lake where
+pig-tailed macaques
+are busy working from home
+three sisters crying instantly at new color
+they’ve not seen before
+majestic cliffhanger
+crystal to blowhole rainbow
+and one tiny beauty.
+little ants
+shifting their nest  ` },
+            { text: `i'm sat in a forest unearthing dumb quirks
+behold the sensorium.
+materials of time, traditions of time.
+cartoonish and classical forms,
+honest comedic.
+there's stillness but something else,
+some tracery sense like why architecture calms.
+from here we’ve waivered,
+are fed big lemon,
+leather salad,
+reduced to a postcard.
+but what's missing?
+` },
+            { text: `most pictures, you see, of photographs of people talk,
+quite frankly, by a painting of the picture, you say here’s a painting but it’s a picture, or it represents but it doesn’t represent,,
+two different therapies, there was a picture of a woman who had burgers and children, and they put in an element of stock,, people act if people aren’t
+ 
+I came to see how things knock down, the way you would respond to a picture of a monster, & everybody said, you should be abstracter in the future.
+ 
+right must Wayne over wrong! in other words,
+people of tonight’s lengthy, imposed visit, even, simply,
+the audacity of being mindful, the un-elected,
+proves I have nothing to prove.
+ 
+the claim that the little mind is American is a doctor’s shadow
+they were almost monsters, third generation, what gave structures pressure,
+the caps of a figure, in a certain kind of way,
+because figures will do what you can see, what they were, that they were,
+the elephant, the alphabet,,
+ 
+ 
+worker where there were Daguerre, a predator,
+registering movement. it was a movement, was sort of the last overworked movement forward, the thought of, the thought dot, is not big and clear,
+ 
+ 
+they were almost monsters, third generation abstract specialists’ sons,
+what made structures pressure didn’t have the idea of letting yourself gold,
+marketed,, maneuvered,, directing any traffic` },
+            { text: `™ 
+every thing in the entire life can be solved. make it into patterns
+i mean look at me, an exploded champion divides by three
+
+no suntan boy, no scorpion
+and then again how many strokes of the pen the word red is carved in
+it never gets stagnant exactly
+stream that flows it never stops
+a stream it flows
+i thought, what a stream` },
+            { text: `[ages ago,
+                jungle soundscapes waxing unadopted]
+large fire erupts,
+mythology whateverness
+now power
+         poison props the perfect pit stop
+fits a statue in position,
+                       an other people’s products glitch
+the research reaffirms, these are soaps
+simple.summer style is toxic
+ages ago,accidental purpose seeded trails
+now it needs a name card.
+now it goes to church
+now it’s
+[hell-scammed 
+  o  p  e  n]
+ on a map` },
+            { text: `i spoke at highly polished sand
+it mimicked trick missiles in patterns
+and told me i am bland
+things escalated
+
+it tore at me, violently 
+quietly it doomed my id
+implied that thy–thy mind, is pure cacophony
+
+thus i override
+tell it, thou art somber.
+somber in sombrero cosmos!
+sand goes comatose
+
+now it's wet
+angrily i suss, this metallic gravitas…
+and of all the tools we have…
+i shut it off` },
+            { text: `the cosmic web is full of magnetic field shortcuts
+in abundant supply,
+like rivers combining,new oceans being born.
+it’s effectively impossible without camouflage–
+the architecture, hypnotized,a study finds,is intelligent though measurements wobble.
+think gaps.
+see they simply only exist–
+it’s filtering, it’s areas, it’s Policy Unnatural’s selection which do the heaviest sorting.
+are there insights from the end-to-end?
+macroscopic full text view? the complete?
+oh, majorly.
+well then, here is it.
+here is doing surgery in space.
+` },
+            { text: `set a body, annealing,
+in superposition.then see.
+it collates, collapses a vast tiny distance
+and is perceived as the needle
+in a haystack of needles
+ ` },
+            { text: `look, a cantaloupe, a stooge.
+look, a prison, transformation seven.
+look, a paradox.
+translation,
+i do not think about the cantaloupe.
+even once.
+but when it calls it calls me positive.
+it calls me negative. passive,
+camouflages and calls me appetitive.
+the cantaloupe, that stooge,
+is back, repetitive.
+it causes modern minds to break,
+not even once, but seven.
+look, i’ll go again. 
+
+oh look, a cantaloupe. isn't it austere?
+a faintest treasure.
+found it lurking in a subdivision,
+the little shaman.
+i did not hunt it down.
+i did not think about it.
+i did not even know where to
+look, a cantaloupe.
+it's seven.
+now it's doling rations with the parsons.
+doing math.
+but see its witticisms winding down.
+it's melting now,
+what used to be a cantaloupe, look.
+not even once,
+a head or seven.
+look.` }
+        ];
+        
+        // --- VOICE SELECTOR: Hunts for Natural/Online voices ---
+        function getBestVoice() {
+            const voices = synth.getVoices();
+            let voice = voices.find(v => v.name.includes("Google US English"));
+            if (!voice) voice = voices.find(v => v.name.includes("Natural"));
+            if (!voice) voice = voices.find(v => v.name.includes("Samantha")); 
+            if (!voice) voice = voices.find(v => v.name.includes("Zira")); 
+            return voice || voices[0];
+        }
+
+        // --- READING ENGINE ---
+        function stopReading() {
+            if (segmentTimeout) clearTimeout(segmentTimeout);
+            synth.cancel();
+            isReading = false;
+            isPaused = false;
+            readBtn.classList.remove('is-reading');
+            iconPlay.style.display = 'block';
+            iconPause.style.display = 'none';
+            segmentIndex = 0;
+        }
+
+        function setRandomPoem() {
+            stopReading(); // Stop any audio immediately on reload
+            const randomIndex = Math.floor(Math.random() * poems.length);
+            const poemObj = poems[randomIndex];
+            currentPoemText = poemObj.read || poemObj.text;
+            
+            // Security Patch: Prefer textContent over innerHTML to prevent XSS
+            if (poemObj.display) {
+                poemContent.innerHTML = poemObj.display; // Allowed because this poem uses safe, explicit HTML styling
+            } else {
+                poemContent.textContent = poemObj.text; // Plaintext poems injected safely
+            }
+        }
+
+        function playNextChunk() {
+            if (!isReading || isPaused) return;
+            // Split by punctuation chars + preserve delimiters
+            // IMPORTANT UPDATE: Logic to correctly identify newlines vs empty strings
+            const segments = currentPoemText.split(/([.,;?!—]+|\n+)/g);
+            
+            if (segmentIndex >= segments.length) {
+                stopReading();
+                return;
+            }
+            
+            const rawSegment = segments[segmentIndex];
+            const chunk = rawSegment.trim();
+            
+            // NEW LOGIC: Check if it is a newline BEFORE skipping empty chunks
+            const isNewline = /^\n+$/.test(rawSegment);
+            const isPunctuation = /^[.,;?!—]+$/.test(chunk);
+
+            // Skip empty chunks ONLY if they aren't newlines
+            if (!chunk && !isNewline) {
+                segmentIndex++;
+                playNextChunk();
+                return;
+            }
+
+            // HANDLING SILENCE
+            if (isNewline || isPunctuation) {
+                let pauseTime = 200; // Base pause
+                
+                if (isNewline) {
+                    // 2+ newlines = Stanza Break (Longer pause)
+                    pauseTime = rawSegment.length > 1 ? 1200 : 250; 
+                } 
+                else if (isPunctuation) {
+                    if (chunk.includes('.')) pauseTime = 900;
+                    else if (chunk.includes('?')) pauseTime = 900;
+                    else if (chunk.includes('!')) pauseTime = 900;
+                    else if (chunk.includes(',')) pauseTime = 400;
+                    else if (chunk.includes('—')) pauseTime = 600;
+                } 
+                
+                segmentIndex++;
+                segmentTimeout = setTimeout(playNextChunk, pauseTime);
+            } 
+            // HANDLING SPEECH
+            else {
+                const utterance = new SpeechSynthesisUtterance(chunk);
+                utterance.voice = getBestVoice();
+                utterance.rate = 0.85; // Slow down slightly for effect
+                
+                // Dynamic Pitch: Drop pitch at end of sentences
+                if (segments[segmentIndex+1] && /[.?!]/.test(segments[segmentIndex+1])) {
+                     utterance.pitch = 0.9;
+                } else {
+                     utterance.pitch = 1.0;
+                }
+                
+                utterance.onend = function() {
+                    segmentIndex++;
+                    playNextChunk();
+                };
+                
+                synth.speak(utterance);
+            }
+        }
+
+        readBtn.addEventListener('click', () => {
+            // TOGGLE LOGIC
+            if (isReading) {
+                if (isPaused) {
+                    // RESUME
+                    isPaused = false;
+                    iconPlay.style.display = 'none';
+                    iconPause.style.display = 'block';
+                    playNextChunk();
+                } else {
+                    // PAUSE
+                    isPaused = true;
+                    if (segmentTimeout) clearTimeout(segmentTimeout);
+                    synth.cancel();
+                    iconPlay.style.display = 'block';
+                    iconPause.style.display = 'none';
+                }
+            } else {
+                // START NEW READ
+                synth.cancel();
+                // Ensure voices are loaded (Chrome sometimes needs a kick)
+                const voice = getBestVoice(); 
+                segmentIndex = 0;
+                isReading = true;
+                isPaused = false;
+                
+                readBtn.classList.add('is-reading');
+                iconPlay.style.display = 'none';
+                iconPause.style.display = 'block';
+                
+                playNextChunk();
+            }
+        });
+
+        // Initialize
+        if(reloadBtn && poemContent) {
+            setRandomPoem();
+            
+            reloadBtn.addEventListener('click', () => {
+                setRandomPoem(); 
+            });
+
+            [reloadBtn, readBtn].forEach(btn => {
+                btn.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
+                btn.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+            });
+        }
+        
+    });
+    </script>
+</body>
+</html>
