@@ -986,6 +986,35 @@ look.` }
         }
         
     });
-    </script>
+   <!-- Animated Favicon Script -->
+<script>
+(function() {
+    // Find or create the favicon link tag
+    let link = document.querySelector("link[rel~='icon']");
+    if (!link) {
+        link = document.createElement('link');
+        link.rel = 'icon';
+        document.head.appendChild(link);
+    }
+
+    let angle = 0;
+    
+    // Change the direction every 1000 milliseconds (1 second)
+    setInterval(() => {
+        // Draw an SVG arrow using your site's colors, rotated by the current angle
+        const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <g transform="rotate(${angle} 12 12)">
+                <path d="M12 2L20 10H15V22H9V10H4L12 2Z" fill="#CCFF00" stroke="#000000" stroke-width="2" stroke-linejoin="round"/>
+            </g>
+        </svg>`;
+        
+        // Encode the SVG and set it as the favicon
+        link.href = 'data:image/svg+xml,' + encodeURIComponent(svg);
+        
+        // Rotate 90 degrees for the next frame (Up -> Right -> Down -> Left)
+        angle = (angle + 90) % 360;
+    }, 1000); // 1000ms = 1 second. Lower the number to speed it up!
+})();
+</script>
 </body>
 </html>
