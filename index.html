@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>reconstruction v3</title>
+<title>ADAM STOVES</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,700&display=swap" rel="stylesheet">
 <style>
 :root{ --ink:#000; --paper:#fff; --accent:#CCFF00; --blue:#0055ff; }
@@ -111,7 +111,7 @@ canvas{ width:100%; height:100%; display:block; object-fit:cover; }
 </head>
 <body>
  
-<p class="hint" id="hintText">scroll to move through the collection — stay still to read in full</p>
+<p class="hint" id="hintText">
 <div id="stageWrap"><canvas id="glCanvas" width="480" height="700"></canvas></div>
 <div class="textzone" id="textzone"><span id="termText"></span></div>
 <div id="holdIndicator">holding — full text below</div>
@@ -448,14 +448,26 @@ resize();
  
 const loaded = [];
 let sourcesReady = false;
+
 Promise.all(IMAGES.map(src => new Promise(res => {
   const img = new Image();
   img.onload = () => res(img);
+  img.onerror = () => {
+    console.warn("Could not load image, skipping:", src);
+    res(null); // Resolves anyway so the site doesn't freeze
+  };
   img.src = src;
 }))).then(imgs => {
-  loaded.push(...imgs);
-  sourcesReady = true;
-  requestAnimationFrame(loop);
+  // Filter out any images that failed to load
+  const successfulImages = imgs.filter(img => img !== null);
+  
+  if (successfulImages.length > 0) {
+    loaded.push(...successfulImages);
+    sourcesReady = true;
+    requestAnimationFrame(loop);
+  } else {
+    console.error("No images loaded successfully. Check your file paths.");
+  }
 });
  
 function linesOf(poemText){
