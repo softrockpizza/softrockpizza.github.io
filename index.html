@@ -1,589 +1,178 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADAM STOVES</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><rect width='16' height='16' fill='%23CCFF00'/><text x='50%' y='55%' dominant-baseline='middle' text-anchor='middle' font-family='monospace' font-weight='bold' font-size='12' fill='black'>A</text></svg>">
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-    
-    <style>
-        :root {
-            --bg-color: #ffffff;
-            --ink-color: #000000;
-            --accent-color: #CCFF00; 
-            --secondary-accent: #0055ff; 
-            --silver-color: #e6e6e6; 
-            --border-thick: 3px solid var(--ink-color);
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--ink-color);
-            margin: 0;
-            font-family: "Space Mono", monospace;
-            overflow-y: auto; 
-            cursor: auto; 
-            overflow-x: hidden; 
-        }
-
-        body.custom-cursor-active {
-            cursor: none;
-        }
-        
-        header {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            border-bottom: var(--border-thick);
-            background: var(--bg-color);
-        }
-
-        /* --- NAME STYLING --- */
-        .name {
-            font-family: 'Space Mono', monospace; 
-            font-weight: 700;
-            background-color: var(--accent-color);
-            display: flex;
-            align-items: center;
-            width: 100%;
-            padding: 15px 0;
-            box-sizing: border-box;
-            font-size: 8vw; 
-            line-height: 1; 
-            transform-origin: top;
-            user-select: none;
-            text-transform: uppercase;
-            position: relative;
-            z-index: 2;
-            border-bottom: var(--border-thick);
-        }
-
-        .name span {
-            display: block;
-            white-space: pre;
-        }
-
-        .name-spacer {
-            height: 1px;
-            visibility: hidden;
-        }
-        
-        .menu-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: stretch;
-            background-color: var(--ink-color);
-            position: relative;
-            z-index: 1;
-            padding: 0;
-        }
-        
-        .menu-bar a {
-            flex-grow: 1;
-            text-align: center;
-            font-family: 'Space Mono', monospace;
-            font-weight: 700;
-            text-decoration: none;
-            color: var(--bg-color);
-            font-size: 1.2rem;
-            text-transform: uppercase;
-            padding: 15px 0;
-            transition: all 0.1s;
-            border-right: 1px solid #333;
-        }
-
-        .menu-bar a:hover {
-            background-color: var(--bg-color);
-            color: var(--ink-color);
-        }
-        
-        /* --- CUSTOM CURSOR --- */
-        .random-cursor {
-            position: fixed;
-            width: 40px; 
-            height: 40px;
-            pointer-events: none;
-            z-index: 9999;
-            mix-blend-mode: difference; 
-            display: none; 
-            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-            transform: translate(-50%, -50%) rotate(45deg);
-        }
-
-        .random-cursor.hovering {
-            transform: translate(-50%, -50%) rotate(90deg);
-            width: 50px;
-            height: 50px;
-        }
-
-        .random-cursor svg {
-            width: 100%;
-            height: 100%;
-            overflow: visible;
-        }
-        
-        .page-section {
-            min-height: auto; 
-            padding: 0;
-            max-width: 100%; 
-            margin: 0 auto;
-            border-bottom: var(--border-thick);
-        }
-
-        .page-section h2 {
-            font-family: 'Space Mono', monospace;
-            font-weight: 700;
-            font-size: 2rem;
-            color: var(--bg-color);
-            background-color: var(--ink-color);
-            margin: 0;
-            padding: 20px;
-            text-transform: uppercase;
-            letter-spacing: -1px;
-            border-bottom: var(--border-thick);
-            position: sticky;
-            top: 0; 
-            z-index: 10;
-        }
-
-        /* --- GRID STYLING --- */
-        .image-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr); 
-            gap: 0; 
-            background-color: var(--ink-color);
-            border-bottom: var(--border-thick);
-        }
-
-        @media (max-width: 768px) {
-            .image-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        .grid-item {
-            aspect-ratio: 1 / 1;
-            overflow: hidden;
-            cursor: pointer;
-            position: relative;
-            border-right: var(--border-thick);
-            border-bottom: var(--border-thick);
-            background-color: var(--bg-color);
-        }
-
-        .grid-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            filter: grayscale(100%); 
-            transition: all 0s; 
-            mix-blend-mode: multiply;
-            display: block; 
-        }
-
-        .grid-item:hover img {
-            filter: grayscale(0%) contrast(120%);
-        }
-        
-        .grid-item:hover {
-            background-color: var(--secondary-accent); 
-        }
-
-        /* --- WORDS SECTION STYLING --- */
-        #words {
-            padding: 0;
-            background-color: #f0f0f0; 
-        }
-
-        .poem-wrapper {
-            position: relative;
-            max-width: 800px;
-            margin: 80px auto; 
-            padding: 0 20px;
-        }
-
-        .poem-window {
-            background: var(--bg-color);
-            border: var(--border-thick);
-            box-shadow: 15px 15px 0px var(--ink-color);
-            padding: 40px;
-            min-height: 400px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative; 
-        }
-
-        .poem-content {
-            font-size: 1.1rem;
-            line-height: 1.6;
-            white-space: pre-wrap; 
-            font-weight: 400;
-        }
-
-        /* --- CONTROLS STYLING --- */
-        .poem-controls {
-            position: absolute;
-            left: -80px; 
-            top: 0;
-            display: flex;
-            flex-direction: column; 
-            gap: 15px;
-            z-index: 5;
-        }
-
-        @media (max-width: 1000px) {
-            .poem-controls {
-                position: relative;
-                left: 0;
-                top: 0;
-                flex-direction: row;
-                margin-bottom: 20px;
-            }
-        }
-
-        .control-btn {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            border: var(--border-thick);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 5px 5px 0px var(--ink-color);
-            transition: transform 0.1s, box-shadow 0.1s;
-            margin: 0; 
-            padding: 0;
-        }
-
-        #reload-poem-btn {
-            background-color: var(--accent-color);
-        }
-
-        #read-poem-btn {
-            background-color: var(--silver-color);
-        }
-
-        .control-btn svg {
-            width: 30px;
-            height: 30px;
-            fill: var(--ink-color);
-            transition: transform 0.3s ease;
-        }
-
-        .control-btn:hover {
-            transform: translate(2px, 2px);
-            box-shadow: 3px 3px 0px var(--ink-color);
-        }
-        
-        #reload-poem-btn:hover svg {
-            transform: rotate(180deg);
-        }
-
-        #read-poem-btn:hover {
-            background-color: #d4d4d4;
-        }
-
-        /* Active State for Read Button (When Reading) */
-        #read-poem-btn.is-reading {
-            background-color: var(--secondary-accent);
-        }
-        #read-poem-btn.is-reading svg {
-            fill: white;
-        }
-
-        .control-btn:active {
-            transform: translate(5px, 5px);
-            box-shadow: 0px 0px 0px var(--ink-color);
-        }
-
-        /* --- FORM STYLING --- */
-        #reachme form {
-            padding: 40px;
-            display: grid;
-            gap: 20px;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        label {
-            display: flex;
-            flex-direction: column;
-            font-weight: bold;
-            font-size: 1.2rem;
-            text-transform: uppercase;
-        }
-
-        input, textarea, button {
-            margin-top: 10px;
-            padding: 15px;
-            border: var(--border-thick);
-            background: transparent;
-            font-family: "Space Mono", monospace;
-            font-size: 1rem;
-            border-radius: 0; 
-            box-shadow: 5px 5px 0px var(--ink-color); 
-            transition: transform 0.1s, box-shadow 0.1s;
-        }
-
-        input:focus, textarea:focus {
-            outline: none;
-            background-color: var(--accent-color);
-        }
-
-        button {
-            background-color: var(--ink-color);
-            color: var(--accent-color);
-            font-weight: bold;
-            cursor: pointer;
-            text-transform: uppercase;
-        }
-
-        button:hover {
-            transform: translate(2px, 2px);
-            box-shadow: 3px 3px 0px var(--ink-color);
-        }
-
-        button:active {
-            transform: translate(5px, 5px);
-            box-shadow: 0px 0px 0px var(--ink-color);
-        }
-
-        /* --- LIGHTBOX --- */
-        .lightbox {
-            background-color: rgba(204, 255, 0, 0.95); 
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 10000;
-            padding: 2em;
-            box-sizing: border-box;
-            cursor: auto; 
-        }
-
-        .lightbox.active {
-            display: flex;
-        }
-
-        .lightbox img {
-            max-width: 90%;
-            max-height: 90%;
-            object-fit: contain;
-            border: 4px solid black; 
-            box-shadow: 10px 10px 0 black;
-        }
-
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>reconstruction v3</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,700&display=swap" rel="stylesheet">
+<style>
+:root{ --ink:#000; --paper:#fff; --accent:#CCFF00; --blue:#0055ff; }
+*{box-sizing:border-box; margin:0; padding:0;}
+html,body{
+  height:100%; overflow:hidden; background:var(--ink);
+  overscroll-behavior:none; touch-action:none;
+}
+body{ font-family:'Space Mono', monospace; }
+#stageWrap{
+  position:fixed; inset:0;
+  display:flex; align-items:center; justify-content:center;
+}
+canvas{ width:100%; height:100%; display:block; object-fit:cover; }
+ 
+.textzone{
+  position:fixed; left:0; right:0; bottom:40px;
+  display:flex; justify-content:center; padding:0 20px;
+  pointer-events:none;
+  transition: opacity 0.5s ease;
+}
+.textzone.hidden{ opacity:0; }
+.textzone span{
+  font-size:clamp(1.5rem, 6.4vw, 2.6rem);
+  font-weight:700;
+  text-align:center; line-height:1.25;
+  max-width:720px;
+  transition: color 0.4s ease;
+}
+.textzone span.on-light{
+  color:#000;
+  text-shadow:
+    -1.5px -1.5px 0 #fff, 1.5px -1.5px 0 #fff,
+    -1.5px 1.5px 0 #fff, 1.5px 1.5px 0 #fff,
+    0 0 16px rgba(255,255,255,0.55);
+}
+.textzone span.on-dark{
+  color:var(--accent);
+  text-shadow:
+    -1.5px -1.5px 0 #000, 1.5px -1.5px 0 #000,
+    -1.5px 1.5px 0 #000, 1.5px 1.5px 0 #000,
+    0 0 16px rgba(0,0,0,0.55);
+}
+.textzone .cursor{
+  display:inline-block; width:0.5em; height:0.85em;
+  background:currentColor; vertical-align:-0.1em;
+  animation: blink 0.85s steps(1) infinite;
+}
+@keyframes blink{ 50%{opacity:0;} }
+.glitch-char{ color:var(--blue) !important; text-shadow:none !important; }
+.correction-char{ color:#ff2d55 !important; text-shadow:none !important; text-decoration: line-through; }
+ 
+.hint{
+  position:fixed; top:16px; left:0; right:0;
+  text-align:center; font-size:0.65rem; color:#888;
+  font-style:italic; pointer-events:none;
+  transition: opacity 0.5s ease;
+}
+ 
+#indexLink{
+  position:fixed; right:14px; bottom:14px;
+  font-family:'Space Mono', monospace;
+  font-size:0.62rem; letter-spacing:0.03em;
+  color:rgba(255,255,255,0.75);
+  background:rgba(0,0,0,0.55);
+  text-decoration:none;
+  padding:5px 9px;
+  border:1px solid rgba(255,255,255,0.18);
+  transition: color 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+  z-index:20;
+}
+#indexLink:hover{
+  color:#fff;
+  border-color:rgba(255,255,255,0.5);
+  background:rgba(0,0,0,0.75);
+}
+ 
+/* ---------------- STILLNESS / READING PANEL ---------------- */
+#holdPanel{
+  position:fixed; inset:0;
+  background:rgba(0,0,0,0.88);
+  display:flex; align-items:center; justify-content:center;
+  padding:8vh 8vw;
+  opacity:0; pointer-events:none;
+  transition: opacity 0.7s ease;
+  overflow-y:auto;
+}
+#holdPanel.visible{ opacity:1; pointer-events:auto; }
+#holdPanel pre{
+  color:var(--paper);
+  font-family:'Space Mono', monospace;
+  font-size:clamp(0.95rem, 2.6vw, 1.25rem);
+  line-height:1.65;
+  white-space:pre-wrap;
+  max-width:640px;
+  text-align:left;
+}
+#holdIndicator{
+  position:fixed; bottom:18px; left:50%; transform:translateX(-50%);
+  font-size:0.62rem; color:var(--accent); letter-spacing:0.04em;
+  opacity:0; transition:opacity 0.4s ease; pointer-events:none;
+}
+#holdIndicator.visible{ opacity:0.85; }
+</style>
 </head>
 <body>
-    
-    <header id="main-header">
-        <div class="name" id="dynamic-name"></div>
-        <nav class="menu-bar" id="menu-bar">
-            <a href="#images">Images</a>
-            <a href="#words">Words</a>
-        </nav>
-    </header>
-
-    <div class="random-cursor" id="random-cursor">
-        <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
-            <rect x="16" y="0" width="8" height="40" fill="white"/>
-            <rect x="0" y="16" width="40" height="8" fill="white"/>
-        </svg>
-    </div>
-
-    <div class="lightbox" id="image-lightbox">
-        <img src="" alt="Enlarged image">
-    </div>
-
-    <main>
-        <section id="images" class="page-section">
-            <h2>Images</h2>
-            <div class="image-grid" id="image-grid"></div>
-        </section>
-
-        <section id="words" class="page-section">
-            <h2>Words</h2>
-            
-            <div class="poem-wrapper">
-                <div class="poem-window">
-                    <div class="poem-controls">
-                        <button id="reload-poem-btn" class="control-btn" aria-label="Load new poem" title="New Poem">
-                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46A7.93 7.93 0 0020 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74A7.93 7.93 0 004 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/>
-                            </svg>
-                        </button>
-                        <button id="read-poem-btn" class="control-btn" aria-label="Read Poem" title="Read Aloud">
-                            <svg id="icon-play" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
-                            </svg>
-                            <svg id="icon-pause" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="display:none;">
-                                <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
-                            </svg>
-                        </button>
-                    </div>
-
-                    <div id="poem-content" class="poem-content"></div>
-                </div>
-            </div>
-
-        </section>
-    </main>
-    
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
-
-        // --- 1. RANDOM SPACING HEADER ---
-        const nameContainer = document.getElementById('dynamic-name');
-        const nameString = "ADAMSTOVES"; 
-        
-        if(nameContainer) {
-            nameContainer.innerHTML = '';
-            for(let i = 0; i < nameString.length; i++) {
-                const char = nameString[i];
-                const span = document.createElement('span');
-                span.innerText = char;
-                if (i < 4) { span.style.color = 'var(--ink-color)'; } 
-                else { span.style.color = 'var(--secondary-accent)'; }
-                nameContainer.appendChild(span);
-
-                if (i < nameString.length - 1) {
-                    const spacer = document.createElement('div');
-                    spacer.className = 'name-spacer';
-                    let weight = Math.random(); 
-                    if (i === 3) { weight = Math.random() * 4 + 2; }
-                    spacer.style.flexGrow = weight;
-                    nameContainer.appendChild(spacer);
-                }
-            }
-        }
-
-        // --- 2. HEADER SQUISH SCRIPT ---
-        const nameElement = document.querySelector('.name');
-        const menuBar = document.getElementById('menu-bar');
-        
-        if(nameElement && menuBar) {
-            function handleScrollAnimation() {
-                const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
-                if (scrollableHeight <= 0) return;
-                const scrollPercentage = window.scrollY / scrollableHeight;
-                const maxScale = 1;
-                const minScale = 0.15;
-                let currentScale = maxScale - (scrollPercentage * (maxScale - minScale));
-                currentScale = Math.max(minScale, Math.min(maxScale, currentScale));
-                nameElement.style.transform = `scaleY(${currentScale})`;
-                const originalHeight = nameElement.offsetHeight;
-                const squishedHeight = originalHeight * currentScale;
-                const translateY = -(originalHeight - squishedHeight);
-                menuBar.style.transform = `translateY(${translateY}px)`;
-            }
-            window.addEventListener('scroll', handleScrollAnimation);
-            window.addEventListener('resize', handleScrollAnimation);
-            handleScrollAnimation();
-        }
-
-        // --- 3. CUSTOM CURSOR ---
-        const cursor = document.getElementById('random-cursor');
-        if (cursor) {
-            const moveCursor = (e) => {
-                cursor.style.left = `${e.clientX}px`;
-                cursor.style.top = `${e.clientY}px`;
-            };
-            window.addEventListener('mousemove', moveCursor);
-            window.addEventListener('touchmove', (e) => moveCursor(e.touches[0]));
-            document.body.classList.add('custom-cursor-active');
-            cursor.style.display = 'block';
-            const interactiveElements = document.querySelectorAll('a, button, input, textarea, .grid-item');
-            interactiveElements.forEach(el => {
-                el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
-                el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
-            });
-        }
-
-        // --- 4. IMAGE GRID ---
-        const imageGrid = document.getElementById('image-grid');
-        const imageLightbox = document.getElementById('image-lightbox');
-        const lightboxImage = imageLightbox ? imageLightbox.querySelector('img') : null;
-
-        const myImageFiles = [
-            "1.jpg", "IMG_20180328_103203_311.jpg", "nine.jpg", "one.jpg", 
-            "IMG_20180402_143642_071.jpg", "image_248.jpg", "image_265.jpg", 
-            "image_109 frame sm.jpg", "image_67.jpg", "image_90 frame sm.jpg", 
-            "image_72 frame sm.jpg", "image_67 sm.jpg", "image_65 frame sm.jpg", 
-            "image_60 frame sm.jpg", "image_46 frame.jpg", "image_38 frame.jpg", 
-            "image_264 frame sm.jpg", "image_257.jpg", "image_251 frame sm.jpg", 
-            "image_245 frame sm.jpg", "image_229 frame sm.jpg", "image_214 frame sm.jpg", 
-            "image_195 frame sm.jpg", "image_187 frame sm.jpg"
-        ];
-
-        if(imageGrid && imageLightbox) {
-            for (let i = 0; i < myImageFiles.length; i++) {
-                const gridItem = document.createElement('div');
-                gridItem.className = 'grid-item';
-                const img = document.createElement('img');
-                img.src = encodeURI(myImageFiles[i]);
-                img.alt = `Image ${i}`;
-                img.loading = "lazy"; 
-                img.onerror = function() {
-                    this.style.display = "none";
-                    gridItem.style.backgroundColor = "red";
-                    gridItem.style.display = "flex";
-                    gridItem.style.alignItems = "center";
-                    gridItem.style.justifyContent = "center";
-                    gridItem.style.color = "white";
-                    gridItem.style.fontSize = "3rem";
-                    gridItem.style.fontWeight = "bold";
-                    gridItem.innerText = "?";
-                };
-                gridItem.appendChild(img);
-                imageGrid.appendChild(gridItem);
-                gridItem.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
-                gridItem.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
-                gridItem.addEventListener('click', () => {
-                    if(img.style.display !== "none") {
-                        lightboxImage.src = img.src;
-                        imageLightbox.classList.add('active');
-                    }
-                });
-            }
-            imageLightbox.addEventListener('click', () => {
-                imageLightbox.classList.remove('active');
-            });
-        }
-
-        // --- 5. POEM GENERATOR & READER ---
-        const poemContent = document.getElementById('poem-content');
-        const reloadBtn = document.getElementById('reload-poem-btn');
-        const readBtn = document.getElementById('read-poem-btn');
-        const iconPlay = document.getElementById('icon-play');
-        const iconPause = document.getElementById('icon-pause');
-        
-        let currentPoemText = ""; 
-        let synth = window.speechSynthesis;
-        let isReading = false;
-        let isPaused = false;
-        let segmentIndex = 0;
-        let segmentTimeout = null;
-
-        const rainbowText = '<span style="color:#ff0000">s</span><span style="color:#ff8c00">p</span><span style="color:#e6b800">e</span><span style="color:#008000">c</span><span style="color:#0000ff">i</span><span style="color:#4b0082">a</span><span style="color:#8f00ff">l</span> <span style="color:#ff0000">e</span><span style="color:#ff8c00">f</span><span style="color:#e6b800">f</span><span style="color:#e6b800">e</span><span style="color:#008000">c</span><span style="color:#0000ff">t</span>';
-
-        // NOTE: Strict formatting preserved in template literals
-        const poems = [
-            { text: `on a bluff is a red tomato a meter away
+ 
+<p class="hint" id="hintText">scroll to move through the collection — stay still to read in full</p>
+<div id="stageWrap"><canvas id="glCanvas" width="480" height="700"></canvas></div>
+<div class="textzone" id="textzone"><span id="termText"></span></div>
+<div id="holdIndicator">holding — full text below</div>
+<div id="holdPanel"><pre id="holdPoemText"></pre></div>
+<!-- Points to a separate, plain page (not built yet) — see chat notes -->
+<a href="index.html" id="indexLink">images &amp; words</a>
+ 
+<script>
+/* ============================================================
+   ADD YOUR WORK HERE. Two separate lists — they don't need to
+   match in length, and they're paired up randomly at runtime,
+   re-rolled every time you arrive at a piece. So the same image
+   will show a different poem on different visits/scrolls.
+ 
+   IMAGES:
+     - The order here is the order you scroll through.
+     - For a handful of pieces, a normal file path works fine
+       once this is hosted, e.g. "images/01.jpg".
+     - Do NOT base64-embed dozens of images like this prototype
+       does (that's only here because of sandbox constraints) —
+       for 10–30 real pieces, embedding would make the page file
+       enormous and slow. Use real file paths on your server.
+ 
+   POEMS:
+     - Each entry is one full poem, line breaks exactly as you
+       want them typed.
+     - Whenever you land on a new image, one poem is picked at
+       random from this list for that visit — its lines feed the
+       floating caption, and staying still reveals it in full.
+       Scroll away and back, and you may get a different poem
+       paired with the same image next time.
+   ============================================================ */
+const IMAGES = [
+  "1.jpg", 
+  "IMG_20180328_103203_311.jpg", 
+  "nine.jpg", 
+  "one.jpg", 
+  "IMG_20180402_143642_071.jpg", 
+  "image_248.jpg", 
+  "image_265.jpg", 
+  "image_109 frame sm.jpg", 
+  "image_67.jpg", 
+  "image_90 frame sm.jpg", 
+  "image_72 frame sm.jpg", 
+  "image_67 sm.jpg", 
+  "image_65 frame sm.jpg", 
+  "image_60 frame sm.jpg", 
+  "image_46 frame.jpg", 
+  "image_38 frame.jpg", 
+  "image_264 frame sm.jpg", 
+  "image_257.jpg", 
+  "image_251 frame sm.jpg", 
+  "image_245 frame sm.jpg", 
+  "image_229 frame sm.jpg", 
+  "image_214 frame sm.jpg", 
+  "image_195 frame sm.jpg", 
+  "image_187 frame sm.jpg"
+];
+ 
+const POEMS = [
+`on a bluff is a red tomato a meter away
 & the jungle deletes me
 on the rabbit-hole goes a lie down & shapes to motion act dumb in affect
 
@@ -600,8 +189,9 @@ must be logic or quit
 on perception, it's not a wrong language
 & to spare the mess, on balance all models are wrong
 & [delete me]
-secrete code in effect` },
-            { text: `a)
+secrete code in effect`,
+
+`a)
 penny moon always dings
 think a thrumming bell in helmet, twit soft
 
@@ -616,8 +206,9 @@ pitty pats lifts off
 
 b)
 less like less & less &
-my head was in the helmet penny moon` },
-            { text: `aura manusia looks super natural 
+my head was in the helmet penny moon`,
+
+`aura manusia looks super natural 
  in the crick-necked creek of the dead
   paints holy
    clusters in squeezed quick final push face
@@ -625,8 +216,9 @@ my head was in the helmet penny moon` },
      for an outline one day will wake up
       all made up
        but not today
-        the _____ stream is for wading` },
-            { text: `dialects first
+        the _____ stream is for wading`,
+
+`dialects first
 they end. 
 bye my civilian accents, my imported
 
@@ -639,25 +231,18 @@ cultural remains quickly morph
 in woman is discovered a middle silent desert
 obscured and therein loved
 
-i start rather squealed off` },
-            { 
-                display: `we sound a portrait object–pumice
-aka monument’s kiss
-you wake, from a 50 year coma
-to my cover band: I Am Bone Person
-now i’m no artist, but i tried my best
-@ the endless dilemma
-[${rainbowText}]`,
-                read: `we sound a portrait object–pumice
+i start rather squealed off`,
+
+`we sound a portrait object–pumice
 aka monument’s kiss
 you wake
 from a 50 year coma
 to my cover band: I Am Bone Person
 now i’m no artist, but i tried my best
 @ the endless dilemma
-[special effect]`
-            },
-            { text: `dear white tiger in barbed wire
+[special effect]`,
+
+`dear white tiger in barbed wire
 did you know all bubbles pop, popes die
 both mind & perpetual motion come to a stop
 plus, probably cancer is hidden within me
@@ -676,16 +261,18 @@ besides, what could be felt by the ungrowth of a wednesday?
 narrow fate hangs in the chamber
 soft clamor, a mosquito in amber
 relax, my nerves. everything bathes
-no enemy worse than the hell i foresee` },
-            { text: `drawn ground
+no enemy worse than the hell i foresee`,
+
+`drawn ground
 in simple lingo:
 thick and high.
 monosyllabic were their plans. paleolithic.
 such silk-stocking thoughts are soft seductions
 dot dot dot…
 when we are but schmucks above,
-checking the work.` },
-            { text: `motivation for the upcoming
+checking the work.`,
+
+`motivation for the upcoming
 dry season
 includes
 long exposure of lake where
@@ -697,8 +284,9 @@ majestic cliffhanger
 crystal to blowhole rainbow
 and one tiny beauty.
 little ants
-shifting their nest  ` },
-            { text: `i'm sat in a forest unearthing dumb quirks
+shifting their nest  `,
+
+`i'm sat in a forest unearthing dumb quirks
 behold the sensorium.
 materials of time, traditions of time.
 cartoonish and classical forms,
@@ -710,8 +298,9 @@ are fed big lemon,
 leather salad,
 reduced to a postcard.
 but what's missing?
-` },
-            { text: `most pictures, you see, of photographs of people talk,
+`,
+
+`most pictures, you see, of photographs of people talk,
 quite frankly, by a painting of the picture, you say here’s a painting but it’s a picture, or it represents but it doesn’t represent,,
 two different therapies, there was a picture of a woman who had burgers and children, and they put in an element of stock,, people act if people aren’t
  
@@ -735,8 +324,9 @@ registering movement. it was a movement, was sort of the last overworked movemen
  
 they were almost monsters, third generation abstract specialists’ sons,
 what made structures pressure didn’t have the idea of letting yourself gold,
-marketed,, maneuvered,, directing any traffic` },
-            { text: `™ 
+marketed,, maneuvered,, directing any traffic`,
+
+`™ 
 every thing in the entire life can be solved. make it into patterns
 i mean look at me, an exploded champion divides by three
 
@@ -745,8 +335,9 @@ and then again how many strokes of the pen the word red is carved in
 it never gets stagnant exactly
 stream that flows it never stops
 a stream it flows
-i thought, what a stream` },
-            { text: `[ages ago,
+i thought, what a stream`,
+
+`[ages ago,
                 jungle soundscapes waxing unadopted]
 large fire erupts,
 mythology whateverness
@@ -762,8 +353,9 @@ now it goes to church
 now it’s
 [hell-scammed 
   o  p  e  n]
-  on a map` },
-            { text: `i spoke at highly polished sand
+ on a map`,
+
+`i spoke at highly polished sand
 it mimicked trick missiles in patterns
 and told me i am bland
 things escalated
@@ -780,8 +372,9 @@ sand goes comatose
 now it's wet
 angrily i suss, this metallic gravitas…
 and of all the tools we have…
-i shut it off` },
-            { text: `the cosmic web is full of magnetic field shortcuts
+i shut it off`,
+
+`the cosmic web is full of magnetic field shortcuts
 in abundant supply,
 like rivers combining,new oceans being born.
 it’s effectively impossible without camouflage–
@@ -794,14 +387,16 @@ macroscopic full text view? the complete?
 oh, majorly.
 well then, here is it.
 here is doing surgery in space.
-` },
-            { text: `set a body, annealing,
+`,
+
+`set a body, annealing,
 in superposition.then see.
 it collates, collapses a vast tiny distance
 and is perceived as the needle
 in a haystack of needles
- ` },
-            { text: `look, a cantaloupe, a stooge.
+ `,
+
+`look, a cantaloupe, a stooge.
 look, a prison, transformation seven.
 look, a paradox.
 translation,
@@ -832,160 +427,394 @@ it's melting now,
 what used to be a cantaloupe, look.
 not even once,
 a head or seven.
-look.` }
-        ];
-        
-        // --- VOICE SELECTOR: Hunts for Natural/Online voices ---
-        function getBestVoice() {
-            const voices = synth.getVoices();
-            let voice = voices.find(v => v.name.includes("Google US English"));
-            if (!voice) voice = voices.find(v => v.name.includes("Natural"));
-            if (!voice) voice = voices.find(v => v.name.includes("Samantha")); 
-            if (!voice) voice = voices.find(v => v.name.includes("Zira")); 
-            return voice || voices[0];
+look.`
+];
+ 
+const GLITCH_CHARS = "#$%&01_/\\^~<>";
+ 
+/* ---------------- CANVAS ---------------- */
+const canvas = document.getElementById('glCanvas');
+const ctx = canvas.getContext('2d');
+let W = canvas.width, H = canvas.height;
+let cachedFrames = {};
+ 
+function resize(){
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+  cachedFrames = {};
+}
+window.addEventListener('resize', resize);
+resize();
+ 
+const loaded = [];
+let sourcesReady = false;
+Promise.all(IMAGES.map(src => new Promise(res => {
+  const img = new Image();
+  img.onload = () => res(img);
+  img.src = src;
+}))).then(imgs => {
+  loaded.push(...imgs);
+  sourcesReady = true;
+  requestAnimationFrame(loop);
+});
+ 
+function linesOf(poemText){
+  return poemText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+}
+ 
+function getFrameData(img){
+  const off = document.createElement('canvas');
+  off.width = W; off.height = H;
+  const octx = off.getContext('2d');
+  const scale = Math.max(W / img.width, H / img.height);
+  const dw = img.width * scale, dh = img.height * scale;
+  octx.drawImage(img, (W - dw) / 2, (H - dh) / 2, dw, dh);
+  return octx.getImageData(0, 0, W, H);
+}
+ 
+let position = 0;
+let velocity = 0;
+let currentIndex = 0;
+let currentPoemIndex = 0;
+ 
+function pickRandomPoemIndex(){
+  if(POEMS.length <= 1) return 0;
+  let idx;
+  do { idx = rand(POEMS.length); } while (idx === currentPoemIndex);
+  return idx;
+}
+ 
+function frameFor(i){
+  const n = loaded.length;
+  const idx = ((i % n) + n) % n;
+  if(!cachedFrames[idx]) cachedFrames[idx] = getFrameData(loaded[idx]);
+  return cachedFrames[idx];
+}
+ 
+let mode = 'band';
+let modeArmed = true;
+let bandOffset = [], bandTarget = [];
+ 
+function armNewTransition(){
+  const modes = ['band','vertical','block','flash'];
+  mode = modes[Math.floor(Math.random()*modes.length)];
+  const bandCount = 8 + Math.floor(Math.random()*32);
+  bandOffset = new Array(bandCount).fill(0);
+  bandTarget = new Array(bandCount).fill(0);
+}
+ 
+let lastInputTime = performance.now();
+ 
+window.addEventListener('wheel', e => {
+  velocity += e.deltaY * 0.0016;
+  lastInputTime = performance.now();
+}, {passive:true});
+ 
+let touchStartY = null;
+window.addEventListener('touchstart', e => { touchStartY = e.touches[0].clientY; lastInputTime = performance.now(); }, {passive:true});
+window.addEventListener('touchmove', e => {
+  if(touchStartY === null) return;
+  const dy = touchStartY - e.touches[0].clientY;
+  velocity += dy * 0.008;
+  touchStartY = e.touches[0].clientY;
+  lastInputTime = performance.now();
+}, {passive:true});
+ 
+/* ---------------- ADAPTIVE TEXT COLOR ---------------- */
+const termText = document.getElementById('termText');
+let bgIsLight = true;
+function sampleBgLuminance(imgData){
+  const data = imgData.data;
+  const bandStart = Math.floor(H*0.74);
+  let total=0, count=0;
+  for(let y=bandStart; y<H; y+=7){
+    for(let x=0; x<W; x+=7){
+      const idx=(y*W+x)*4;
+      total += 0.299*data[idx]+0.587*data[idx+1]+0.114*data[idx+2];
+      count++;
+    }
+  }
+  return count ? total/count : 128;
+}
+function applyTextColor(imgData){
+  const lum = sampleBgLuminance(imgData);
+  if(lum > 150 && !bgIsLight) bgIsLight = true;
+  else if(lum < 100 && bgIsLight) bgIsLight = false;
+  termText.classList.toggle('on-light', bgIsLight);
+  termText.classList.toggle('on-dark', !bgIsLight);
+}
+ 
+/* ---------------- STILLNESS / READING MODE ---------------- */
+const textzone = document.getElementById('textzone');
+const holdPanel = document.getElementById('holdPanel');
+const holdIndicator = document.getElementById('holdIndicator');
+const holdPoemText = document.getElementById('holdPoemText');
+const hintText = document.getElementById('hintText');
+let holding = false;
+const STILL_THRESHOLD_MS = 7000; // how long to stay still before the full poem appears
+ 
+function enterHold(){
+  if(holding) return;
+  holding = true;
+  holdPoemText.textContent = POEMS[currentPoemIndex];
+  holdPanel.classList.add('visible');
+  holdIndicator.classList.remove('visible');
+  textzone.classList.add('hidden');
+  hintText.style.opacity = 0;
+}
+function exitHold(){
+  if(!holding) return;
+  holding = false;
+  holdPanel.classList.remove('visible');
+  textzone.classList.remove('hidden');
+  hintText.style.opacity = '';
+}
+ 
+function loop(){
+  if(!sourcesReady){ requestAnimationFrame(loop); return; }
+ 
+  position += velocity;
+  velocity *= 0.9;
+ 
+  const nearest = Math.round(position);
+  const dist = Math.abs(position - nearest);
+  const energy = Math.min(1, dist * 2.15);
+ 
+  if(Math.abs(velocity) < 0.004){
+    position += (nearest - position) * 0.12;
+  }
+ 
+  const newIndex = ((nearest % loaded.length) + loaded.length) % loaded.length;
+  if(newIndex !== currentIndex){
+    currentIndex = newIndex;
+    currentPoemIndex = pickRandomPoemIndex();
+    if(!holding) triggerNewFragment();
+    exitHold();
+  }
+ 
+  if(energy > 0.04 && modeArmed){ armNewTransition(); modeArmed = false; }
+  if(energy < 0.03) modeArmed = true;
+ 
+  const src = frameFor(nearest);
+  applyTextColor(src);
+ 
+  // stillness detection — only while fully settled
+  const stillFor = performance.now() - lastInputTime;
+  if(energy < 0.01 && Math.abs(velocity) < 0.0005){
+    if(!holding && stillFor > STILL_THRESHOLD_MS){
+      enterHold();
+    } else if(!holding && stillFor > STILL_THRESHOLD_MS * 0.3){
+      holdIndicator.classList.add('visible');
+    }
+  } else {
+    holdIndicator.classList.remove('visible');
+    if(holding) exitHold();
+  }
+ 
+  if(energy < 0.02){
+    ctx.putImageData(src, 0, 0);
+    requestAnimationFrame(loop);
+    return;
+  }
+ 
+  const out = ctx.createImageData(W, H);
+  const s = src.data, d = out.data;
+  const rgbShift = Math.round(4 + energy * 22);
+ 
+  if(mode === 'band'){
+    const BANDS = bandOffset.length;
+    const bandH = H / BANDS;
+    for(let b=0;b<BANDS;b++){
+      if(Math.random() < 0.3) bandTarget[b] = (Math.random()*2-1) * energy * 70;
+      bandOffset[b] += (bandTarget[b] - bandOffset[b]) * 0.5;
+    }
+    for(let y=0;y<H;y++){
+      const band = Math.min(BANDS-1, Math.floor(y/bandH));
+      const off = Math.round(bandOffset[band]);
+      for(let x=0;x<W;x++){
+        const sx = clampi(x - off, 0, W-1);
+        writePixel(d, s, x, y, sx, y, rgbShift, W);
+      }
+    }
+  } else if(mode === 'vertical'){
+    const BANDS = bandOffset.length;
+    const bandW = W / BANDS;
+    for(let b=0;b<BANDS;b++){
+      if(Math.random() < 0.3) bandTarget[b] = (Math.random()*2-1) * energy * 90;
+      bandOffset[b] += (bandTarget[b] - bandOffset[b]) * 0.5;
+    }
+    for(let x=0;x<W;x++){
+      const band = Math.min(BANDS-1, Math.floor(x/bandW));
+      const off = Math.round(bandOffset[band]);
+      for(let y=0;y<H;y++){
+        const sy = clampi(y - off, 0, H-1);
+        writePixel(d, s, x, y, x, sy, rgbShift, W);
+      }
+    }
+  } else if(mode === 'block'){
+    for(let y=0;y<H;y++){
+      for(let x=0;x<W;x++){
+        writePixel(d, s, x, y, x, y, Math.round(rgbShift*0.5), W);
+      }
+    }
+    const blockCount = Math.round(4 + energy*18);
+    for(let i=0;i<blockCount;i++){
+      const bw = 10 + Math.random()*90*energy;
+      const bh = 6 + Math.random()*40*energy;
+      const bx = Math.random()*W, by = Math.random()*H;
+      for(let y=by; y<Math.min(H,by+bh); y++){
+        for(let x=bx; x<Math.min(W,bx+bw); x++){
+          const idx = (Math.floor(y)*W + Math.floor(x))*4;
+          const v = Math.random()*255;
+          d[idx] = v; d[idx+1] = v; d[idx+2] = v; d[idx+3] = 255;
         }
-
-        // --- READING ENGINE ---
-        function stopReading() {
-            if (segmentTimeout) clearTimeout(segmentTimeout);
-            synth.cancel();
-            isReading = false;
-            isPaused = false;
-            readBtn.classList.remove('is-reading');
-            iconPlay.style.display = 'block';
-            iconPause.style.display = 'none';
-            segmentIndex = 0;
+      }
+    }
+  } else { // flash
+    const BANDS = bandOffset.length;
+    const bandH = H / BANDS;
+    for(let b=0;b<BANDS;b++){
+      if(Math.random() < 0.5) bandTarget[b] = (Math.random()*2-1) * energy * 110;
+      bandOffset[b] += (bandTarget[b] - bandOffset[b]) * 0.7;
+    }
+    for(let y=0;y<H;y++){
+      const band = Math.min(BANDS-1, Math.floor(y/bandH));
+      const off = Math.round(bandOffset[band]);
+      for(let x=0;x<W;x++){
+        const sx = clampi(x - off, 0, W-1);
+        writePixel(d, s, x, y, sx, y, rgbShift, W);
+      }
+      if(Math.random() < energy * 0.02){
+        for(let x=0;x<W;x++){
+          const idx=(y*W+x)*4; const v = Math.random()<0.5?0:255;
+          d[idx]=d[idx+1]=d[idx+2]=v; d[idx+3]=255;
         }
-
-        function setRandomPoem() {
-            stopReading(); // Stop any audio immediately on reload
-            const randomIndex = Math.floor(Math.random() * poems.length);
-            const poemObj = poems[randomIndex];
-            currentPoemText = poemObj.read || poemObj.text;
-            
-            // Security Patch: Prefer textContent over innerHTML to prevent XSS
-            if (poemObj.display) {
-                poemContent.innerHTML = poemObj.display; // Allowed because this poem uses safe, explicit HTML styling
-            } else {
-                poemContent.textContent = poemObj.text; // Plaintext poems injected safely
-            }
-        }
-
-        function playNextChunk() {
-            if (!isReading || isPaused) return;
-            // Split by punctuation chars + preserve delimiters
-            // IMPORTANT UPDATE: Logic to correctly identify newlines vs empty strings
-            const segments = currentPoemText.split(/([.,;?!—]+|\n+)/g);
-            
-            if (segmentIndex >= segments.length) {
-                stopReading();
-                return;
-            }
-            
-            const rawSegment = segments[segmentIndex];
-            const chunk = rawSegment.trim();
-            
-            // NEW LOGIC: Check if it is a newline BEFORE skipping empty chunks
-            const isNewline = /^\n+$/.test(rawSegment);
-            const isPunctuation = /^[.,;?!—]+$/.test(chunk);
-
-            // Skip empty chunks ONLY if they aren't newlines
-            if (!chunk && !isNewline) {
-                segmentIndex++;
-                playNextChunk();
-                return;
-            }
-
-            // HANDLING SILENCE
-            if (isNewline || isPunctuation) {
-                let pauseTime = 200; // Base pause
-                
-                if (isNewline) {
-                    // 2+ newlines = Stanza Break (Longer pause)
-                    pauseTime = rawSegment.length > 1 ? 1200 : 250; 
-                } 
-                else if (isPunctuation) {
-                    if (chunk.includes('.')) pauseTime = 900;
-                    else if (chunk.includes('?')) pauseTime = 900;
-                    else if (chunk.includes('!')) pauseTime = 900;
-                    else if (chunk.includes(',')) pauseTime = 400;
-                    else if (chunk.includes('—')) pauseTime = 600;
-                } 
-                
-                segmentIndex++;
-                segmentTimeout = setTimeout(playNextChunk, pauseTime);
-            } 
-            // HANDLING SPEECH
-            else {
-                const utterance = new SpeechSynthesisUtterance(chunk);
-                utterance.voice = getBestVoice();
-                utterance.rate = 0.85; // Slow down slightly for effect
-                
-                // Dynamic Pitch: Drop pitch at end of sentences
-                if (segments[segmentIndex+1] && /[.?!]/.test(segments[segmentIndex+1])) {
-                     utterance.pitch = 0.9;
-                } else {
-                     utterance.pitch = 1.0;
-                }
-                
-                utterance.onend = function() {
-                    segmentIndex++;
-                    playNextChunk();
-                };
-                
-                synth.speak(utterance);
-            }
-        }
-
-        readBtn.addEventListener('click', () => {
-            // TOGGLE LOGIC
-            if (isReading) {
-                if (isPaused) {
-                    // RESUME
-                    isPaused = false;
-                    iconPlay.style.display = 'none';
-                    iconPause.style.display = 'block';
-                    playNextChunk();
-                } else {
-                    // PAUSE
-                    isPaused = true;
-                    if (segmentTimeout) clearTimeout(segmentTimeout);
-                    synth.cancel();
-                    iconPlay.style.display = 'block';
-                    iconPause.style.display = 'none';
-                }
-            } else {
-                // START NEW READ
-                synth.cancel();
-                // Ensure voices are loaded (Chrome sometimes needs a kick)
-                const voice = getBestVoice(); 
-                segmentIndex = 0;
-                isReading = true;
-                isPaused = false;
-                
-                readBtn.classList.add('is-reading');
-                iconPlay.style.display = 'none';
-                iconPause.style.display = 'block';
-                
-                playNextChunk();
-            }
-        });
-
-        // Initialize
-        if(reloadBtn && poemContent) {
-            setRandomPoem();
-            
-            reloadBtn.addEventListener('click', () => {
-                setRandomPoem(); 
-            });
-
-            [reloadBtn, readBtn].forEach(btn => {
-                btn.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
-                btn.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
-            });
-        }
-        
-    });
-    </script>
+      }
+    }
+    if(Math.random() < energy*0.015){
+      for(let i=0;i<d.length;i+=4){ d[i]=255-d[i]; d[i+1]=255-d[i+1]; d[i+2]=255-d[i+2]; }
+    }
+  }
+ 
+  const grainAmt = energy * 40;
+  for(let i=0;i<d.length;i+=4){
+    if(Math.random() < energy*0.35){
+      const n = (Math.random()*2-1) * grainAmt;
+      d[i] = clampi(d[i]+n,0,255);
+      d[i+1] = clampi(d[i+1]+n,0,255);
+      d[i+2] = clampi(d[i+2]+n,0,255);
+    }
+  }
+ 
+  ctx.putImageData(out, 0, 0);
+  requestAnimationFrame(loop);
+}
+ 
+function clampi(v,lo,hi){ return v<lo?lo:(v>hi?hi:v); }
+function writePixel(d, s, dx, dy, sx, sy, shift, w){
+  const dIdx = (dy*w+dx)*4;
+  const rX = clampi(sx-shift,0,w-1), bX = clampi(sx+shift,0,w-1);
+  const rIdx=(sy*w+rX)*4, gIdx=(sy*w+sx)*4, bIdx=(sy*w+bX)*4;
+  d[dIdx]=s[rIdx]; d[dIdx+1]=s[gIdx+1]; d[dIdx+2]=s[bIdx+2]; d[dIdx+3]=255;
+}
+ 
+/* ---------------- TEXT: TYPE, MISFIRE, WORD-LEVEL CORRECTION ---------------- */
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const rand = n => Math.floor(Math.random()*n);
+let textRunId = 0;
+ 
+const CORPUS_WORDS = POEMS.join(' ')
+  .split(/\s+/)
+  .map(w => w.replace(/[^\w'-]/g,''))
+  .filter(w => w.length > 2);
+ 
+function randomCorpusWord(){ return CORPUS_WORDS[rand(CORPUS_WORDS.length)]; }
+ 
+async function triggerNewFragment(){
+  const myRun = ++textRunId;
+  const lines = linesOf(POEMS[currentPoemIndex]);
+  const frag = lines[rand(lines.length)];
+  termText.innerHTML = '<span class="cursor"></span>';
+  await sleep(120);
+  await typeFragment(frag, myRun);
+}
+ 
+async function typeChars(str, myRun, getShownPrefix, delayFn){
+  let acc = "";
+  for(let i=0;i<str.length;i++){
+    if(myRun !== textRunId) return null;
+    acc += str[i];
+    termText.innerHTML = getShownPrefix() + acc + '<span class="cursor"></span>';
+    await sleep(delayFn());
+  }
+  return acc;
+}
+ 
+async function typeFragment(frag, myRun){
+  const pace = ['fast','slow','erratic'][rand(3)];
+  const delayFn = () => {
+    if(pace === 'fast') return 12 + Math.random()*18;
+    if(pace === 'slow') return 90 + Math.random()*90;
+    return 10 + Math.random()*160;
+  };
+ 
+  const words = frag.split(' ');
+  let shown = "";
+ 
+  for(let wi=0; wi<words.length; wi++){
+    if(myRun !== textRunId) return;
+    const word = words[wi];
+ 
+    // occasional whole-word misfire + correction
+    if(wi > 0 && Math.random() < 0.16){
+      const decoy = randomCorpusWord();
+      let decoyShown = "";
+      for(let c=0;c<decoy.length;c++){
+        if(myRun !== textRunId) return;
+        decoyShown += decoy[c];
+        termText.innerHTML = shown + '<span class="correction-char">' + decoyShown + '</span><span class="cursor"></span>';
+        await sleep(delayFn());
+      }
+      await sleep(260 + Math.random()*220);
+      if(myRun !== textRunId) return;
+      // backspace the decoy
+      for(let c=decoyShown.length; c>0; c--){
+        if(myRun !== textRunId) return;
+        termText.innerHTML = shown + '<span class="correction-char">' + decoyShown.slice(0,c-1) + '</span><span class="cursor"></span>';
+        await sleep(16 + Math.random()*10);
+      }
+      await sleep(140);
+    }
+ 
+    // type the real word, char by char, with small chance of letter-level misfire
+    for(let ci=0; ci<word.length; ci++){
+      if(myRun !== textRunId) return;
+      shown += word[ci];
+      termText.innerHTML = shown + '<span class="cursor"></span>';
+ 
+      if(/[a-z]/i.test(word[ci]) && Math.random() < 0.05){
+        let glitch = "";
+        const n = 2 + rand(3);
+        for(let g=0; g<n; g++) glitch += GLITCH_CHARS[rand(GLITCH_CHARS.length)];
+        termText.innerHTML = shown + '<span class="glitch-char">' + glitch + '</span>';
+        await sleep(70 + Math.random()*90);
+        if(myRun !== textRunId) return;
+        termText.innerHTML = shown + '<span class="cursor"></span>';
+        await sleep(60);
+      } else if(Math.random() < 0.045){
+        await sleep(450 + Math.random()*650);
+        if(myRun !== textRunId) return;
+      }
+      await sleep(delayFn());
+    }
+    shown += (wi < words.length-1 ? ' ' : '');
+    termText.innerHTML = shown + '<span class="cursor"></span>';
+  }
+}
+ 
+currentPoemIndex = rand(POEMS.length);
+triggerNewFragment();
+</script>
+ 
 </body>
 </html>
